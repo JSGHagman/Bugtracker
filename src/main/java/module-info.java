@@ -5,4 +5,6 @@ module com.example.bugtracker {
 
     opens Controller to javafx.fxml;
     exports Controller;
+    exports View;
+    opens View to javafx.fxml;
 }
