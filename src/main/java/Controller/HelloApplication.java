@@ -1,4 +1,4 @@
-package com.example.bugtracker;
+package Controller;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

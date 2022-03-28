@@ -3,6 +3,6 @@ module com.example.bugtracker {
     requires javafx.fxml;
 
 
-    opens com.example.bugtracker to javafx.fxml;
-    exports com.example.bugtracker;
+    opens Controller to javafx.fxml;
+    exports Controller;
 }
