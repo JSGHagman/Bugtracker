@@ -91,7 +91,7 @@
                <children>
                   <ImageView fitHeight="108.0" fitWidth="233.0" layoutX="26.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../BugTrackerNameIcon.png" />
+                        <Image url="@../BugTrckerLogo.png" />
                      </image>
                   </ImageView>
                </children>
