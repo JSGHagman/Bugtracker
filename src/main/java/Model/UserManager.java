@@ -11,13 +11,25 @@ public class UserManager {
 
     public UserManager() {
         users = new ArrayList<>();
-
     }
 
+    /**
+     * This method adds a new user to an ArrayList of users.
+     * @param user
+     */
     public void addToUsers(User user) {
         users.add(user);
     }
 
+
+    /**
+     * This method will later be used to check the list of users when
+     * a user attempts to sign in.
+     * Will return true if email and password matches that of a user in the list.
+     * @param email
+     * @param password
+     * @return found
+     * */
     public boolean checkPassword(String email, String password) {
         boolean found = false;
         for (User u : users) {

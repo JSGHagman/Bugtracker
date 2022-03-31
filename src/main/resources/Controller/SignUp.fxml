@@ -11,7 +11,7 @@
    <children>
       <VBox prefHeight="400.0" prefWidth="317.0" style="-fx-background-color: #E9967A;">
          <children>
-            <Text smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new user" textAlignment="JUSTIFY" wrappingWidth="128.359375">
+            <Text smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new user" textAlignment="JUSTIFY" wrappingWidth="137.359375">
                <VBox.margin>
                   <Insets left="50.0" right="50.0" top="70.0" />
                </VBox.margin>
@@ -38,7 +38,7 @@
                <children>
                   <Pane prefHeight="29.0" prefWidth="211.0">
                      <children>
-                        <TextField fx:id="tfUsername" layoutX="6.0" layoutY="6.0" prefHeight="26.0" prefWidth="204.0" promptText="Username" />
+                        <TextField fx:id="tfUsername" focusTraversable="false" layoutX="6.0" layoutY="6.0" prefHeight="26.0" prefWidth="204.0" promptText="Username" />
                      </children>
                   </Pane>
                </children>
@@ -50,7 +50,7 @@
                <children>
                   <Pane prefHeight="27.0" prefWidth="202.0">
                      <children>
-                        <TextField fx:id="tfEmail" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="E-mail" />
+                        <TextField fx:id="tfEmail" focusTraversable="false" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="E-mail" />
                      </children>
                   </Pane>
                </children>
@@ -59,7 +59,7 @@
                <children>
                   <Pane prefHeight="27.0" prefWidth="202.0">
                      <children>
-                        <TextField fx:id="pfPassword" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="Password" />
+                        <TextField fx:id="pfPassword" focusTraversable="false" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="Password" />
                      </children>
                   </Pane>
                </children>
