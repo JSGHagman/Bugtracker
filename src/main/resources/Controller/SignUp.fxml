@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="317.0" style="-fx-background-color: #E9967A;">
+         <children>
+            <Text fill="#6adcf87a" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="New user ?" wrappingWidth="119.359375">
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="70.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Arial Bold Italic" size="16.0" />
+               </font>
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                     </light>
+                  </Lighting>
+               </effect>
+            </Text>
+            <HBox prefHeight="33.0" prefWidth="215.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+               </VBox.margin>
+               <children>
+                  <Pane prefHeight="29.0" prefWidth="211.0">
+                     <children>
+                        <TextField fx:id="tfUsername" layoutX="6.0" layoutY="6.0" prefHeight="26.0" prefWidth="204.0" promptText="Username" />
+                     </children>
+                  </Pane>
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="206.0">
+               <VBox.margin>
+                  <Insets bottom="60.0" left="57.0" right="57.0" top="-40.0" />
+               </VBox.margin>
+               <children>
+                  <Pane prefHeight="27.0" prefWidth="202.0">
+                     <children>
+                        <TextField fx:id="tfEmail" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="E-mail" />
+                     </children>
+                  </Pane>
+               </children>
+            </HBox>
+            <HBox layoutX="67.0" layoutY="153.0" prefHeight="29.0" prefWidth="206.0">
+               <children>
+                  <Pane prefHeight="27.0" prefWidth="202.0">
+                     <children>
+                        <TextField fx:id="pfPassword" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="Password" />
+                     </children>
+                  </Pane>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="50.0" left="57.0" right="50.0" top="-50.0" />
+               </VBox.margin>
+            </HBox>
+            <Button fx:id="btnSignUp" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #FFF8DC #FFF8DC;" text="Sign Up" textFill="#686060">
+               <VBox.margin>
+                  <Insets left="89.0" top="-20.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Arial Bold Italic" size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+      <VBox prefHeight="400.0" prefWidth="286.0" style="-fx-background-color: #FFF8DC;">
+         <children>
+            <Pane prefHeight="199.0" prefWidth="251.0">
+               <children>
+                  <ImageView fitHeight="108.0" fitWidth="233.0" layoutX="26.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../BugTrackerNameIcon.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <ImageView fitHeight="124.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../bugTrackerIcon.png" />
+               </image>
+               <VBox.margin>
+                  <Insets left="80.0" top="20.0" />
+               </VBox.margin>
+            </ImageView>
+         </children>
+      </VBox>
+   </children>
+</HBox>

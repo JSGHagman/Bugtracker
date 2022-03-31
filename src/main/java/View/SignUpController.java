@@ -2,6 +2,7 @@ package View;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -10,28 +11,27 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoginController {
+public class SignUpController implements Initializable {
     @FXML
-    private TextField tfUsername;
+    private Button btnSignUp;
+
+    @FXML
+    private TextField pfPassword;
 
     @FXML
     private TextField tfEmail;
 
     @FXML
-    private PasswordField pfPassword;
+    private TextField tfUsername;
 
-    @FXML
-    private Button btnSignUp;
-
-
-    public void intialize(URL location, ResourceBundle resourceBundle){
-
-
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         btnSignUp.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                //do somthing after press button
+                //do somthing when btn pressed
             }
         });
+
     }
 }
