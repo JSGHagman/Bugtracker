@@ -1,4 +1,4 @@
-package View;
+package Controller;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
