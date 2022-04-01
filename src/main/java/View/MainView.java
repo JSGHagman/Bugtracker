@@ -18,13 +18,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
-public class MainView extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
+public class MainView {
+    public MainView(Stage stage) throws Exception {
 
         Group root = new Group();
         Scene scene = new Scene(root, 600, 700, Color.CORAL);
