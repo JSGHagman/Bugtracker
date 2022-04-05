@@ -72,7 +72,7 @@ public class MainView {
         rectangle.setStrokeWidth(5);
         rectangle.setStroke(Color.BLACK);
 
-        Image icon = new Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-84QJaofvWOR-Y_pUqut53hJ_-tkYiRBbWA&usqp=CAU");
+        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
         stage.getIcons().add(icon);
 
         //Image image = new Image("https://media.istockphoto.com/vectors/slice-of-pepperoni-pizza-isolated-vector-illustration-vector-id1320470406?b=1&k=20&m=1320470406&s=170667a&w=0&h=MrBUVVZ-ZubzLWHaqPpjc0osiZvpagiWcZkU-s_GGc0=");
