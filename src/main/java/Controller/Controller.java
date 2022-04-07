@@ -77,8 +77,14 @@ public class Controller {
         new MainView(stage);
     }
 
-    public void newTicket () {
+    /**
+     * @author Patrik Brandell
+     * Creates new ticket with current user, creates DB entry and adds id to ticket object
+     * @throws Exception
+     */
+    public void newTicket() throws Exception {
         ticket = new Ticket(user);
-
+        ticket.setId(dbController.newTicket());
+        
     }
 }

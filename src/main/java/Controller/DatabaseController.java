@@ -68,12 +68,11 @@ public class DatabaseController {
 
     /**
      * @Author Patrik Brandell
-     * @param ticket
      * @return int id of last ticket made
      * @throws SQLException
      *
      */
-    public int newTicket(Ticket ticket) throws SQLException {
+    public int newTicket() throws SQLException {
         int id;
         Connection con = getDBConnection();
         //Create empty ticket
@@ -81,7 +80,7 @@ public class DatabaseController {
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         //Get ID from ticket
-        QUERY = "Select TOP 1 * from ticket ORDER by id DESC";
+        QUERY = "SELECT TOP 1 * from ticket ORDER by id DESC";
         id = stmt.executeUpdate(QUERY);
         con.close();
 
