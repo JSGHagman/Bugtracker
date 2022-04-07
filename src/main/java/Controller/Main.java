@@ -1,12 +1,11 @@
 package Controller;
-import View.*;
+import View.MainView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import View.MainView;
 
 public class Main extends Application {
 
@@ -23,11 +22,14 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
+
         Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
         stage.setTitle("Bugtracker Sign Up");
         Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
         stage.getIcons().add(icon);
         stage.setScene(new Scene(root));
         stage.show();
+
+
     }
 }

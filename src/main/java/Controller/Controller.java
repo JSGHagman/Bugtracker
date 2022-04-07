@@ -1,20 +1,30 @@
 package Controller;
 import Model.*;
-import View.MainView;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.io.IOException;
 
 public class Controller {
+
+    private Scene scene;
+    private Stage newStage;
+    private Stage sigOut;
+    private Parent lroot;
+    private Parent root2;
+    private Parent troot;
+    private Parent sroot;
+    private Parent seroot;
+    private Parent mroot;
+
     private UserManager userManager;
     private User user;
     @FXML
@@ -30,7 +40,6 @@ public class Controller {
         userManager = new UserManager();
     }
 
-
     /**
      * @author Jakob Hagman
      * This method is called when the sign up button is clicked
@@ -39,15 +48,83 @@ public class Controller {
      * It prints the new user in the console
      * It starts the main window
      */
+
     @FXML
-    protected void onSignUpBtnClick() throws Exception {
+    //Creates SigUp view
+    protected void onSignOutBtnClick(ActionEvent event) throws IOException{
+        lroot = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
+        newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        newStage.setTitle("Bugtracker Main Menu");
+        scene = new Scene(lroot);
+        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
+        newStage.getIcons().add(icon);
+        newStage.setScene(scene);
+        newStage.show();
+    }
+    @FXML
+    //switch scene to ticket view
+    public void switchToTicket(ActionEvent event) throws IOException {
+        troot = FXMLLoader.load(getClass().getResource("Ticket.fxml"));
+        newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        newStage.setTitle("Bugtracker Tickets");
+        scene = new Scene(troot);
+        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
+        newStage.getIcons().add(icon);
+        newStage.setScene(scene);
+        newStage.show();
+    }
+
+
+    @FXML
+    //switch to Settings view
+    public void switchToSettings(ActionEvent event) throws IOException {
+        seroot = FXMLLoader.load(getClass().getResource("Settings.fxml"));
+        newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        newStage.setTitle("Bugtracker Settings");
+        scene = new Scene(seroot);
+        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
+        newStage.getIcons().add(icon);
+        newStage.setScene(scene);
+        newStage.show();
+
+    }
+    //switch scene to Statistics view
+    public void switchStatistics(ActionEvent event) throws IOException {
+        sroot = FXMLLoader.load(getClass().getResource("Statistics.fxml"));
+        newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        newStage.setTitle("Bugtracker Statistics");
+        scene = new Scene(sroot);
+        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
+        newStage.getIcons().add(icon);
+        newStage.setScene(scene);
+        newStage.show();
+
+    }
+
+
+    /**
+     * This method opens the main window
+     * @throws IOException
+     */
+
+    public void openMainWindow(ActionEvent event) throws IOException {
         String userName = tfUsername.getText();
         String email = tfEmail.getText();
         String password = pfPassword.getText();
         user = new User(userName,password,email);
         userManager.addToUsers(user);
         newUserAlert();
-        openMainWindow();
+
+        // Switch scene to StartView from SignUp View
+        lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
+        newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        newStage.setTitle("Bugtracker Main Menu");
+        scene = new Scene(lroot);
+        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
+        newStage.getIcons().add(icon);
+        newStage.setScene(scene);
+        newStage.show();
+
     }
 
     /**
@@ -58,12 +135,4 @@ public class Controller {
         System.out.println("NEW USER!\n" + user.toString());
     }
 
-    /**
-     * This method opens the main window
-     * @throws Exception
-     */
-    public void openMainWindow() throws Exception {
-        Stage stage = new Stage();
-        new MainView(stage);
-    }
 }
