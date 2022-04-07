@@ -20,6 +20,7 @@ public class Controller {
     private User user;
     private DatabaseController dbController;
     private Ticket ticket;
+    private TicketManager ticketManager;
     @FXML
     private Button btnSignUp;
     @FXML
@@ -31,6 +32,7 @@ public class Controller {
 
     public Controller(){
         userManager = new UserManager();
+        ticketManager = new TicketManager();
         try {
             dbController = new DatabaseController();
         }
@@ -85,6 +87,11 @@ public class Controller {
     public void newTicket() throws Exception {
         ticket = new Ticket(user);
         ticket.setId(dbController.newTicket());
-        
+        ticketManager.addTicketToList(ticket);
+    }
+
+    public void getAllTickets() throws Exception {
+       dbController.getAllTickets();
+        //Städa listan, skapa ticket objekt som läggs in i TicketManager arraylist
     }
 }

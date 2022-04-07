@@ -87,7 +87,27 @@ public class DatabaseController {
         return id;
     }
 
+    /**
+     * @author Patrik Brandell
+     * @return ArrayList of all current tickets in db
+     * @throws Exception
+     */
+    public ArrayList getAllTickets () throws Exception{
+        ArrayList list = new ArrayList();
+        Connection con = getDBConnection();
+        String QUERY = String.format("SELECT * FROM ticket");
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(QUERY);
 
+        while (rs.next()) {
+            list.add(rs);
+            System.out.println(rs);
+        }
+        stmt.close();
+        con.close();
+
+        return list;
+    }
 
     public void testAddUser() throws SQLException {
         //ESTABLISHES DBCONNECTION
