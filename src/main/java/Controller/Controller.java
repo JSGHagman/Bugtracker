@@ -19,6 +19,7 @@ public class Controller {
     private UserManager userManager;
     private User user;
     private DatabaseController dbController;
+    private Ticket ticket;
     @FXML
     private Button btnSignUp;
     @FXML
@@ -74,5 +75,10 @@ public class Controller {
     public void openMainWindow() throws Exception {
         Stage stage = new Stage();
         new MainView(stage);
+    }
+
+    public void newTicket () {
+        ticket = new Ticket(user);
+
     }
 }
