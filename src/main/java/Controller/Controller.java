@@ -12,11 +12,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class Controller {
     private UserManager userManager;
     private User user;
+    private DatabaseController dbController;
     @FXML
     private Button btnSignUp;
     @FXML
@@ -28,6 +30,12 @@ public class Controller {
 
     public Controller(){
         userManager = new UserManager();
+        try {
+            dbController = new DatabaseController();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -46,6 +54,7 @@ public class Controller {
         String password = pfPassword.getText();
         user = new User(userName,password,email);
         userManager.addToUsers(user);
+        dbController.addNormalUser(user);
         newUserAlert();
         openMainWindow();
     }

@@ -1,4 +1,6 @@
 package Controller;
+import Model.User;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -46,6 +48,20 @@ public class DatabaseController {
             }
 
         }
+    }
+
+    public void addNormalUser (User user) throws SQLException {
+        //ESTABLISHES DBCONNECTION
+        Connection con = getDBConnection();
+
+        //SPECIFIES QUERY
+        String QUERY = "INSERT INTO userid (firstname, lastname, email, password, role)" +
+                "VALUES ('" + user.getUsername() + "','" + user.getUsername() + "','" + user.getEmail() + "','" + user.getPassword() + "','User')";
+
+        //EXECUTES QUERY
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
+        con.close();
     }
 
     public void testAddUser() throws SQLException {
