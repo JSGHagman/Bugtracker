@@ -7,11 +7,16 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+
+import static javafx.scene.paint.Color.BLACK;
+import static javafx.scene.paint.Color.BLUE;
 
 public class Controller {
 
@@ -24,9 +29,14 @@ public class Controller {
     private Parent sroot;
     private Parent seroot;
     private Parent mroot;
+    private Parent pRoot;
+    private Parent uRoot;
 
     private UserManager userManager;
     private User user;
+
+    String userName;
+    String email;
     @FXML
     private Button btnSignUp;
     @FXML
@@ -35,6 +45,10 @@ public class Controller {
     private TextField tfEmail;
     @FXML
     private TextField tfUsername;
+    @FXML
+    Label pUsernameText;
+    @FXML
+    Label pEmailText;
 
     public Controller(){
         userManager = new UserManager();
@@ -62,12 +76,46 @@ public class Controller {
         newStage.show();
     }
     @FXML
+    /**
+     switch scene to Profile view
+     loads username,  to profileWindow
+
+     */
+    public void switchToProfile(ActionEvent event) throws IOException {
+
+       FXMLLoader loader = new FXMLLoader(getClass().getResource("Profile.fxml"));
+        pRoot = loader.load();
+        Controller scene1Controller = loader.getController();
+        //scene1Controller.pUsernameText.setText("Username: Användarnamn ska komma in här");
+        //scene1Controller.pEmailText.setText("Email: Email ska komma in här");
+
+        newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        newStage.setTitle("Bugtracker Profile");
+        scene = new Scene(pRoot);
+        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
+        newStage.getIcons().add(icon);
+        newStage.setScene(scene);
+        newStage.show();
+    }
+    @FXML
     //switch scene to ticket view
     public void switchToTicket(ActionEvent event) throws IOException {
         troot = FXMLLoader.load(getClass().getResource("Ticket.fxml"));
         newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         newStage.setTitle("Bugtracker Tickets");
         scene = new Scene(troot);
+        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
+        newStage.getIcons().add(icon);
+        newStage.setScene(scene);
+        newStage.show();
+    }
+    @FXML
+
+    public void switchToMainmenu(ActionEvent event) throws IOException {
+        lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
+        newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        newStage.setTitle("Bugtracker MainMenu");
+        scene = new Scene(lroot);
         Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
         newStage.getIcons().add(icon);
         newStage.setScene(scene);
@@ -108,8 +156,8 @@ public class Controller {
      */
 
     public void openMainWindow(ActionEvent event) throws IOException {
-        String userName = tfUsername.getText();
-        String email = tfEmail.getText();
+        userName = tfUsername.getText();
+        email = tfEmail.getText();
         String password = pfPassword.getText();
         user = new User(userName,password,email);
         userManager.addToUsers(user);
@@ -134,5 +182,4 @@ public class Controller {
     public void newUserAlert() {
         System.out.println("NEW USER!\n" + user.toString());
     }
-
 }
