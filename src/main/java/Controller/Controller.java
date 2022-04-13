@@ -14,7 +14,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.BLUE;
@@ -207,7 +210,13 @@ public class Controller {
     }
 
     public void getAllTickets() throws Exception {
-        dbController.getAllTickets();
+        ArrayList<Ticket> list;
+        list = dbController.getAllTickets();
+        for (Ticket t : list) {
+            ticketManager.addTicketToList(t);
+            System.out.println(t.getId());
+        }
+
         //Städa listan, skapa ticket objekt som läggs in i TicketManager arraylist
     }
 

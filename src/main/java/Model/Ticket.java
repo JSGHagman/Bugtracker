@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Ticket {
 
@@ -11,11 +12,22 @@ public class Ticket {
     private ArrayList<User> agent = new ArrayList<>();
     private User user;
     private int time;
+    private Date startdate;
+    private Date enddate;
 
 
     public Ticket (User user) {
 
         this.user = user;
+    }
+
+    public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate) {
+        this.id = id;
+        this.category = category;
+        this.status = status;
+        this.priority = priority;
+        this.startdate = startdate;
+        this.enddate = enddate;
     }
 
     public void addAgent(User agent) {

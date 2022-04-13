@@ -17,6 +17,7 @@ public class DatabaseController {
     private final String url = "jdbc:postgresql://pgserver.mau.se:5432/bugtracker";
     private final String user = "am4032";
     private final String password = "krhi9kxm";
+    private Ticket ticket;
 
     public DatabaseController() throws SQLException {
     //   menu();
@@ -100,8 +101,18 @@ public class DatabaseController {
         ResultSet rs = stmt.executeQuery(QUERY);
 
         while (rs.next()) {
-            list.add(rs);
-            System.out.println(rs);
+            int id = rs.getInt("id");
+            int priority = rs.getInt("priority");
+            String category = rs.getString("category");
+            String status = rs.getString("status");
+            String files = rs.getString("files");
+            String time = rs.getString("time");
+            Date startdate = rs.getDate("dateopen");
+            Date enddate = rs.getDate("dateclose");
+
+            ticket = new Ticket(id, category, status, priority, startdate, enddate);
+            list.add(ticket);
+
         }
         stmt.close();
         con.close();
@@ -160,6 +171,27 @@ public class DatabaseController {
         con.close();
     }
 
+    private class ticketThread extends Thread {
+
+        public void run()  {
+            ArrayList list = new ArrayList();
+            Connection con = getDBConnection();
+            String QUERY = String.format("SELECT * FROM ticket");
+            Statement stmt = null;
+            try {
+                stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(QUERY);
+                while (rs.next()) {
+                    list.add(rs.getString("id"));
+                    System.out.println(rs.getString("id"));
+                }
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public static void main(String[] args) throws SQLException {
         new DatabaseController();
     }
