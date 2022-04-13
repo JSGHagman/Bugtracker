@@ -2,7 +2,9 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -34,16 +36,19 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="109.0" layoutY="131.0" text="Username: " />
       <ImageView fitHeight="77.0" fitWidth="91.0" layoutX="101.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Profile.jpg" />
          </image>
       </ImageView>
-      <Label layoutX="109.0" layoutY="159.0" text="Email: " />
-      <TextArea layoutX="101.0" layoutY="186.0" prefHeight="200.0" prefWidth="200.0" text="About me:" />
+      <TextArea layoutX="357.0" layoutY="168.0" prefHeight="200.0" prefWidth="200.0" text="About me:" />
       <Label layoutX="494.0" layoutY="14.0" text="Role(Admin)" />
       <Label layoutX="494.0" layoutY="35.0" text="Role(User)" />
       <Label layoutX="496.0" layoutY="53.0" text="Role(Agent)" />
+      <PasswordField layoutX="96.0" layoutY="293.0" promptText="Change password" />
+      <TextField layoutX="96.0" layoutY="155.0" promptText="Name" />
+      <TextField layoutX="96.0" layoutY="200.0" promptText="Lastname" />
+      <TextField layoutX="96.0" layoutY="242.0" promptText="Email" />
+      <Button layoutX="96.0" layoutY="343.0" mnemonicParsing="false" text="Save changes" />
    </children>
 </AnchorPane>

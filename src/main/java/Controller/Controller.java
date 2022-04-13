@@ -121,7 +121,10 @@ public class Controller {
         newStage.setScene(scene);
         newStage.show();
     }
-
+    /** Mina tickets
+    *all tickets
+     * assigned
+*/
 
     @FXML
     //switch to Settings view
