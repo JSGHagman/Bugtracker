@@ -3,6 +3,7 @@ package Controller;
 import Model.Ticket;
 import Model.User;
 
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -105,12 +106,12 @@ public class DatabaseController {
             int priority = rs.getInt("priority");
             String category = rs.getString("category");
             String status = rs.getString("status");
-            String files = rs.getString("files");
+            String file = rs.getString("files");
             String time = rs.getString("time");
             Date startdate = rs.getDate("dateopen");
             Date enddate = rs.getDate("dateclose");
 
-            ticket = new Ticket(id, category, status, priority, startdate, enddate);
+            ticket = new Ticket(id, category, status, priority, startdate, enddate, file);
             list.add(ticket);
 
         }

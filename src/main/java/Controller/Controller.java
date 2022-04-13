@@ -209,16 +209,31 @@ public class Controller {
         ticketManager.addTicketToList(ticket);
     }
 
-    public void getAllTickets() throws Exception {
-        ArrayList<Ticket> list;
-        list = dbController.getAllTickets();
-        for (Ticket t : list) {
-            ticketManager.addTicketToList(t);
-            System.out.println(t.getId());
-        }
+    public void getAllTickets()  {
+       GetAllTickets getAllTickets = new GetAllTickets();
+       getAllTickets.start();
 
-        //Städa listan, skapa ticket objekt som läggs in i TicketManager arraylist
+
     }
 
+    /**
+     * @Author Patrik Brandell
+     * Separate thread to get all tickets from DB and add to TicketManager
+     */
+    private class GetAllTickets extends Thread {
 
+        public void run()  {
+            ArrayList<Ticket> list = new ArrayList<>();
+            try {
+                list = dbController.getAllTickets();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            for (Ticket t : list) {
+                ticketManager.addTicketToList(t);
+                System.out.println(t.getId());
+            }
+        }
+    }
 }
+

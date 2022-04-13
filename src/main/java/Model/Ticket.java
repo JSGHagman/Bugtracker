@@ -1,5 +1,6 @@
 package Model;
 
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ public class Ticket {
     private int time;
     private Date startdate;
     private Date enddate;
+    private String file;
 
 
     public Ticket (User user) {
@@ -21,13 +23,14 @@ public class Ticket {
         this.user = user;
     }
 
-    public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate) {
+    public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String file) {
         this.id = id;
         this.category = category;
         this.status = status;
         this.priority = priority;
         this.startdate = startdate;
         this.enddate = enddate;
+        this.file = file;
     }
 
     public void addAgent(User agent) {
