@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.BLUE;
@@ -34,6 +35,9 @@ public class Controller {
 
     private UserManager userManager;
     private User user;
+    private TicketManager ticketManager;
+    private DatabaseController dbController;
+    private Ticket ticket;
 
     String userName;
     String email;
@@ -52,6 +56,13 @@ public class Controller {
 
     public Controller(){
         userManager = new UserManager();
+        ticketManager = new TicketManager();
+        try {
+            dbController = new DatabaseController();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -185,4 +196,21 @@ public class Controller {
     public void newUserAlert() {
         System.out.println("NEW USER!\n" + user.toString());
     }
+    /**
+     * @author Patrik Brandell
+     * Creates new ticket with current user, creates DB entry and adds id to ticket object
+     * @throws Exception
+     */
+    public void newTicket() throws Exception {
+        ticket = new Ticket(user);
+        ticket.setId(dbController.newTicket());
+        ticketManager.addTicketToList(ticket);
+    }
+
+    public void getAllTickets() throws Exception {
+        dbController.getAllTickets();
+        //Städa listan, skapa ticket objekt som läggs in i TicketManager arraylist
+    }
+
+
 }
