@@ -38,7 +38,6 @@ public class Controller {
     private TicketManager ticketManager;
     private DatabaseController dbController;
     private Ticket ticket;
-
     String userName;
     String email;
     @FXML

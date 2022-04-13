@@ -19,7 +19,7 @@ public class DatabaseController {
     private final String password = "krhi9kxm";
 
     public DatabaseController() throws SQLException {
-       menu();
+    //   menu();
     }
 
     public Connection getDBConnection(){
