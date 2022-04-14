@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.BLUE;
@@ -32,7 +33,6 @@ public class Controller {
     private Parent mroot;
     private Parent pRoot;
     private Parent uRoot;
-
     private UserManager userManager;
     private User user;
     private TicketManager ticketManager;
@@ -58,7 +58,7 @@ public class Controller {
         userManager = new UserManager();
         ticketManager = new TicketManager();
         try {
-            dbController = new DatabaseController();
+            dbController = new DatabaseController(this);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -76,7 +76,7 @@ public class Controller {
 
     @FXML
     //Creates SigUp view
-    protected void onSignOutBtnClick(ActionEvent event) throws IOException{
+    protected void onSignOutBtnClick(ActionEvent event) throws Exception {
         lroot = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
         newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         newStage.setTitle("Bugtracker Main Menu");
@@ -85,6 +85,7 @@ public class Controller {
         newStage.getIcons().add(icon);
         newStage.setScene(scene);
         newStage.show();
+
     }
     @FXML
     /**
@@ -93,7 +94,6 @@ public class Controller {
 
      */
     public void switchToProfile(ActionEvent event) throws IOException {
-
        FXMLLoader loader = new FXMLLoader(getClass().getResource("Profile.fxml"));
         pRoot = loader.load();
         Controller scene1Controller = loader.getController();
@@ -160,7 +160,6 @@ public class Controller {
         newStage.getIcons().add(icon);
         newStage.setScene(scene);
         newStage.show();
-
     }
 
 
@@ -170,12 +169,15 @@ public class Controller {
      */
 
     public void openMainWindow(ActionEvent event) throws IOException {
+        /**
+         * OBS!! SKALL UPPDATERAS NÄR LOGINGUI ÄR FÄRDIGT.
+         */
         userName = tfUsername.getText();
         email = tfEmail.getText();
         String password = pfPassword.getText();
-        user = new User(userName,password,email);
-        userManager.addToUsers(user);
-        newUserAlert();
+        //user = new User(userName,password,email);
+        //userManager.addToUsers(user);
+        //newUserAlert();
 
         // Switch scene to StartView from SignUp View
         lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
@@ -210,6 +212,10 @@ public class Controller {
     public void getAllTickets() throws Exception {
         dbController.getAllTickets();
         //Städa listan, skapa ticket objekt som läggs in i TicketManager arraylist
+    }
+
+    public void newUser(User u){
+        userManager.addToUsers(u);
     }
 
 

@@ -14,7 +14,6 @@ public class Ticket {
 
 
     public Ticket (User user) {
-
         this.user = user;
     }
 
@@ -61,7 +60,6 @@ public class Ticket {
     public ArrayList<User> getAgent() {
         return agent;
     }
-   
 
     public User getUser() {
         return user;

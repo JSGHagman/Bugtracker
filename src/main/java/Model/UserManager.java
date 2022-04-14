@@ -21,7 +21,6 @@ public class UserManager {
         users.add(user);
     }
 
-
     /**
      * This method will later be used to check the list of users when
      * a user attempts to sign in.

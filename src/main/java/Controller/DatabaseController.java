@@ -1,25 +1,23 @@
 package Controller;
 
-import Model.Ticket;
 import Model.User;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.*;
-import java.util.Date;
 
 public class DatabaseController {
 
     private final String url = "jdbc:postgresql://pgserver.mau.se:5432/bugtracker";
     private final String user = "am4032";
     private final String password = "krhi9kxm";
+    private Controller controller;
 
-    public DatabaseController() throws SQLException {
-       menu();
+    public DatabaseController(Controller controller) throws SQLException {
+        this.controller = controller;
     }
 
     public Connection getDBConnection(){
@@ -34,31 +32,12 @@ public class DatabaseController {
         }
     }
 
-    public void menu() throws SQLException {
-        Scanner choice = new Scanner(System.in);
-        int menuChoice = -1;
-        while(menuChoice!=0){
-            System.out.println("MENU");
-            System.out.println("1. TEST ADD USER");
-            System.out.println("2. SHOW ALL USERS");
-            System.out.println("0. EXIT");
-            menuChoice = choice.nextInt();
-            if(menuChoice == 1){
-                testAddUser();
-            }else if(menuChoice == 2){
-                testShowAllUsers();
-            }
-
-        }
-    }
-
     public void addNormalUser (User user) throws SQLException {
         //ESTABLISHES DBCONNECTION
         Connection con = getDBConnection();
-
         //SPECIFIES QUERY
         String QUERY = "INSERT INTO userid (firstname, lastname, email, password, role)" +
-                "VALUES ('" + user.getUsername() + "','" + user.getUsername() + "','" + user.getEmail() + "','" + user.getPassword() + "','User')";
+                "VALUES ('" + user.getFirstName() + "','" + user.getLastName() + "','" + user.getEmail() + "','" + user.getPassword() + "','" + user.getRole() + "')";
 
         //EXECUTES QUERY
         Statement stmt = con.createStatement();
@@ -109,7 +88,52 @@ public class DatabaseController {
         return list;
     }
 
-    public void testAddUser() throws SQLException {
+    /**
+     * @author Jakob Hagman
+     * Method used to get all registered users from the database when the application starts
+     * @return ArrayList of userobjects
+     * @throws Exception
+     */
+    public void getAllUsers() throws SQLException {
+        Connection con = getDBConnection();
+        String QUERY = String.format("SELECT * FROM userid");
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(QUERY);
+
+        while(rs.next()){
+            User u = null;
+            String firstName = rs.getString("firstname");
+            String lastName =  rs.getString("lastname");
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            String role = rs.getString("role");
+            u = new User(firstName, lastName, email, password, role);
+            controller.newUser(u);
+        }
+        stmt.close();
+        con.close();
+    }
+
+
+    /*public void menu() throws SQLException {
+        Scanner choice = new Scanner(System.in);
+        int menuChoice = -1;
+        while(menuChoice!=0){
+            System.out.println("MENU");
+            System.out.println("1. TEST ADD USER");
+            System.out.println("2. SHOW ALL USERS");
+            System.out.println("0. EXIT");
+            menuChoice = choice.nextInt();
+            if(menuChoice == 1){
+                testAddUser();
+            }else if(menuChoice == 2){
+                testShowAllUsers();
+            }
+
+        }
+    }*/
+
+    /*public void testAddUser() throws SQLException {
         //ESTABLISHES DBCONNECTION
         Connection con = getDBConnection();
 
@@ -135,10 +159,11 @@ public class DatabaseController {
         //EXECUTES QUERY
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
+        stmt.close();
         con.close();
-    }
+    }*/
 
-    public void testShowAllUsers() throws SQLException {
+    /*public void testShowAllUsers() throws SQLException {
         //ESTABLISHES DBCONNECTION
         Connection con = getDBConnection();
         //DEFINES QUERY
@@ -158,9 +183,5 @@ public class DatabaseController {
         }
         stmt.close();
         con.close();
-    }
-
-    public static void main(String[] args) throws SQLException {
-        new DatabaseController();
-    }
+    }*/
 }
