@@ -172,27 +172,7 @@ public class DatabaseController {
         con.close();
     }
 
-    private class ticketThread extends Thread {
-
-        public void run()  {
-            ArrayList list = new ArrayList();
-            Connection con = getDBConnection();
-            String QUERY = String.format("SELECT * FROM ticket");
-            Statement stmt = null;
-            try {
-                stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery(QUERY);
-                while (rs.next()) {
-                    list.add(rs.getString("id"));
-                    System.out.println(rs.getString("id"));
-                }
-                stmt.close();
-                con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    
     public static void main(String[] args) throws SQLException {
         new DatabaseController();
     }
