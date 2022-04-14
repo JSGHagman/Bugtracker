@@ -69,7 +69,7 @@ public class DatabaseController {
     }
 
     /**
-     * @Author Patrik Brandell
+     * aAuthor Patrik Brandell
      * @return int id of last ticket made
      * @throws SQLException
      *
@@ -172,7 +172,7 @@ public class DatabaseController {
         con.close();
     }
 
-    
+
     public static void main(String[] args) throws SQLException {
         new DatabaseController();
     }

@@ -215,7 +215,10 @@ public class Controller {
      * Get tickets with current user assigned
      */
     public void getMyTickets() {
-        ArrayList myTickets = new ArrayList(ticketManager.getMyTickets(user.getUsername()));
+        if (user != null) {
+            ArrayList myTickets = new ArrayList(ticketManager.getMyTickets(user.getUsername()));
+
+        }
     }
 
     /**
@@ -234,6 +237,14 @@ public class Controller {
 
     }
 
+    /**
+     * @author Patrik Brandell
+     * @param id from GUI list
+     * @return marked ticket
+     */
+    public Ticket getMarkedTicket(int id) {
+        return ticketManager.getTicket(id);
+    }
 
     /**
      * @Author Patrik Brandell
