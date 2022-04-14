@@ -63,6 +63,7 @@ public class Controller {
         catch (SQLException e) {
             e.printStackTrace();
         }
+        getAllUsers();
     }
 
     /**
@@ -86,11 +87,11 @@ public class Controller {
         newStage.setScene(scene);
         newStage.show();
     }
+
     @FXML
     /**
      switch scene to Profile view
      loads username,  to profileWindow
-
      */
     public void switchToProfile(ActionEvent event) throws IOException {
 
@@ -237,8 +238,17 @@ public class Controller {
     public void getAllTickets()  {
        GetAllTickets getAllTicketsThread = new GetAllTickets();
        getAllTicketsThread.start();
-
     }
+
+    /**
+     * @author Jakob Hagman
+     * Creates object of private class and starts its thread.
+     */
+    public void getAllUsers(){
+        GetAllUsers getAllUsers = new GetAllUsers();
+        getAllUsers.start();
+    }
+
 
     /**
      * @author Patrik Brandell
@@ -265,6 +275,22 @@ public class Controller {
             for (Ticket t : list) {
                 ticketManager.addTicketToList(t);
                 System.out.println(t.getId());
+            }
+        }
+    }
+
+    /**
+     * Class extends thread.
+     * Uses thread to retrieve all users from the database.
+     */
+
+    private class GetAllUsers extends Thread {
+        @Override
+        public void run() {
+            try{
+                dbController.getAllUsers();
+            }catch(SQLException e){
+                e.printStackTrace();
             }
         }
     }

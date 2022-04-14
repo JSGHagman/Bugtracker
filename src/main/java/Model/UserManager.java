@@ -19,6 +19,7 @@ public class UserManager {
      */
     public void addToUsers(User user) {
         users.add(user);
+        System.out.println(user.toString());
     }
 
     /**

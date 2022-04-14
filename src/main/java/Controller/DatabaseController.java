@@ -60,24 +60,24 @@ public class DatabaseController {
      * @throws Exception
     */
     public void getAllUsers() throws SQLException {
-    Connection con = getDBConnection();
-    String QUERY = String.format("SELECT FROM userid");
-    Statement stmt = con.createStatement();
-    ResultSet rs = stmt.executeQuery(QUERY);
+        Connection con = getDBConnection();
+        String QUERY = String.format("SELECT * FROM userid");
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(QUERY);
 
-    while(rs.next()){
-    User u = null;
-    String firstName = rs.getString("firstname");
-    String lastName =  rs.getString("lastname");
-    String email = rs.getString("email");
-    String password = rs.getString("password");
-    String role = rs.getString("role");
-    u = new User(firstName, lastName, email, password, role);
-    controller.newUser(u);
-    }
-    stmt.close();
-    con.close();
-    }
+        while(rs.next()){
+            User u = null;
+            String firstName = rs.getString("firstname");
+            String lastName =  rs.getString("lastname");
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            String role = rs.getString("role");
+            u = new User(firstName, lastName, email, password, role);
+            controller.newUser(u);
+            }
+            stmt.close();
+            con.close();
+        }
 
     /**
      * aAuthor Patrik Brandell
@@ -95,6 +95,7 @@ public class DatabaseController {
         //Get ID from ticket
         QUERY = "SELECT TOP 1 * from ticket ORDER by id DESC";
         id = stmt.executeUpdate(QUERY);
+        stmt.close();
         con.close();
 
         return id;
