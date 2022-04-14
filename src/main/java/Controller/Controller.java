@@ -65,7 +65,7 @@ public class Controller {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        getAllTickets();
+    
     }
 
     /**
@@ -228,8 +228,8 @@ public class Controller {
      * Create private GetallTickets object and start thread
      */
     public void getAllTickets()  {
-       GetAllTickets getAllTickets = new GetAllTickets();
-       getAllTickets.start();
+       GetAllTickets getAllTicketsThread = new GetAllTickets();
+       getAllTicketsThread.start();
 
     }
 
