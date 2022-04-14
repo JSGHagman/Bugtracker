@@ -78,7 +78,7 @@ public class DatabaseController {
         int id;
         Connection con = getDBConnection();
         //Create empty ticket
-        String QUERY = "INSERT INTO ticket";
+        String QUERY = "INSERT INTO ticket(id) VALUES (default)";
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         //Get ID from ticket

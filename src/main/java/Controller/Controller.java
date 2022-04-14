@@ -41,8 +41,8 @@ public class Controller {
     private TicketManager ticketManager;
     private DatabaseController dbController;
     private Ticket ticket;
-    String userName;
-    String email;
+    private String userName;
+    private String email;
     @FXML
     private Button btnSignUp;
     @FXML
@@ -65,6 +65,7 @@ public class Controller {
         catch (SQLException e) {
             e.printStackTrace();
         }
+        getAllTickets();
     }
 
     /**
@@ -209,12 +210,29 @@ public class Controller {
         ticketManager.addTicketToList(ticket);
     }
 
+    /**
+     * Get tickets with current user assigned
+     */
+    public void getMyTickets() {
+        ArrayList myTickets = new ArrayList(ticketManager.getMyTickets(user.getUsername()));
+    }
+
+    /**
+     * Get unassigned tickets based on null agent or zero size array
+     */
+    public void getUnassignedTickets() {
+        ArrayList unassignedTickets = new ArrayList(ticketManager.getUnassignedTickets());
+    }
+
+    /**
+     * Create private GetallTickets object and start thread
+     */
     public void getAllTickets()  {
        GetAllTickets getAllTickets = new GetAllTickets();
        getAllTickets.start();
 
-
     }
+
 
     /**
      * @Author Patrik Brandell
