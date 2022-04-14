@@ -52,9 +52,9 @@ public class Controller {
     @FXML
     private TextField tfUsername;
     @FXML
-    Label pUsernameText;
+    private Label pUsernameText;
     @FXML
-    Label pEmailText;
+    private Label pEmailText;
 
     public Controller(){
         userManager = new UserManager();
@@ -65,9 +65,6 @@ public class Controller {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        getAllTickets();
-
-
     }
 
     /**
