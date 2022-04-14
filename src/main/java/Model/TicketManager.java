@@ -25,16 +25,16 @@ public class TicketManager {
      * @return List of mytickets for both users and agents
      */
 
-    public ArrayList getMyTickets (String username) {
+    public ArrayList getMyTickets (String email) {
 
         ArrayList myTickets = new ArrayList();
         for (Ticket t : tickets) {
             if (t.getUser() != null) {
-                if (t.getUser().getUsername().equals(username)) {
+                if (t.getUser().getEmail().equals(email)) {
                     myTickets.add(t);
                 }
                 for (User u : t.getAgent()) {
-                    if (u.getUsername().equals(username)) {
+                    if (u.getEmail().equals(email)) {
                         myTickets.add(t);
                     }
                 }
@@ -52,6 +52,7 @@ public class TicketManager {
         for (Ticket t : tickets) {
             if (t.getAgent().size() == 0 || t.getAgent().equals(null)) {
                     unassignedTickets.add(t);
+                    System.out.print(t);
                 }
             }
 

@@ -65,6 +65,7 @@ public class Controller {
         catch (SQLException e) {
             e.printStackTrace();
         }
+        getAllTickets();
 
 
     }
@@ -223,7 +224,7 @@ public class Controller {
      */
     public void getMyTickets() {
         if (user != null) {
-            ArrayList myTickets = new ArrayList(ticketManager.getMyTickets(user.getUsername()));
+            ArrayList myTickets = new ArrayList(ticketManager.getMyTickets(user.getEmail()));
 
         }
     }

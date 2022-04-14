@@ -21,6 +21,7 @@ public class DatabaseController {
     private Ticket ticket;
     private Controller controller;
 
+
     public DatabaseController(Controller controller) throws SQLException {
         this.controller = controller;
     }
@@ -42,10 +43,9 @@ public class DatabaseController {
     public void addNormalUser (User user) throws SQLException {
         //ESTABLISHES DBCONNECTION
         Connection con = getDBConnection();
-
         //SPECIFIES QUERY
         String QUERY = "INSERT INTO userid (firstname, lastname, email, password, role)" +
-                "VALUES ('" + user.getUsername() + "','" + user.getUsername() + "','" + user.getEmail() + "','" + user.getPassword() + "','User')";
+                "VALUES ('" + user.getFirstName() + "','" + user.getLastName() + "','" + user.getEmail() + "','" + user.getPassword() + "','" + user.getRole() + "')";
 
         //EXECUTES QUERY
         Statement stmt = con.createStatement();

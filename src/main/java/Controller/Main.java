@@ -28,6 +28,7 @@ public class Main extends Application {
         Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
         stage.getIcons().add(icon);
         stage.setScene(new Scene(root));
+        stage.setResizable(true);
         stage.show();
 
 
