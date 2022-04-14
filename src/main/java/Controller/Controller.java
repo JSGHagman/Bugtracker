@@ -280,6 +280,7 @@ public class Controller {
     }
 
     /**
+     * @author Jakob Hagman
      * Class extends thread.
      * Uses thread to retrieve all users from the database.
      */
