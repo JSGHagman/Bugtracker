@@ -23,7 +23,6 @@ import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.BLUE;
 
 public class Controller {
-
     private Scene scene;
     private Stage newStage;
     private Stage sigOut;
@@ -35,7 +34,6 @@ public class Controller {
     private Parent mroot;
     private Parent pRoot;
     private Parent uRoot;
-
     private UserManager userManager;
     private User user;
     private TicketManager ticketManager;
