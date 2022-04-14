@@ -60,7 +60,7 @@ public class Controller {
         userManager = new UserManager();
         ticketManager = new TicketManager();
         try {
-            dbController = new DatabaseController();
+            dbController = new DatabaseController(this);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -174,12 +174,12 @@ public class Controller {
      */
 
     public void openMainWindow(ActionEvent event) throws IOException {
-        userName = tfUsername.getText();
-        email = tfEmail.getText();
-        String password = pfPassword.getText();
-        user = new User(userName,password,email);
-        userManager.addToUsers(user);
-        newUserAlert();
+     //   userName = tfUsername.getText();
+       // email = tfEmail.getText();
+       // String password = pfPassword.getText();
+       // user = new User(userName,password,email);
+      //  userManager.addToUsers(user);
+     //   newUserAlert();
 
         // Switch scene to StartView from SignUp View
         lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
@@ -200,6 +200,13 @@ public class Controller {
     public void newUserAlert() {
         System.out.println("NEW USER!\n" + user.toString());
     }
+
+
+    public void newUser(User u){
+        userManager.addToUsers(u);
+    }
+
+
     /**
      * @author Patrik Brandell
      * Creates new ticket with current user, creates DB entry and adds id to ticket object
