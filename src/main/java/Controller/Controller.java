@@ -110,6 +110,7 @@ public class Controller implements Initializable {
     }
 /*
 METODEN SER TILL ATT LOGGA IN VIA DATABASEN
+
     private void validateLogin() throws SQLException {
         DatabaseController dbcontroller = new DatabaseController();
         Connection connectDB = dbcontroller.getDBConnection();
