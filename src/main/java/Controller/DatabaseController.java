@@ -58,7 +58,7 @@ public class DatabaseController {
 
         //SPECIFIES QUERY
         String QUERY = "INSERT INTO userid (firstname, lastname, email, password, role)" +
-                "VALUES ('" + user.getUsername() + "','" + user.getUsername() + "','" + user.getEmail() + "','" + user.getPassword() + "','User')";
+                "VALUES ('" + user.getFirstName() + "','" + user.getLastName() + "','" + user.getEmail() + "','" + user.getPassword() + "','User')";
 
         //EXECUTES QUERY
         Statement stmt = con.createStatement();

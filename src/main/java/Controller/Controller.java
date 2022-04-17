@@ -1,24 +1,33 @@
 package Controller;
 import Model.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ResourceBundle;
 
 import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.BLUE;
 
-public class Controller {
+public class Controller implements Initializable {
 
     private Scene scene;
     private Stage newStage;
@@ -35,20 +44,34 @@ public class Controller {
     private UserManager userManager;
     private User user;
 
-    String userName;
+    String firstName;
+    String lastName;
     String email;
+    String errorMessage = "";
     @FXML
     private Button btnSignUp;
     @FXML
-    private TextField pfPassword;
+    private PasswordField pfPassword;
     @FXML
     private TextField tfEmail;
     @FXML
-    private TextField tfUsername;
+    private TextField tfFirstname;
+    @FXML
+    private TextField tfLastname;
     @FXML
     Label pUsernameText;
     @FXML
     Label pEmailText;
+    @FXML
+    private ComboBox roleComb;
+    @FXML
+    private Button btnSignIn;
+    @FXML
+    private TextField tfEmailSignIn;
+    @FXML
+    private PasswordField pfPasswordSingIn;
+    @FXML
+    private Label errorMessageLable;
 
     public Controller(){
         userManager = new UserManager();
@@ -76,6 +99,46 @@ public class Controller {
         newStage.show();
     }
     @FXML
+    //SigIn view
+    protected void onSignInBtnClick(ActionEvent event) throws IOException, SQLException {
+      if(tfEmailSignIn.getText().isBlank() == false && pfPasswordSingIn.getText().isBlank() == false ){
+       //   validateLogin();
+
+      }else{
+          errorMessageLable.setText("Please enter email and password!");
+      }
+    }
+/*
+METODEN SER TILL ATT LOGGA IN VIA DATABASEN
+    private void validateLogin() throws SQLException {
+        DatabaseController dbcontroller = new DatabaseController();
+        Connection connectDB = dbcontroller.getDBConnection();
+
+        String verifyLogin = "SELECT count(1) FROM userid WHERE email = '" + tfEmailSignIn.getText() + " AND password = '" + pfPasswordSingIn.getText() + "'";
+
+        try{
+            Statement statement = connectDB.createStatement();
+            ResultSet queryResult = statement.executeQuery(verifyLogin);
+
+            while (queryResult.next()){
+                //while "selected count" have specific condition
+                if (queryResult.getInt(1) == 1) {
+                    //if there is any matching record then return 1 , else 0
+                    errorMessageLable.setText("Logged in successfully ");
+                }else {
+                    errorMessageLable.setText("Invalid Login");
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getCause();
+        }
+
+    }
+    */
+
+    @FXML
     /**
      switch scene to Profile view
      loads username,  to profileWindow
@@ -86,7 +149,7 @@ public class Controller {
        FXMLLoader loader = new FXMLLoader(getClass().getResource("Profile.fxml"));
         pRoot = loader.load();
         Controller scene1Controller = loader.getController();
-        //scene1Controller.pUsernameText.setText("Username: Användarnamn ska komma in här");
+       // scene1Controller.pUsernameText.setText("Username: Användarnamn ska komma in här");
         //scene1Controller.pEmailText.setText("Email: Email ska komma in här");
 
         newStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -159,10 +222,11 @@ public class Controller {
      */
 
     public void openMainWindow(ActionEvent event) throws IOException {
-        userName = tfUsername.getText();
+        firstName  = tfFirstname.getText();
+        lastName  = tfLastname.getText();
         email = tfEmail.getText();
         String password = pfPassword.getText();
-        user = new User(userName,password,email);
+        user = new User(firstName,lastName,password,email);
         userManager.addToUsers(user);
         newUserAlert();
 
@@ -178,6 +242,10 @@ public class Controller {
 
     }
 
+
+
+
+
     /**
      * @author Jakob Hagman
      * This method prints the created userobject to the console.
@@ -185,4 +253,47 @@ public class Controller {
     public void newUserAlert() {
         System.out.println("NEW USER!\n" + user.toString());
     }
+
+
+    /**
+     * @param event onAction
+     * select a role from the Combo-box
+     */
+    @FXML
+    void selectRole(ActionEvent event ){
+        String s = roleComb.getSelectionModel().getSelectedItem().toString();
+    }
+
+    /**
+     * @param url
+     * @param resourceBundle
+     *  The method append the specific items to the end of this Combo-Box
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        ObservableList<String> roleList = FXCollections.observableArrayList("User","Admin","Agent");
+        roleComb.setItems(roleList);
+    }
+
+    /**
+     * @return IsFilled == false when email or password input is Empty
+     */
+    private boolean isFiealdFilled(){
+        boolean isFilled = true;
+        if(tfEmailSignIn.getText().isEmpty()){
+            isFilled = false;
+            errorMessage = "Please enter the right e-mail!";
+        }
+        if(pfPasswordSingIn.getText().isEmpty()){
+            isFilled = false;
+            if(errorMessage.isEmpty()){
+            errorMessage = "Please enter the right password!";
+        }else {
+                errorMessage = "Password is Empty!";
+            }
+        }
+        errorMessageLable.setText(errorMessage);
+        return isFilled;
+    }
+
 }
