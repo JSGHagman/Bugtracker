@@ -1,23 +1,33 @@
 package Model;
 
 public class User {
-    private String username;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
 
 
-    public User(String userName, String password, String email){
-        this.username = userName;
+    public User( String firstName, String lastName, String password, String email){
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -40,6 +50,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("USERNAME: %s\nEMAIL: %s\nPASSWORD: %s", this.username, this.email, this.password);
+        return String.format("Name: %s %s\n EMAIL: %s\nPASSWORD: %s", this.firstName, this.lastName,
+                this.email, this.password);
     }
 }
