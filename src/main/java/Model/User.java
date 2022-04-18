@@ -92,5 +92,6 @@ public class User {
     @Override
     public String toString() {
         return String.format("NAME: %s %s\nEMAIL: %s\nPASSWORD: %s\nROLE: %s", this.firstName, this.lastName, this.email, this.password, this.role);
+
     }
 }

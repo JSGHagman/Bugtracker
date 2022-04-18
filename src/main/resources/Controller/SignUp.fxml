@@ -2,9 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Lighting?>
-<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -13,95 +14,124 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Controller" >
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Controller">
    <children>
       <VBox prefHeight="400.0" prefWidth="317.0" style="-fx-background-color: #002366;">
          <children>
-            <Text fill="WHITE" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new user" textAlignment="JUSTIFY" wrappingWidth="137.359375">
+            <ImageView fitHeight="51.0" fitWidth="252.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../BugTrckerLogo.png" />
+               </image>
                <VBox.margin>
-                  <Insets left="50.0" right="50.0" top="70.0" />
+                  <Insets left="42.0" top="40.0" />
                </VBox.margin>
-               <font>
-                  <Font name="Arial Bold Italic" size="16.0" />
-               </font>
-               <effect>
-                  <Lighting>
-                     <bumpInput>
-                        <Shadow />
-                     </bumpInput>
-                     <light>
-                     </light>
-                  </Lighting>
-               </effect>
-            </Text>
-            <HBox prefHeight="33.0" prefWidth="215.0">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
+            </ImageView>
+            <HBox prefHeight="52.0" prefWidth="256.0">
                <VBox.margin>
-                  <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+                  <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                </VBox.margin>
                <children>
-                  <Pane prefHeight="29.0" prefWidth="211.0">
+                  <Pane prefHeight="40.0" prefWidth="257.0">
                      <children>
-                        <TextField fx:id="tfUsername" focusTraversable="false" layoutX="6.0" layoutY="6.0" prefHeight="26.0" prefWidth="204.0" promptText="Username" />
+                        <TextField fx:id="tfEmailtSignIn" layoutX="18.0" layoutY="19.0" prefHeight="32.0" prefWidth="236.0" promptText="E-mail" />
                      </children>
                   </Pane>
                </children>
             </HBox>
-            <HBox prefHeight="29.0" prefWidth="206.0">
-               <VBox.margin>
-                  <Insets bottom="60.0" left="57.0" right="57.0" top="-40.0" />
-               </VBox.margin>
+            <HBox prefHeight="44.0" prefWidth="259.0">
                <children>
-                  <Pane prefHeight="27.0" prefWidth="202.0">
+                  <Pane prefHeight="40.0" prefWidth="256.0">
                      <children>
-                        <TextField fx:id="tfEmail" focusTraversable="false" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="E-mail" />
-                     </children>
-                  </Pane>
-               </children>
-            </HBox>
-            <HBox layoutX="67.0" layoutY="153.0" prefHeight="29.0" prefWidth="206.0">
-               <children>
-                  <Pane prefHeight="27.0" prefWidth="202.0">
-                     <children>
-                        <TextField fx:id="pfPassword" focusTraversable="false" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="Password" />
+                        <PasswordField fx:id="pfPasswordSignIn" layoutX="19.0" layoutY="12.0" prefHeight="32.0" prefWidth="235.0" promptText="Password" />
                      </children>
                   </Pane>
                </children>
                <VBox.margin>
-                  <Insets bottom="50.0" left="57.0" right="50.0" top="-50.0" />
+                  <Insets bottom="20.0" left="30.0" right="30.0" top="-10.0" />
                </VBox.margin>
             </HBox>
-            <Button fx:id="btnSignUp" blendMode="HARD_LIGHT" mnemonicParsing="false" onAction="#openMainWindow" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #FFF8DC #FFF8DC;" text="Sign Up" textFill="#686060">
-               <VBox.margin>
-                  <Insets left="89.0" top="-20.0" />
-               </VBox.margin>
+            <Button fx:id="btnSignIn" blendMode="HARD_LIGHT" mnemonicParsing="false" onAction="#openMainWindow" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #FFF8DC #FFF8DC;" text="Sign In" textFill="#686060">
                <font>
                   <Font name="Arial Bold Italic" size="14.0" />
                </font>
+               <VBox.margin>
+                  <Insets left="88.0" />
+               </VBox.margin>
             </Button>
+            <Pane prefHeight="148.0" prefWidth="316.0">
+               <children>
+                  <Label fx:id="errorMessageLable" alignment="CENTER" layoutX="4.0" layoutY="16.0" prefHeight="121.0" prefWidth="305.0" textFill="#ff0f0f" />
+               </children>
+            </Pane>
          </children>
       </VBox>
       <VBox prefHeight="400.0" prefWidth="286.0" style="-fx-background-color: #FFF8DC;">
          <children>
-            <Pane prefHeight="199.0" prefWidth="251.0">
+            <Pane prefHeight="403.0" prefWidth="285.0">
                <children>
-                  <ImageView fitHeight="108.0" fitWidth="233.0" layoutX="26.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
+                  <HBox layoutX="59.0" layoutY="122.0" prefHeight="33.0" prefWidth="218.0">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <children>
+                        <Pane prefHeight="29.0" prefWidth="211.0">
+                           <children>
+                              <TextField fx:id="tfLastname" focusTraversable="false" layoutX="6.0" layoutY="6.0" prefHeight="26.0" prefWidth="204.0" promptText="Last name" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </HBox>
+                  <ImageView fitHeight="83.0" fitWidth="75.0" layoutX="210.0" layoutY="332.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../BugTrckerLogo.png" />
+                        <Image url="@../bugTrackerIcon.png" />
                      </image>
                   </ImageView>
+                  <HBox layoutX="66.0" layoutY="93.0" prefHeight="29.0" prefWidth="206.0">
+                     <children>
+                        <Pane prefHeight="27.0" prefWidth="202.0">
+                           <children>
+                              <TextField fx:id="tfFirstname" focusTraversable="false" layoutX="-1.0" layoutY="2.0" prefHeight="26.0" prefWidth="204.0" promptText="First name" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="65.0" layoutY="198.0" prefHeight="29.0" prefWidth="206.0">
+                     <children>
+                        <Pane prefHeight="27.0" prefWidth="202.0">
+                           <children>
+                              <PasswordField fx:id="pfPassword" prefHeight="26.0" prefWidth="204.0" promptText="Password" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </HBox>
+                  <ComboBox fx:id="roleComb" layoutX="65.0" layoutY="236.0" onAction="#selectRole" prefWidth="150.0" promptText="Select role" />
+                  <HBox layoutX="64.0" layoutY="161.0" prefHeight="26.0" prefWidth="206.0">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <children>
+                        <Pane prefHeight="22.0" prefWidth="209.0">
+                           <children>
+                              <TextField fx:id="tfEmail" focusTraversable="false" layoutX="1.0" layoutY="3.0" prefHeight="26.0" prefWidth="203.0" promptText="E-mail" />
+                           </children>
+                           <HBox.margin>
+                              <Insets top="-3.0" />
+                           </HBox.margin>
+                        </Pane>
+                     </children>
+                  </HBox>
+                  <Text fill="#ada6a6" layoutX="63.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a new user" wrappingWidth="103.3299560546875">
+                     <font>
+                        <Font name="System Bold Italic" size="13.0" />
+                     </font>
+                  </Text>
+                  <Button fx:id="btnSignUp" layoutX="92.0" layoutY="285.0" mnemonicParsing="false" onAction="#openMainWindow" prefHeight="29.0" prefWidth="100.0" text="Sign Up" textFill="#686060">
+                     <font>
+                        <Font name="Arial Bold Italic" size="14.0" />
+                     </font>
+                  </Button>
                </children>
             </Pane>
-            <ImageView fitHeight="124.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../bugTrackerIcon.png" />
-               </image>
-               <VBox.margin>
-                  <Insets left="80.0" top="20.0" />
-               </VBox.margin>
-            </ImageView>
          </children>
       </VBox>
    </children>
