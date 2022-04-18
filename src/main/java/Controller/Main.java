@@ -1,16 +1,23 @@
 package Controller;
 import View.MainView;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    @FXML
+    private ComboBox roleComb;
+
     public static void main(String[] args) {
-        new Controller();
+        Controller controller = new Controller();
         launch(args);
     }
 
@@ -22,7 +29,6 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-
         Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
         stage.setTitle("Bugtracker Sign Up");
         Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
@@ -30,7 +36,5 @@ public class Main extends Application {
         stage.setScene(new Scene(root));
         stage.setResizable(true);
         stage.show();
-
-
     }
 }

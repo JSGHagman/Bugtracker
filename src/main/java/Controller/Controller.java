@@ -3,7 +3,6 @@ import Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,29 +11,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ResourceBundle;
 
-import static javafx.scene.paint.Color.BLACK;
-import static javafx.scene.paint.Color.BLUE;
 
-
-    public class Controller implements Initializable {
-
-
+public class Controller {
         private Scene scene;
         private Stage newStage;
         private Stage sigOut;
@@ -55,6 +40,8 @@ import static javafx.scene.paint.Color.BLUE;
         private String email;
         private String firstName;
         private String lastName;
+        private String role;
+        private String password;
         private String errorMessage = "";
         @FXML
         private Button btnSignUp;
@@ -77,9 +64,15 @@ import static javafx.scene.paint.Color.BLUE;
         @FXML
         private TextField tfEmailSignIn;
         @FXML
-        private PasswordField pfPasswordSingIn;
+        private PasswordField pfPasswordSignIn;
         @FXML
-        private Label errorMessageLable;
+        private Label errorMessageLabel;
+        @FXML
+        private RadioButton userBtn;
+        @FXML
+        private RadioButton adminBtn;
+        @FXML
+        private RadioButton agentBtn;
 
         public Controller() {
             userManager = new UserManager();
@@ -92,18 +85,9 @@ import static javafx.scene.paint.Color.BLUE;
             getAllUsers();
         }
 
-        /**
-         * @author Jakob Hagman
-         * This method is called when the sign up button is clicked
-         * It retrieves strings from the three textfields
-         * It creates a new user and adds it to an ArrayList of users in the UserManager class.
-         * It prints the new user in the console
-         * It starts the main window
-         */
-
         @FXML
-        //Creates SigUp view
-        protected void onSignOutBtnClick(ActionEvent event) throws IOException {
+        //Creates SignUp view
+        public void onSignOutBtnClick(ActionEvent event) throws IOException {
             lroot = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
             newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             newStage.setTitle("Bugtracker Main Menu");
@@ -115,45 +99,40 @@ import static javafx.scene.paint.Color.BLUE;
         }
 
         @FXML
-        //SigIn view
-        protected void onSignInBtnClick(ActionEvent event) throws IOException, SQLException {
-            if (tfEmailSignIn.getText().isBlank() == false && pfPasswordSingIn.getText().isBlank() == false) {
-                //validateLogin();
+        public void onSignUpBtnClick(ActionEvent event) throws SQLException {
+            firstName = tfFirstname.getText();
+            lastName = tfLastname.getText();
+            email = tfEmail.getText();
+            password = pfPassword.getText();
 
-            } else {
-                errorMessageLable.setText("Please enter email and password!");
+            if(adminBtn.isSelected()){
+                role = "Admin";
+            }if(userBtn.isSelected()){
+                role = "User";
+            }if(agentBtn.isSelected()){
+                role = "Agent";
             }
-        }
-/*
-METODEN SER TILL ATT LOGGA IN VIA DATABASEN
-
-    private void validateLogin() throws SQLException {
-        DatabaseController dbcontroller = new DatabaseController();
-        Connection connectDB = dbcontroller.getDBConnection();
-
-        String verifyLogin = "SELECT count(1) FROM userid WHERE email = '" + tfEmailSignIn.getText() + " AND password = '" + pfPasswordSingIn.getText() + "'";
-
-        try{
-            Statement statement = connectDB.createStatement();
-            ResultSet queryResult = statement.executeQuery(verifyLogin);
-
-            while (queryResult.next()){
-                //while "selected count" have specific condition
-                if (queryResult.getInt(1) == 1) {
-                    //if there is any matching record then return 1 , else 0
-                    errorMessageLable.setText("Logged in successfully ");
-                }else {
-                    errorMessageLable.setText("Invalid Login");
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            e.getCause();
+            user = new User(firstName,lastName,email,password, role);
+            System.out.println(user.toString());
+            dbController.addNormalUser(user);
+            
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("MESSAGE");
+            alert.setHeaderText(null);
+            alert.setContentText("New user created successfully, now sign in");
+            alert.showAndWait();
+            tfFirstname.clear();
+            tfLastname.clear();
+            tfEmail.clear();
+            pfPassword.clear();
         }
 
-    }
-    */
+        @FXML
+        public void onSignInBtnClick(ActionEvent event) {
+            if(isFieldFilled()){
+                tryLogin();
+            }
+        }
 
         @FXML
         /**
@@ -166,7 +145,6 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
             Controller scene1Controller = loader.getController();
             // scene1Controller.pUsernameText.setText("Username: Användarnamn ska komma in här");
             //scene1Controller.pEmailText.setText("Email: Email ska komma in här");
-
             newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             newStage.setTitle("Bugtracker Profile");
             scene = new Scene(pRoot);
@@ -190,7 +168,6 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
         }
 
         @FXML
-
         public void switchToMainmenu(ActionEvent event) throws IOException {
             lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
             newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -201,12 +178,6 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
             newStage.setScene(scene);
             newStage.show();
         }
-
-        /**
-         * Mina tickets
-         * all tickets
-         * assigned
-         */
 
         @FXML
         //switch to Settings view
@@ -219,7 +190,6 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
             newStage.getIcons().add(icon);
             newStage.setScene(scene);
             newStage.show();
-
         }
 
         //switch scene to Statistics view
@@ -232,26 +202,14 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
             newStage.getIcons().add(icon);
             newStage.setScene(scene);
             newStage.show();
-
         }
-
 
         /**
          * This method opens the main window
          *
          * @throws IOException
          */
-
         public void openMainWindow(ActionEvent event) throws IOException {
-            firstName = tfFirstname.getText();
-            lastName = tfLastname.getText();
-            email = tfEmail.getText();
-            String password = pfPassword.getText();
-            String role = roleComb.getSelectionModel().getSelectedItem().toString();
-            user = new User(firstName, lastName, password, email, role);
-            userManager.addToUsers(user);
-            newUserAlert();
-
             // Switch scene to StartView from SignUp View
             lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
             newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -261,21 +219,19 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
             newStage.getIcons().add(icon);
             newStage.setScene(scene);
             newStage.show();
-
         }
-
-
-        /**
-         * @author Jakob Hagman
-         * This method prints the created userobject to the console.
-         */
-        public void newUserAlert() {
-            System.out.println("NEW USER!\n" + user.toString());
-        }
-
 
         public void newUser(User u) {
             userManager.addToUsers(u);
+        }
+
+        public boolean tryLogin(){
+            boolean success = false;
+            String loginMail = tfEmailSignIn.getText();
+            String password = pfPasswordSignIn.getText();
+            success = userManager.checkPassword(loginMail, password);
+            System.out.println(success);
+            return success;
         }
 
 
@@ -296,7 +252,6 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
         public void getMyTickets() {
             if (user != null) {
                 ArrayList myTickets = new ArrayList(ticketManager.getMyTickets(user.getEmail()));
-
             }
         }
 
@@ -334,36 +289,25 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
             return ticketManager.getTicket(id);
         }
 
-
         /**
          * @param event onAction
-         *              select a role from the Combo-box
+         * select a role from the Combo-box
          */
         @FXML
-        void selectRole(ActionEvent event) {
-            String s = roleComb.getSelectionModel().getSelectedItem().toString();
-        }
-
-        /**
-         * @param url
-         * @param resourceBundle The method append the specific items to the end of this Combo-Box
-         */
-        @Override
-        public void initialize(URL url, ResourceBundle resourceBundle) {
-            ObservableList<String> roleList = FXCollections.observableArrayList("User", "Admin", "Agent");
-            roleComb.setItems(roleList);
+        public void selectRole(ActionEvent event) {
+            role = roleComb.getSelectionModel().getSelectedItem().toString();
         }
 
         /**
          * @return IsFilled == false when email or password input is Empty
          */
-        private boolean isFiealdFilled() {
+        private boolean isFieldFilled() {
             boolean isFilled = true;
             if (tfEmailSignIn.getText().isEmpty()) {
                 isFilled = false;
                 errorMessage = "Please enter the right e-mail!";
             }
-            if (pfPasswordSingIn.getText().isEmpty()) {
+            if (pfPasswordSignIn.getText().isEmpty()) {
                 isFilled = false;
                 if (errorMessage.isEmpty()) {
                     errorMessage = "Please enter the right password!";
@@ -371,7 +315,7 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
                     errorMessage = "Password is Empty!";
                 }
             }
-            errorMessageLable.setText(errorMessage);
+            errorMessageLabel.setText(errorMessage);
             return isFilled;
         }
 
@@ -380,7 +324,6 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
          * Separate thread to get all tickets from DB and add to TicketManager
          */
         private class GetAllTickets extends Thread {
-
             public void run() {
                 ArrayList<Ticket> list = new ArrayList<>();
                 try {
@@ -394,12 +337,10 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
                 }
             }
         }
-
         /**
          * Class extends thread.
          * Uses thread to retrieve all users from the database.
          */
-
         private class GetAllUsers extends Thread {
             @Override
             public void run() {
@@ -410,5 +351,5 @@ METODEN SER TILL ATT LOGGA IN VIA DATABASEN
                 }
             }
         }
-    }
+}
 

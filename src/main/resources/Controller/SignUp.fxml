@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Controller">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Controller">
    <children>
       <VBox prefHeight="400.0" prefWidth="317.0" style="-fx-background-color: #002366;">
          <children>
@@ -33,7 +25,7 @@
                <children>
                   <Pane prefHeight="40.0" prefWidth="257.0">
                      <children>
-                        <TextField fx:id="tfEmailtSignIn" layoutX="18.0" layoutY="19.0" prefHeight="32.0" prefWidth="236.0" promptText="E-mail" />
+                        <TextField fx:id="tfEmailSignIn" focusTraversable="false" layoutX="18.0" layoutY="19.0" prefHeight="32.0" prefWidth="236.0" promptText="E-mail" />
                      </children>
                   </Pane>
                </children>
@@ -42,7 +34,7 @@
                <children>
                   <Pane prefHeight="40.0" prefWidth="256.0">
                      <children>
-                        <PasswordField fx:id="pfPasswordSignIn" layoutX="19.0" layoutY="12.0" prefHeight="32.0" prefWidth="235.0" promptText="Password" />
+                        <PasswordField fx:id="pfPasswordSignIn" focusTraversable="false" layoutX="19.0" layoutY="12.0" prefHeight="32.0" prefWidth="235.0" promptText="Password" />
                      </children>
                   </Pane>
                </children>
@@ -60,7 +52,7 @@
             </Button>
             <Pane prefHeight="148.0" prefWidth="316.0">
                <children>
-                  <Label fx:id="errorMessageLable" alignment="CENTER" layoutX="4.0" layoutY="16.0" prefHeight="121.0" prefWidth="305.0" textFill="#ff0f0f" />
+                  <Label fx:id="errorMessageLabel" alignment="CENTER" layoutX="4.0" layoutY="16.0" prefHeight="121.0" prefWidth="305.0" textFill="#ff0f0f" />
                </children>
             </Pane>
          </children>
@@ -104,7 +96,6 @@
                         </Pane>
                      </children>
                   </HBox>
-                  <ComboBox fx:id="roleComb" layoutX="65.0" layoutY="236.0" onAction="#selectRole" prefWidth="150.0" promptText="Select role" />
                   <HBox layoutX="64.0" layoutY="161.0" prefHeight="26.0" prefWidth="206.0">
                      <opaqueInsets>
                         <Insets />
@@ -120,16 +111,20 @@
                         </Pane>
                      </children>
                   </HBox>
-                  <Text fill="#ada6a6" layoutX="63.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a new user" wrappingWidth="103.3299560546875">
+                  <Text fill="#ada6a6" layoutX="63.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a new user" wrappingWidth="131.3299560546875">
                      <font>
                         <Font name="System Bold Italic" size="13.0" />
                      </font>
                   </Text>
-                  <Button fx:id="btnSignUp" layoutX="92.0" layoutY="285.0" mnemonicParsing="false" onAction="#openMainWindow" prefHeight="29.0" prefWidth="100.0" text="Sign Up" textFill="#686060">
+                  <Button fx:id="btnSignUp" layoutX="66.0" layoutY="297.0" mnemonicParsing="false" onAction="#onSignUpBtnClick" prefHeight="29.0" prefWidth="100.0" text="Sign Up" textFill="#686060">
                      <font>
                         <Font name="Arial Bold Italic" size="14.0" />
                      </font>
                   </Button>
+                  <Label layoutX="66.0" layoutY="233.0" text="Select your role" />
+                  <RadioButton fx:id="adminBtn" layoutX="67.0" layoutY="256.0" mnemonicParsing="false" text="Admin" />
+                  <RadioButton fx:id="userBtn" layoutX="143.0" layoutY="256.0" mnemonicParsing="false" text="User"  />
+                  <RadioButton fx:id="agentBtn" layoutX="210.0" layoutY="256.0" mnemonicParsing="false" text="Agent" />
                </children>
             </Pane>
          </children>
