@@ -112,15 +112,15 @@ public class Controller {
             }if(agentBtn.isSelected()){
                 role = "Agent";
             }
+
             user = new User(firstName,lastName,email,password, role);
-            System.out.println(user.toString());
             dbController.addNormalUser(user);
-            
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("MESSAGE");
             alert.setHeaderText(null);
             alert.setContentText("New user created successfully, now sign in");
-            alert.showAndWait();
+
             tfFirstname.clear();
             tfLastname.clear();
             tfEmail.clear();
