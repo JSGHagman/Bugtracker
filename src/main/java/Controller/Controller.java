@@ -250,11 +250,8 @@ public class Controller {
         public void newTicket(User u, String topic, String comment) throws Exception {
             int id = dbController.newTicket();
             ticket = new Ticket(id,u,topic,comment);
-            //ticket.setId(dbController.newTicket());
-            //ticket.setComment(view.getComment());
-            //ticket.setTopic(view.getTopic());
             ticketManager.addTicketToList(ticket);
-            //dbController.updateTicket(ticket);
+            dbController.updateTicket(ticket);
         }
 
 

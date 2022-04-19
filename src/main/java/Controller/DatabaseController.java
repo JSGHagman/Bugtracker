@@ -78,7 +78,7 @@ public class DatabaseController {
         }
 
     /**
-     * aAuthor Patrik Brandell
+     * @author Patrik Brandell
      * @return int id of last ticket made
      * @throws SQLException
      *
@@ -102,24 +102,39 @@ public class DatabaseController {
         return id;
     }
 
+    /**
+     * @author Patrik Brandell
+     * @param ticket - Ticket object
+     * @throws SQLException
+     * Updates ticket in db with information from ticket object
+     */
     public void updateTicket(Ticket ticket) throws SQLException{
         Connection con = getDBConnection();
-        String QUERY = "UPDATE ticket SET column 2 '" + ticket.getPriority() + "' SET column 3 '" + ticket.getCategory() + "' SET column 4 '" + ticket.getStatus() +
-                "' SET column 5 '" + ticket.getFile() + "' SET column 6 '" + ticket.getTime() + "' SET column 7 '" + ticket.getStartdate() +
-                "' SET column 8 '" + ticket.getEnddate() + "' WHERE id = '" + ticket.getId();
+        String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category ='" + ticket.getCategory() + "', status ='" + ticket.getStatus() +
+              "', files ='" + ticket.getFile() + "', time =" + ticket.getTime() + ", dateopen ='" + ticket.getStartdate() +
+               "', dateclose =" + ticket.getEnddate() + ", topic = '" + ticket.getTopic() + "' WHERE id = " + ticket.getId();
+
+        System.out.println(QUERY);
+
         Statement stmt = con.createStatement();
-        stmt.executeQuery(QUERY);
+        stmt.executeUpdate(QUERY);
         stmt.close();
         con.close();
         updateTicketComments(ticket);
     }
 
+    /**
+     * @author Patrik Brandell
+     * @param ticket current ticket
+     * @throws SQLException
+     * writes comments in table ticketcomments with a new id. Can connect to ticket through ticketId
+     */
     public void updateTicketComments (Ticket ticket) throws SQLException {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
         for (String str : ticket.getComment()) {
-            String QUERY = "INSERT INTO ticketcomments (id, ticketid, comment) VALUES ('" + ticket.getId() + "', '" + str + "')";
-            stmt.executeQuery(QUERY);
+            String QUERY = "INSERT INTO ticketcomments (id, ticketid, comment) VALUES (default,'" + ticket.getId() + "', '" + str + "')";
+            stmt.executeUpdate(QUERY);
         }
         stmt.close();
         con.close();

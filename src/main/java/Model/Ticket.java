@@ -28,6 +28,7 @@ public class Ticket {
         this.user = user;
         this.topic = topic;
         setComment(comment);
+        startdate = new Date();
     }
 
     public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String file) {
