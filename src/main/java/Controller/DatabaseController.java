@@ -21,7 +21,6 @@ public class DatabaseController {
     private Ticket ticket;
     private Controller controller;
 
-
     public DatabaseController(Controller controller) throws SQLException {
         this.controller = controller;
     }
@@ -30,15 +29,13 @@ public class DatabaseController {
         Connection con = null;
         try{
             con = DriverManager.getConnection(url, user, password);
-            System.out.println("CONNECTION ESTABLISHED");
+            //System.out.println("CONNECTION ESTABLISHED");
             return con;
         }catch(Exception e){
             System.out.print(e);
             return null;
         }
     }
-
-
 
     public void addNormalUser (User user) throws SQLException {
         //ESTABLISHES DBCONNECTION
@@ -106,7 +103,6 @@ public class DatabaseController {
     }
 
     public void updateTicket(Ticket ticket) throws SQLException{
-
         Connection con = getDBConnection();
         String QUERY = "UPDATE ticket SET column 2 '" + ticket.getPriority() + "' SET column 3 '" + ticket.getCategory() + "' SET column 4 '" + ticket.getStatus() +
                 "' SET column 5 '" + ticket.getFile() + "' SET column 6 '" + ticket.getTime() + "' SET column 7 '" + ticket.getStartdate() +
@@ -116,8 +112,6 @@ public class DatabaseController {
         stmt.close();
         con.close();
         updateTicketComments(ticket);
-
-
     }
 
     public void updateTicketComments (Ticket ticket) throws SQLException {
@@ -127,7 +121,6 @@ public class DatabaseController {
             String QUERY = "INSERT INTO ticketcomments (id, ticketid, comment) VALUES ('" + ticket.getId() + "', '" + str + "')";
             stmt.executeQuery(QUERY);
         }
-
         stmt.close();
         con.close();
     }
@@ -137,7 +130,7 @@ public class DatabaseController {
      * @throws Exception
      */
     public ArrayList getAllTickets () throws Exception{
-        ArrayList list = new ArrayList();
+        ArrayList list = new ArrayList<Ticket>();
         Connection con = getDBConnection();
         String QUERY = String.format("SELECT * FROM ticket");
         Statement stmt = con.createStatement();
@@ -152,14 +145,12 @@ public class DatabaseController {
             String time = rs.getString("time");
             Date startdate = rs.getDate("dateopen");
             Date enddate = rs.getDate("dateclose");
-
             ticket = new Ticket(id, category, status, priority, startdate, enddate, file);
             list.add(ticket);
 
         }
         stmt.close();
         con.close();
-
         return list;
     }
 

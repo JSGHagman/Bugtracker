@@ -1,12 +1,16 @@
 package Model;
-
 import java.util.ArrayList;
-
-
 public class UserManager {
     private final ArrayList<User> users;
-    public UserManager() {
+    private User signedInUser;
+    private static UserManager instance = new UserManager();
+
+    private UserManager() {
         users = new ArrayList<>();
+    }
+
+    public static UserManager getInstance(){
+        return instance;
     }
 
     public void printUserList(){
@@ -35,9 +39,18 @@ public class UserManager {
         for (User u : users) {
             if (u.getPassword().equals(password) && u.getEmail().equals(email)) {
                 found = true;
+                setSignedInUser(u);
             }
         }
         return found;
+    }
+
+    public void setSignedInUser(User signedInUser) {
+        this.signedInUser = signedInUser;
+    }
+
+    public User getSignedInUser() {
+        return signedInUser;
     }
 
 }

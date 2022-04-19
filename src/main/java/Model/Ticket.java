@@ -19,8 +19,6 @@ public class Ticket {
     private Date enddate;
     private String file;
 
-
-
     public Ticket (User user) {
         this.user = user;
     }

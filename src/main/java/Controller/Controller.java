@@ -64,8 +64,8 @@ public class Controller {
 
 
         public Controller() {
-            userManager = new UserManager();
-            ticketManager = new TicketManager();
+            userManager = UserManager.getInstance();
+            ticketManager = TicketManager.getInstance();
             try {
                 dbController = new DatabaseController(this);
             } catch (SQLException e) {
@@ -234,27 +234,29 @@ public class Controller {
             String password = pfPasswordSignIn.getText();
             success = userManager.checkPassword(loginMail, password);
             System.out.println(success);
+            signedInUser = userManager.getSignedInUser();
             return success;
         }
-
 
         /**
          * @throws Exception
          * @author Patrik Brandell
          * Creates new ticket with current user, creates DB entry and adds id to ticket object
          */
-        public void newTicket() throws Exception {
-            ticket = new Ticket(user);
-            ticket.setId(dbController.newTicket());
+        public void newTicket(User u, String topic, String comment) throws Exception {
+            int id = dbController.newTicket();
+            ticket = new Ticket(id,u,topic,comment);
+            //ticket.setId(dbController.newTicket());
+            //ticket.setComment(view.getComment());
+            //ticket.setTopic(view.getTopic());
             ticketManager.addTicketToList(ticket);
-            ticket.setComment(view.getComment());
-            ticket.setTopic(view.getTopic());
+            //dbController.updateTicket(ticket);
         }
 
 
         public void updateTicket() throws Exception {
             if (ticket == null) {
-                newTicket();
+                //newTicket();
             }
             dbController.updateTicket(ticket);
         }
@@ -301,7 +303,6 @@ public class Controller {
         public Ticket getMarkedTicket(int id) {
             return ticketManager.getTicket(id);
         }
-
         /**
          * @param event onAction
          * select a role from the Combo-box
@@ -350,6 +351,7 @@ public class Controller {
 
             public void newTicketGUI () {
             view = new MainFrame(this);
+
             }
 
         /**
@@ -366,7 +368,7 @@ public class Controller {
                 }
                 for (Ticket t : list) {
                     ticketManager.addTicketToList(t);
-                    System.out.println(t.getId());
+                    //System.out.println(t.getId());
                 }
             }
         }

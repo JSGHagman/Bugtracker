@@ -1,21 +1,29 @@
 package View;
 
 import Controller.Controller;
-
+import Model.TicketManager;
+import Model.User;
+import Model.UserManager;
 import javax.swing.*;
+import java.sql.SQLException;
 
 public class MainFrame extends JFrame {
     private int width = 600;
     private int height = 600;
     private MainPanel mainPanel;
     private Controller controller;
+    private UserManager userManager;
+    private TicketManager ticketManager;
 
     public MainFrame(Controller controller){
         setUpframe();
         this.controller = controller;
+        this.userManager = UserManager.getInstance();
+        setCurrUser(userManager.getSignedInUser());
+        this.ticketManager = TicketManager.getInstance();
     }
 
-    public void setUpframe(){
+    public void setUpframe() {
         final int offsetX = width/5;
         final int offsetY = height/5;
 
@@ -31,17 +39,14 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    public void setCurrUser(String username) {
-        mainPanel.getSouthPanel().setUser(username);
+    public void setCurrUser(User user) {
+        mainPanel.getSouthPanel().setUser(user);
     }
+
     public String getTopic() {
         return mainPanel.getSouthPanel().getTopic();
     }
     public String getComment() {
         return mainPanel.getSouthPanel().getComment();
-    }
-
-    public static void main(String[] args) {
-        new MainFrame(new Controller());
     }
 }

@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class MainPanel extends JPanel {
     private int width;
@@ -14,14 +15,14 @@ public class MainPanel extends JPanel {
     private BorderLayout layout;
     private Controller controller;
 
-    public MainPanel(Controller controller, int width, int height){
+    public MainPanel(Controller controller, int width, int height) {
         this.width = width;
         this.height = height;
         this.controller = controller;
         setUpPanel();
     }
 
-    public void setUpPanel(){
+    public void setUpPanel() {
         layout = new BorderLayout();
         setLayout(layout);
 

@@ -33,6 +33,7 @@ public class CenterPanel extends JPanel {
 
 
     public void showTicketsInView(String[] str){
+        list.removeAll();
         list.setListData(str);
     }
 }

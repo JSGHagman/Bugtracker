@@ -3,11 +3,15 @@ package Model;
 import java.util.ArrayList;
 
 public class TicketManager {
-
     private final ArrayList<Ticket> tickets;
+    private static TicketManager instance = new TicketManager();
 
-    public TicketManager() {
+    private TicketManager() {
         tickets = new ArrayList<>();
+    }
+
+    public static TicketManager getInstance(){
+        return instance;
     }
 
     public void addTicketToList(Ticket ticket) {
@@ -26,7 +30,6 @@ public class TicketManager {
      */
 
     public ArrayList getMyTickets (String email) {
-
         ArrayList myTickets = new ArrayList();
         for (Ticket t : tickets) {
             if (t.getUser() != null) {
@@ -55,8 +58,11 @@ public class TicketManager {
                     System.out.print(t);
                 }
             }
-
         return unassignedTickets;
+    }
+
+    public ArrayList getAllTickets(){
+        return tickets;
     }
 
     /**
