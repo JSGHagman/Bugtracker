@@ -17,33 +17,26 @@ public class User {
      * @param email
      * @param role
      */
-    public User(String firstName, String lastName, String password, String email, String role){
+    public User(String firstName, String lastName, String email, String password, String role){
+
         if(firstName.equals(null)){
             this.firstName = "";
         } else{
             this.firstName = firstName;
-        }
-
-        if(lastName.equals(null)){
+        } if(lastName.equals(null)){
             this.lastName = "";
         }else{
             this.lastName = lastName;
-        }
-
-        if(password.equals(null)){
+        } if(password.equals(null)){
             this.password = "";
         }else{
             this.password = password;
-        }
-
-        if(email.equals(null)){
+        } if(email.equals(null)){
             this.email = "";
         }else{
             this.email = email;
-        }
-
-        if(role.equals(null)){
-            this.role = null;
+        } if(role.equals(null)) {
+            this.role = "";
         }else{
             this.role = role;
         }
@@ -92,5 +85,6 @@ public class User {
     @Override
     public String toString() {
         return String.format("NAME: %s %s\nEMAIL: %s\nPASSWORD: %s\nROLE: %s", this.firstName, this.lastName, this.email, this.password, this.role);
+
     }
 }

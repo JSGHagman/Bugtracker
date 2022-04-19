@@ -4,22 +4,22 @@ import java.util.ArrayList;
 
 
 public class UserManager {
-
-
     private final ArrayList<User> users;
-
-
     public UserManager() {
         users = new ArrayList<>();
     }
 
+    public void printUserList(){
+        for(User u : users){
+            System.out.println(u.toString());
+        }
+    }
     /**
      * This method adds a new user to an ArrayList of users.
      * @param user
      */
     public void addToUsers(User user) {
         users.add(user);
-        System.out.println(user.toString());
     }
 
     /**
