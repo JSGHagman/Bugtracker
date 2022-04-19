@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 
 public class MainView {
     public MainView(Stage stage) throws Exception {
-
         Group root = new Group();
         Scene scene = new Scene(root, 600, 700, Color.CORAL);
 
