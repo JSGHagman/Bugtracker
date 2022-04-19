@@ -22,28 +22,14 @@ import java.util.ResourceBundle;
 
 public class Controller {
         private Scene scene;
-        private Stage newStage;
-        private Stage sigOut;
-        private Parent lroot;
-        private Parent root2;
-        private Parent troot;
-        private Parent sroot;
-        private Parent seroot;
-        private Parent mroot;
-        private Parent pRoot;
-        private Parent uRoot;
+        private Stage newStage, sigOut;
+        private Parent lroot, root2, troot, sroot, seroot, mroot, pRoot, uRoot;
         private UserManager userManager;
-        private User user;
+        private User user, signedInUser;
         private TicketManager ticketManager;
         private DatabaseController dbController;
         private Ticket ticket;
-        private String userName;
-        private String email;
-        private String firstName;
-        private String lastName;
-        private String role;
-        private String password;
-        private String errorMessage = "";
+        private String userName, email, firstName, lastName, role, password, errorMessage;
         private MainFrame view;
         @FXML
         private Button btnSignUp;
@@ -359,7 +345,7 @@ public class Controller {
             }
 
             public void newTicketGUI () {
-            view = new MainFrame(800, 600, this);
+            view = new MainFrame(this);
             }
 
         /**

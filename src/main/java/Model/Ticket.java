@@ -20,15 +20,16 @@ public class Ticket {
     private String file;
 
 
+
     public Ticket (User user) {
         this.user = user;
     }
 
-    public Ticket (User user, String topic, String comment) {
+    public Ticket (int id, User user, String topic, String comment) {
+        this.id = id;
         this.user = user;
         this.topic = topic;
-        this.comment.add(comment);
-
+        setComment(comment);
     }
 
     public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String file) {
@@ -147,5 +148,10 @@ public class Ticket {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %s | OWNER: %s | TOPIC: %s | COMMENTS: %s", this.id, this.user, this.topic, this.comment);
     }
 }

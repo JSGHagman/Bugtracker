@@ -1,30 +1,47 @@
 package View;
-import javax.swing.*;
+
 import Controller.Controller;
 
+import javax.swing.*;
+
 public class MainFrame extends JFrame {
+    private int width = 600;
+    private int height = 600;
     private MainPanel mainPanel;
     private Controller controller;
 
+    public MainFrame(Controller controller){
+        setUpframe();
+        this.controller = controller;
+    }
 
-    public MainFrame(int width, int height, Controller controller) {
-    this.controller = controller;
-        this.setResizable(false);
-        this.setSize(width, height);
-        this.mainPanel = new MainPanel(width, height, controller);
-        this.setContentPane(mainPanel);
-        this.setVisible(true);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    public void setUpframe(){
+        final int offsetX = width/5;
+        final int offsetY = height/5;
 
+        setSize(width, height);
+        setTitle("Ticket Window");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocation(offsetX, offsetY);
+
+        mainPanel = new MainPanel(controller ,width, height);
+        setContentPane(mainPanel);
+        setResizable(false);
+        pack();
+        setVisible(true);
     }
 
     public void setCurrUser(String username) {
-        mainPanel.setCurrUser(username);
+        mainPanel.getSouthPanel().setUser(username);
     }
     public String getTopic() {
-        return mainPanel.getTopic().getText();
+        return mainPanel.getSouthPanel().getTopic();
     }
     public String getComment() {
-        return mainPanel.getComment().getText();
+        return mainPanel.getSouthPanel().getComment();
+    }
+
+    public static void main(String[] args) {
+        new MainFrame(new Controller());
     }
 }

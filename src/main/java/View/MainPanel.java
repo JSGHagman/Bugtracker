@@ -1,77 +1,42 @@
 package View;
 
 import Controller.Controller;
-import Model.Ticket;
-
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 public class MainPanel extends JPanel {
-
-    private JTextField topic;
-    private JTextArea comment;
-    private JLabel currUser;
-    private JButton exit;
-    private JButton save;
+    private int width;
+    private int height;
+    private SouthPanel southPanel;
+    private CenterPanel centerPanel;
+    private BorderLayout layout;
     private Controller controller;
 
-
-
-    public MainPanel(int width, int height, Controller controller) {
-        super(new GridLayout(10, 1));
+    public MainPanel(Controller controller, int width, int height){
+        this.width = width;
+        this.height = height;
         this.controller = controller;
-        this.setSize(width, height);
-        setUp();
+        setUpPanel();
     }
 
-    public void setUp () {
-        topic = new JTextField("Topic");
-        topic.setVisible(true);
-        add(topic);
+    public void setUpPanel(){
+        layout = new BorderLayout();
+        setLayout(layout);
 
-        comment = new JTextArea("Beskriv ärendet");
-        add(comment);
+        Border border = this.getBorder();
+        Border margin = BorderFactory.createEmptyBorder(6,6,6,6);
+        setBorder(new CompoundBorder(border, margin));
 
-        currUser = new JLabel("Current user");
-        add(currUser);
-
-        exit = new JButton("EXIT");
-        add(exit);
-
-        save = new JButton("Spara ärende");
-        save.addActionListener(l -> {
-            try {
-                controller.updateTicket();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        add(save);
-
-
+        centerPanel = new CenterPanel(controller,6*width/10, (8*height/10)-100, 6);
+        southPanel = new SouthPanel(centerPanel, controller, width,(height/8)+200, 6);
+        add(southPanel, BorderLayout.SOUTH);
+        add(centerPanel, BorderLayout.CENTER);
     }
 
-    public JTextField getTopic() {
-        return topic;
+    public SouthPanel getSouthPanel(){
+        return southPanel;
     }
 
-    public void setTopic(JTextField topic) {
-        this.topic = topic;
-    }
-
-    public JTextArea getComment() {
-        return comment;
-    }
-
-    public void setComment(JTextArea comment) {
-        this.comment = comment;
-    }
-
-    public JLabel getCurrUser() {
-        return currUser;
-    }
-
-    public void setCurrUser(String currUser) {
-        this.currUser.setText(currUser);
-    }
 }
