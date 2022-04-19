@@ -124,12 +124,14 @@ public class Controller {
                 alert.setTitle("MESSAGE");
                 alert.setHeaderText(null);
                 alert.setContentText("New user created successfully, now sign in");
+                alert.show();
 
                 tfFirstname.clear();
                 tfLastname.clear();
                 tfEmail.clear();
                 pfPassword.clear();
-            }else{
+
+            } else {
                 Alert error = new Alert(Alert.AlertType.ERROR);
                 error.setTitle("ERROR");
                 error.setHeaderText(null);
@@ -139,9 +141,11 @@ public class Controller {
         }
 
         @FXML
-        public void onSignInBtnClick(ActionEvent event) {
+        public void onSignInBtnClick(ActionEvent event) throws IOException {
             if(isFieldFilledLogin()){
-                tryLogin();
+                if(tryLogin()){
+                    openMainWindow(event);
+                }
             }
         }
 
