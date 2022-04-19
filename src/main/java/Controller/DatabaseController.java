@@ -87,21 +87,50 @@ public class DatabaseController {
      *
      */
     public int newTicket() throws SQLException {
-        int id;
+        int id = 0;
         Connection con = getDBConnection();
         //Create empty ticket
         String QUERY = "INSERT INTO ticket(id) VALUES (default)";
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         //Get ID from ticket
-        QUERY = "SELECT TOP 1 * from ticket ORDER by id DESC";
-        id = stmt.executeUpdate(QUERY);
+        QUERY = "SELECT id from ticket ORDER by id DESC limit 1";
+        ResultSet rs = stmt.executeQuery(QUERY);
+        while (rs.next()) {
+            id = Integer.parseInt(rs.getObject(1).toString());
+        }
         stmt.close();
         con.close();
 
         return id;
     }
 
+    public void updateTicket(Ticket ticket) throws SQLException{
+
+        Connection con = getDBConnection();
+        String QUERY = "UPDATE ticket SET column 2 '" + ticket.getPriority() + "' SET column 3 '" + ticket.getCategory() + "' SET column 4 '" + ticket.getStatus() +
+                "' SET column 5 '" + ticket.getFile() + "' SET column 6 '" + ticket.getTime() + "' SET column 7 '" + ticket.getStartdate() +
+                "' SET column 8 '" + ticket.getEnddate() + "' WHERE id = '" + ticket.getId();
+        Statement stmt = con.createStatement();
+        stmt.executeQuery(QUERY);
+        stmt.close();
+        con.close();
+        updateTicketComments(ticket);
+
+
+    }
+
+    public void updateTicketComments (Ticket ticket) throws SQLException {
+        Connection con = getDBConnection();
+        Statement stmt = con.createStatement();
+        for (String str : ticket.getComment()) {
+            String QUERY = "INSERT INTO ticketcomments (id, ticketid, comment) VALUES ('" + ticket.getId() + "', '" + str + "')";
+            stmt.executeQuery(QUERY);
+        }
+
+        stmt.close();
+        con.close();
+    }
     /**
      * @author Patrik Brandell
      * @return ArrayList of all current tickets in db

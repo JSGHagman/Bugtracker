@@ -1,5 +1,6 @@
 package Controller;
 import Model.*;
+import View.MainFrame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -43,6 +44,7 @@ public class Controller {
         private String role;
         private String password;
         private String errorMessage = "";
+        private MainFrame view;
         @FXML
         private Button btnSignUp;
         @FXML
@@ -255,6 +257,16 @@ public class Controller {
             ticket = new Ticket(user);
             ticket.setId(dbController.newTicket());
             ticketManager.addTicketToList(ticket);
+            ticket.setComment(view.getComment());
+            ticket.setTopic(view.getTopic());
+        }
+
+
+        public void updateTicket() throws Exception {
+            if (ticket == null) {
+                newTicket();
+            }
+            dbController.updateTicket(ticket);
         }
 
         /**
@@ -346,6 +358,10 @@ public class Controller {
                 return isFilled;
             }
 
+            public void newTicketGUI () {
+            view = new MainFrame(800, 600, this);
+            }
+
         /**
          * @Author Patrik Brandell
          * Separate thread to get all tickets from DB and add to TicketManager
@@ -378,5 +394,6 @@ public class Controller {
                 }
             }
         }
+
 }
 

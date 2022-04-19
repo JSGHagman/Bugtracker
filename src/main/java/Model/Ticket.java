@@ -6,6 +6,8 @@ import java.util.Date;
 
 public class Ticket {
 
+    private String topic;
+    private ArrayList<String> comment = new ArrayList<>();
     private int id;
     private String category;
     private String status;
@@ -20,6 +22,13 @@ public class Ticket {
 
     public Ticket (User user) {
         this.user = user;
+    }
+
+    public Ticket (User user, String topic, String comment) {
+        this.user = user;
+        this.topic = topic;
+        this.comment.add(comment);
+
     }
 
     public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String file) {
@@ -90,5 +99,53 @@ public class Ticket {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public ArrayList<String> getComment() {
+        return comment;
+    }
+
+    public void setComment(ArrayList<String> comment) {
+        this.comment = comment;
+    }
+
+    public void setComment (String comment) {
+        this.comment.add(comment);
+    }
+
+    public void setAgent(ArrayList<User> agent) {
+        this.agent = agent;
+    }
+
+    public Date getStartdate() {
+        return startdate;
+    }
+
+    public void setStartdate(Date startdate) {
+        this.startdate = startdate;
+    }
+
+    public Date getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(Date enddate) {
+        this.enddate = enddate;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 }
