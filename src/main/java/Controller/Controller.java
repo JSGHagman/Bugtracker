@@ -100,36 +100,46 @@ public class Controller {
 
         @FXML
         public void onSignUpBtnClick(ActionEvent event) throws SQLException {
-            firstName = tfFirstname.getText();
-            lastName = tfLastname.getText();
-            email = tfEmail.getText();
-            password = pfPassword.getText();
+            if(isFieldFilledSignUp()){
+                firstName = tfFirstname.getText();
+                lastName = tfLastname.getText();
+                email = tfEmail.getText();
+                password = pfPassword.getText();
 
-            if(adminBtn.isSelected()){
-                role = "Admin";
-            }if(userBtn.isSelected()){
-                role = "User";
-            }if(agentBtn.isSelected()){
-                role = "Agent";
+                if(adminBtn.isSelected()){
+                    role = "Admin";
+                }if(userBtn.isSelected()){
+                    role = "User";
+                }if(agentBtn.isSelected()){
+                    role = "Agent";
+                }else{
+                    role = "User";
+                }
+
+                user = new User(firstName,lastName,email,password, role);
+                dbController.addNormalUser(user);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("MESSAGE");
+                alert.setHeaderText(null);
+                alert.setContentText("New user created successfully, now sign in");
+
+                tfFirstname.clear();
+                tfLastname.clear();
+                tfEmail.clear();
+                pfPassword.clear();
+            }else{
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("ERROR");
+                error.setHeaderText(null);
+                error.setContentText("Not all fields were filled in, try again");
+                error.show();
             }
-
-            user = new User(firstName,lastName,email,password, role);
-            dbController.addNormalUser(user);
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("MESSAGE");
-            alert.setHeaderText(null);
-            alert.setContentText("New user created successfully, now sign in");
-
-            tfFirstname.clear();
-            tfLastname.clear();
-            tfEmail.clear();
-            pfPassword.clear();
         }
 
         @FXML
         public void onSignInBtnClick(ActionEvent event) {
-            if(isFieldFilled()){
+            if(isFieldFilledLogin()){
                 tryLogin();
             }
         }
@@ -301,7 +311,7 @@ public class Controller {
         /**
          * @return IsFilled == false when email or password input is Empty
          */
-        private boolean isFieldFilled() {
+        private boolean isFieldFilledLogin() {
             boolean isFilled = true;
             if (tfEmailSignIn.getText().isEmpty()) {
                 isFilled = false;
@@ -318,6 +328,22 @@ public class Controller {
             errorMessageLabel.setText(errorMessage);
             return isFilled;
         }
+
+        /**
+         * Checks if any of the fields in the sign up fields is empty
+         * @author Jakob Hagman
+         * @return boolean
+         */
+        private boolean isFieldFilledSignUp() {
+                boolean isFilled = true;
+                if (tfFirstname.getText().isEmpty()
+                        || tfLastname.getText().isEmpty()
+                        || tfEmail.getText().isEmpty()
+                        || pfPassword.getText().isEmpty()) {
+                    isFilled = false;
+                }
+                return isFilled;
+            }
 
         /**
          * @Author Patrik Brandell
