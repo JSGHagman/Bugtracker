@@ -233,6 +233,10 @@ public class Controller {
             String loginMail = tfEmailSignIn.getText();
             String password = pfPasswordSignIn.getText();
             success = userManager.checkPassword(loginMail, password);
+            if(!success){
+                errorMessage = "Wrong e-mail or password!";
+                errorMessageLabel.setText(errorMessage);
+            }
             System.out.println(success);
             signedInUser = userManager.getSignedInUser();
             return success;
@@ -317,17 +321,9 @@ public class Controller {
          */
         private boolean isFieldFilledLogin() {
             boolean isFilled = true;
-            if (tfEmailSignIn.getText().isEmpty()) {
+            if (tfEmailSignIn.getText().isEmpty() || pfPasswordSignIn.getText().isEmpty()) {
                 isFilled = false;
-                errorMessage = "Please enter the right e-mail!";
-            }
-            if (pfPasswordSignIn.getText().isEmpty()) {
-                isFilled = false;
-                if (errorMessage.isEmpty()) {
-                    errorMessage = "Please enter the right password!";
-                } else {
-                    errorMessage = "Password is Empty!";
-                }
+                errorMessage = "Missing e-mail or password";
             }
             errorMessageLabel.setText(errorMessage);
             return isFilled;
