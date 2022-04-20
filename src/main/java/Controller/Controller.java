@@ -66,11 +66,7 @@ public class Controller {
         public Controller() {
             userManager = UserManager.getInstance();
             ticketManager = TicketManager.getInstance();
-            try {
-                dbController = new DatabaseController(this);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            dbController = new DatabaseController(this);
             getAllUsers();
         }
 

@@ -21,7 +21,7 @@ public class DatabaseController {
     private Ticket ticket;
     private Controller controller;
 
-    public DatabaseController(Controller controller) throws SQLException {
+    public DatabaseController(Controller controller)  {
         this.controller = controller;
     }
 
