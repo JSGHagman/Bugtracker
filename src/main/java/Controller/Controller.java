@@ -107,6 +107,7 @@ public class Controller {
 
                 user = new User(firstName,lastName,email,password, role);
                 dbController.addNormalUser(user);
+                userManager.addToUsers(user);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("MESSAGE");
