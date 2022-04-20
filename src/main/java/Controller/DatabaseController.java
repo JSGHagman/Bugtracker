@@ -21,30 +21,28 @@ public class DatabaseController {
     private Ticket ticket;
     private Controller controller;
 
-    public DatabaseController(Controller controller)  {
+    public DatabaseController(Controller controller) {
         this.controller = controller;
     }
 
-    public Connection getDBConnection(){
+    public Connection getDBConnection() {
         Connection con = null;
-        try{
+        try {
             con = DriverManager.getConnection(url, user, password);
             //System.out.println("CONNECTION ESTABLISHED");
             return con;
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.print(e);
             return null;
         }
     }
 
-    public void addNormalUser (User user) throws SQLException {
+    public void addNormalUser(User user) throws SQLException {
         //ESTABLISHES DBCONNECTION
         Connection con = getDBConnection();
         //SPECIFIES QUERY
         String QUERY = "INSERT INTO userid (firstname, lastname, email, password, role)" +
                 "VALUES ('" + user.getFirstName() + "','" + user.getLastName() + "','" + user.getEmail() + "','" + user.getPassword() + "','" + user.getRole() + "')";
-
-
         //EXECUTES QUERY
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
@@ -52,36 +50,35 @@ public class DatabaseController {
     }
 
     /**
-     * @author Jakob Hagman
-     * Method used to get all registered users from the database when the application starts
      * @return ArrayList of userobjects
      * @throws Exception
-    */
+     * @author Jakob Hagman
+     * Method used to get all registered users from the database when the application starts
+     */
     public void getAllUsers() throws SQLException {
         Connection con = getDBConnection();
         String QUERY = String.format("SELECT * FROM userid");
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(QUERY);
 
-        while(rs.next()){
+        while (rs.next()) {
             User u = null;
             String firstName = rs.getString("firstname");
-            String lastName =  rs.getString("lastname");
+            String lastName = rs.getString("lastname");
             String email = rs.getString("email");
             String password = rs.getString("password");
             String role = rs.getString("role");
             u = new User(firstName, lastName, email, password, role);
             controller.newUser(u);
-            }
-            stmt.close();
-            con.close();
         }
+        stmt.close();
+        con.close();
+    }
 
     /**
-     * @author Patrik Brandell
      * @return int id of last ticket made
      * @throws SQLException
-     *
+     * @author Patrik Brandell
      */
     public int newTicket() throws SQLException {
         int id = 0;
@@ -103,18 +100,16 @@ public class DatabaseController {
     }
 
     /**
-     * @author Patrik Brandell
      * @param ticket - Ticket object
-     * @throws SQLException
-     * Updates ticket in db with information from ticket object
+     * @throws SQLException Updates ticket in db with information from ticket object
+     * @author Patrik Brandell
      */
-    public void updateTicket(Ticket ticket) throws SQLException{
+    public void updateTicket(Ticket ticket) throws SQLException {
         Connection con = getDBConnection();
         String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category =" + fixSQLString(ticket.getCategory()) +
                 ", status =" + fixSQLString(ticket.getStatus()) + ", files =" + fixSQLString(ticket.getFile()) + ", time =" + ticket.getTime() +
                 ", dateopen =" + fixSQLDate(ticket.getStartdate()) + ", dateclose =" + fixSQLDate(ticket.getEnddate()) +
                 ", topic = " + fixSQLString(ticket.getTopic()) + " WHERE id = " + ticket.getId();
-
 
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
@@ -124,12 +119,11 @@ public class DatabaseController {
     }
 
     /**
-     * @author Patrik Brandell
      * @param ticket current ticket
-     * @throws SQLException
-     * writes comments in table ticketcomments with a new id. Can connect to ticket through ticketId
+     * @throws SQLException writes comments in table ticketcomments with a new id. Can connect to ticket through ticketId
+     * @author Patrik Brandell
      */
-    public void updateTicketComments (Ticket ticket) throws SQLException {
+    public void updateTicketComments(Ticket ticket) throws SQLException {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
         for (String str : ticket.getComment()) {
@@ -139,12 +133,13 @@ public class DatabaseController {
         stmt.close();
         con.close();
     }
+
     /**
-     * @author Patrik Brandell
      * @return ArrayList of all current tickets in db
      * @throws Exception
+     * @author Patrik Brandell
      */
-    public ArrayList getAllTickets () throws Exception{
+    public ArrayList getAllTickets() throws Exception {
         ArrayList list = new ArrayList<Ticket>();
         Connection con = getDBConnection();
         String QUERY = String.format("SELECT * FROM ticket");
@@ -170,34 +165,32 @@ public class DatabaseController {
     }
 
     /**
-     * @author Patrik Brandell
      * @param str or null
      * @return string or null which can be used in SQLQuery
+     * @author Patrik Brandell
      */
 
-    public String fixSQLString (String str) {
+    public String fixSQLString(String str) {
         boolean isNull = str == null;
         if (!isNull) {
-            str = "'"+str+"'";
+            str = "'" + str + "'";
             return str;
-        }
-        else {
+        } else {
             return null;
         }
     }
 
     /**
-     * @author Patrik Brandell
      * @param date or null
      * @return date or null which can be used in SQLQuery
+     * @author Patrik Brandell
      */
-    public String fixSQLDate (Date date) {
+    public String fixSQLDate(Date date) {
         boolean isNull = date == null;
         if (!isNull) {
-           String strdate = "'"+date.toString()+"'";
-           return strdate;
-        }
-        else {
+            String strdate = "'" + date.toString() + "'";
+            return strdate;
+        } else {
             return null;
         }
     }
