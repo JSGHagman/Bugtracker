@@ -169,6 +169,12 @@ public class DatabaseController {
         return list;
     }
 
+    /**
+     * @author Patrik Brandell
+     * @param str or null
+     * @return string or null which can be used in SQLQuery
+     */
+
     public String fixSQLString (String str) {
         boolean isNull = str == null;
         if (!isNull) {
@@ -179,6 +185,12 @@ public class DatabaseController {
             return null;
         }
     }
+
+    /**
+     * @author Patrik Brandell
+     * @param date or null
+     * @return date or null which can be used in SQLQuery
+     */
     public String fixSQLDate (Date date) {
         boolean isNull = date == null;
         if (!isNull) {
