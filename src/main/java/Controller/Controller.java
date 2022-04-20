@@ -46,8 +46,6 @@ public class Controller {
         @FXML
         private Label pEmailText;
         @FXML
-        private ComboBox roleComb;
-        @FXML
         private Button btnSignIn;
         @FXML
         private TextField tfEmailSignIn;
@@ -234,7 +232,7 @@ public class Controller {
                 errorMessage = "Wrong e-mail or password!";
                 errorMessageLabel.setText(errorMessage);
             }
-            System.out.println(success);
+            //System.out.println(success);
             signedInUser = userManager.getSignedInUser();
             return success;
         }
@@ -300,14 +298,6 @@ public class Controller {
          */
         public Ticket getMarkedTicket(int id) {
             return ticketManager.getTicket(id);
-        }
-        /**
-         * @param event onAction
-         * select a role from the Combo-box
-         */
-        @FXML
-        public void selectRole(ActionEvent event) {
-            role = roleComb.getSelectionModel().getSelectedItem().toString();
         }
 
         /**
