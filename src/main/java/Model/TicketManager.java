@@ -28,7 +28,6 @@ public class TicketManager {
      * Method filters out tickets based on username input and return ArrayList
      * @return List of mytickets for both users and agents
      */
-
     public ArrayList getMyTickets (String email) {
         ArrayList myTickets = new ArrayList();
         for (Ticket t : tickets) {

@@ -40,16 +40,12 @@ public class SouthPanel extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(width, height));
         createImportantStuff();
         ticketManager = TicketManager.getInstance();
-
         try{
             this.dbController = new DatabaseController(controller);
             this.controller.getAllTickets();
-        } catch(SQLException e){
-            e.printStackTrace();
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
-
         //setTickets(ticketManager.getAllTickets());
     }
 

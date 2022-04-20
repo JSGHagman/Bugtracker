@@ -169,7 +169,6 @@ public class DatabaseController {
      * @return string or null which can be used in SQLQuery
      * @author Patrik Brandell
      */
-
     public String fixSQLString(String str) {
         boolean isNull = str == null;
         if (!isNull) {
