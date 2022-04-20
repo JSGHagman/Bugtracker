@@ -110,11 +110,11 @@ public class DatabaseController {
      */
     public void updateTicket(Ticket ticket) throws SQLException{
         Connection con = getDBConnection();
-        String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category ='" + ticket.getCategory() + "', status ='" + ticket.getStatus() +
-              "', files ='" + ticket.getFile() + "', time =" + ticket.getTime() + ", dateopen ='" + ticket.getStartdate() +
-               "', dateclose =" + ticket.getEnddate() + ", topic = '" + ticket.getTopic() + "' WHERE id = " + ticket.getId();
+        String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category =" + fixSQLString(ticket.getCategory()) +
+                ", status =" + fixSQLString(ticket.getStatus()) + ", files =" + fixSQLString(ticket.getFile()) + ", time =" + ticket.getTime() +
+                ", dateopen =" + fixSQLDate(ticket.getStartdate()) + ", dateclose =" + fixSQLDate(ticket.getEnddate()) +
+                ", topic = " + fixSQLString(ticket.getTopic()) + " WHERE id = " + ticket.getId();
 
-        System.out.println(QUERY);
 
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
@@ -133,7 +133,7 @@ public class DatabaseController {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
         for (String str : ticket.getComment()) {
-            String QUERY = "INSERT INTO ticketcomments (id, ticketid, comment) VALUES (default,'" + ticket.getId() + "', '" + str + "')";
+            String QUERY = "INSERT INTO ticketcomments (id, ticketid, comment) VALUES (default," + ticket.getId() + ", " + fixSQLString(str) + ")";
             stmt.executeUpdate(QUERY);
         }
         stmt.close();
@@ -169,6 +169,38 @@ public class DatabaseController {
         return list;
     }
 
+    /**
+     * @author Patrik Brandell
+     * @param str or null
+     * @return string or null which can be used in SQLQuery
+     */
+
+    public String fixSQLString (String str) {
+        boolean isNull = str == null;
+        if (!isNull) {
+            str = "'"+str+"'";
+            return str;
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * @author Patrik Brandell
+     * @param date or null
+     * @return date or null which can be used in SQLQuery
+     */
+    public String fixSQLDate (Date date) {
+        boolean isNull = date == null;
+        if (!isNull) {
+           String strdate = "'"+date.toString()+"'";
+           return strdate;
+        }
+        else {
+            return null;
+        }
+    }
 
 
 }
