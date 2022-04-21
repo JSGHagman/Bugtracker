@@ -1,5 +1,4 @@
 package Controller;
-
 import Model.Ticket;
 import Model.User;
 
@@ -12,9 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.*;
 import java.util.Date;
-
 public class DatabaseController {
-
     private final String url = "jdbc:postgresql://pgserver.mau.se:5432/bugtracker";
     private final String user = "am4032";
     private final String password = "krhi9kxm";
@@ -60,7 +57,6 @@ public class DatabaseController {
         String QUERY = String.format("SELECT * FROM userid");
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(QUERY);
-
         while (rs.next()) {
             User u = null;
             String firstName = rs.getString("firstname");
