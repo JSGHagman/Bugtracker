@@ -34,33 +34,15 @@ public class Controller {
     private String userName, email, firstName, lastName, role, password, errorMessage;
     private MainFrame view;
     @FXML
-    private Button btnSignUp;
+    private Button btnSignUp, btnSignIn;
     @FXML
-    private PasswordField pfPassword;
+    private PasswordField pfPassword, pfPasswordSignIn;
     @FXML
-    private TextField tfEmail;
+    private TextField tfEmail, tfFirstname, tfLastname, tfEmailSignIn;
     @FXML
-    private TextField tfFirstname;
+    private Label pEmailText, pUsernameText, errorMessageLabel;
     @FXML
-    private TextField tfLastname;
-    @FXML
-    private Label pUsernameText;
-    @FXML
-    private Label pEmailText;
-    @FXML
-    private Button btnSignIn;
-    @FXML
-    private TextField tfEmailSignIn;
-    @FXML
-    private PasswordField pfPasswordSignIn;
-    @FXML
-    private Label errorMessageLabel;
-    @FXML
-    private RadioButton userBtn;
-    @FXML
-    private RadioButton adminBtn;
-    @FXML
-    private RadioButton agentBtn;
+    private RadioButton userBtn, adminBtn, agentBtn;
 
 
     public Controller() {
