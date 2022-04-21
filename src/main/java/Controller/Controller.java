@@ -44,7 +44,6 @@ public class Controller {
     @FXML
     private RadioButton userBtn, adminBtn, agentBtn;
 
-
     public Controller() {
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
@@ -350,7 +349,6 @@ public class Controller {
 
     /**
      * Checks if any of the fields in the sign up fields is empty
-     *
      * @return boolean
      * @author Jakob Hagman
      */
@@ -365,9 +363,11 @@ public class Controller {
         return isFilled;
     }
 
+    /**
+     * Opens the makeshift gui for creating a ticket
+     */
     public void newTicketGUI() {
         view = new MainFrame(this);
-
     }
 
     /**
@@ -392,6 +392,7 @@ public class Controller {
     /**
      * Class extends thread.
      * Uses thread to retrieve all users from the database.
+     * @author Jakob Hagman
      */
     private class GetAllUsers extends Thread {
         @Override
