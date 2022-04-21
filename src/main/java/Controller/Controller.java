@@ -21,6 +21,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Controller {
     private Scene scene;
@@ -258,6 +260,8 @@ public class Controller {
         role = getSelectedRole();
         if(userManager.checkIfUserExists(email)){
             showMessage("A user with this e-mail already exists, try another one. ");
+        }if (!validateEmail(email)){
+            showMessage("Please enter a correct email address");
         }else{
             user = new User(firstName, lastName, email, password, role);
             userManager.addToUsers(user);
@@ -322,6 +326,21 @@ public class Controller {
     public void getAllUsers() {
         GetAllUsers getAllUsers = new GetAllUsers();
         getAllUsers.start();
+    }
+
+    /**
+     * Method is used for checking if email is a correct email.
+     * @param email
+     * @return true if alla requirements for an email is met.
+     */
+    public Boolean validateEmail(String email){
+        boolean correct = false;
+        Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+        Matcher mat = pattern.matcher(email);
+        if(mat.matches()){
+            correct = true;
+        }
+        return correct;
     }
 
 
