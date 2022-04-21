@@ -1,3 +1,8 @@
+/**
+ * This class is used for creating the SouthPanel which takes input from the user and creates a ticket.
+ * @Author Jakob Hagman
+ */
+
 package View;
 import Controller.*;
 import Model.Ticket;

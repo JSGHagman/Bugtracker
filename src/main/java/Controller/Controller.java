@@ -83,50 +83,64 @@ public class Controller {
         newStage.show();
     }
 
+
+    /**
+     * Method is used for creating a user, adds the to the database and the UserManager object.
+     * @author Jakob Hagman
+     * @param event
+     * @throws SQLException
+     */
     @FXML
-    public void onSignUpBtnClick(ActionEvent event) throws SQLException {
+    public void onSignUpBtnClick(ActionEvent event){
         if (isFieldFilledSignUp()) {
-            firstName = tfFirstname.getText();
-            lastName = tfLastname.getText();
-            email = tfEmail.getText();
-            password = pfPassword.getText();
-
-            if (adminBtn.isSelected()) {
-                role = "Admin";
-            }
-            if (userBtn.isSelected()) {
-                role = "User";
-            }
-            if (agentBtn.isSelected()) {
-                role = "Agent";
-            } else {
-                role = "User";
-            }
-
-            user = new User(firstName, lastName, email, password, role);
-            dbController.addNormalUser(user);
-            userManager.addToUsers(user);
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("MESSAGE");
-            alert.setHeaderText(null);
-            alert.setContentText("New user created successfully, now sign in");
-            alert.show();
-
-            tfFirstname.clear();
-            tfLastname.clear();
-            tfEmail.clear();
-            pfPassword.clear();
-
+            trySignUp();
         } else {
-            Alert error = new Alert(Alert.AlertType.ERROR);
-            error.setTitle("ERROR");
-            error.setHeaderText(null);
-            error.setContentText("Not all fields were filled in, try again");
-            error.show();
+            showMessage("Not all fields were filled in, try again");
         }
     }
 
+    /**
+     * @author Jakob Hagman
+     * Resets the textfields after a user is created
+     */
+    private void resetFields(){
+        tfFirstname.clear();
+        tfLastname.clear();
+        tfEmail.clear();
+        pfPassword.clear();
+    }
+    /**
+     * @author Jakob Hagman
+     *
+     * @param str - The message to be displayed.
+     */
+    public void showMessage(String str){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("MESSAGE");
+        alert.setHeaderText(null);
+        alert.setContentText(str);
+        alert.show();
+    }
+
+    /**
+     * Retrieves what role the user has selected.
+     * @return string Role
+     */
+    public String getSelectedRole(){
+        if (adminBtn.isSelected()) {
+            role = "Admin";
+        } if (agentBtn.isSelected()) {
+            role = "Agent";
+        } else {
+            role = "User";
+        }
+        return role;
+    }
+
+    /**
+     * Attempts to login, and opens the main window of the application if ok.
+     * @author Jakob Hagman
+     */
     @FXML
     public void onSignInBtnClick(ActionEvent event) throws IOException {
         if (isFieldFilledLogin()) {
@@ -223,10 +237,19 @@ public class Controller {
         newStage.show();
     }
 
+    /**
+     * Adds a user to the list of users in UserManager.
+     * @param u
+     */
     public void newUser(User u) {
         userManager.addToUsers(u);
     }
 
+    /**
+     * @author Jakob Hagman
+     * Attempts to login
+     * @return true if login is successful.
+     */
     public boolean tryLogin() {
         boolean success = false;
         String loginMail = tfEmailSignIn.getText();
@@ -239,6 +262,32 @@ public class Controller {
         //System.out.println(success);
         signedInUser = userManager.getSignedInUser();
         return success;
+    }
+
+    /**
+     * Attempts to sign up
+     * takes the values in the sign up textfields and the selcted role
+     * @author Jakob Hagman
+     */
+    public void trySignUp(){
+        firstName = tfFirstname.getText();
+        lastName = tfLastname.getText();
+        email = tfEmail.getText();
+        password = pfPassword.getText();
+        role = getSelectedRole();
+        if(userManager.checkIfUserExists(email)){
+            showMessage("A user with this e-mail already exists, try another one. ");
+        }else{
+            user = new User(firstName, lastName, email, password, role);
+            userManager.addToUsers(user);
+            showMessage("New user created successfully, now sign in");
+            resetFields();
+            try{
+                dbController.addNormalUser(user);
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

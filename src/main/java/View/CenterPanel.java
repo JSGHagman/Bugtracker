@@ -1,3 +1,9 @@
+/**
+ * This class is used for displaying a panel with a list
+ * This list will display created tickets
+ * @author Jakob Hagman
+ */
+
 package View;
 
 import Controller.Controller;

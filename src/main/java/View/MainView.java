@@ -1,3 +1,8 @@
+/**
+ * Mainview Class
+ * Used for some JavaFX stuff I guess idk.
+ */
+
 package View;
 
 import javafx.application.Application;

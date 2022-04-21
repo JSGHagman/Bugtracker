@@ -1,3 +1,10 @@
+/**
+ * This class is used for creating the MainPanel
+ * Which in turn will create the other two panels SouthPanel and CenterPanel
+ * @author Jakob Hagman
+ *
+ */
+
 package View;
 
 import Controller.Controller;

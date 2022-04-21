@@ -45,6 +45,22 @@ public class UserManager {
         return found;
     }
 
+    /**
+     * This method is used when a user wants to create an account
+     * Checks if a user with an email already exists
+     * @param email
+     * @return
+     */
+    public boolean checkIfUserExists(String email){
+        boolean exists = false;
+        for(User u : users){
+            if(u.getEmail().equals(email)){
+                exists = true;
+            }
+        }
+        return exists;
+    }
+
     public void setSignedInUser(User signedInUser) {
         this.signedInUser = signedInUser;
     }

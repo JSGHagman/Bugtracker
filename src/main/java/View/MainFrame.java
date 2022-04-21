@@ -1,3 +1,8 @@
+/**
+ * This class is used for creating the mainframe for our makeshift create ticket view.
+ * @author Jakob Hagman
+ */
+
 package View;
 
 import Controller.Controller;
