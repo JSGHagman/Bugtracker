@@ -69,12 +69,13 @@ public class Controller {
 
     /**
      * Method is used for creating a user, adds the to the database and the UserManager object.
-     * @author Jakob Hagman
+     *
      * @param event
      * @throws SQLException
+     * @author Jakob Hagman
      */
     @FXML
-    public void onSignUpBtnClick(ActionEvent event){
+    public void onSignUpBtnClick(ActionEvent event) {
         if (isFieldFilledSignUp()) {
             trySignUp();
         } else {
@@ -86,18 +87,18 @@ public class Controller {
      * @author Jakob Hagman
      * Resets the textfields after a user is created
      */
-    private void resetFields(){
+    private void resetFields() {
         tfFirstname.clear();
         tfLastname.clear();
         tfEmail.clear();
         pfPassword.clear();
     }
+
     /**
-     * @author Jakob Hagman
-     *
      * @param str - The message to be displayed.
+     * @author Jakob Hagman
      */
-    public void showMessage(String str){
+    public void showMessage(String str) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("MESSAGE");
         alert.setHeaderText(null);
@@ -107,12 +108,14 @@ public class Controller {
 
     /**
      * Retrieves what role the user has selected.
+     *
      * @return string Role
      */
-    public String getSelectedRole(){
+    public String getSelectedRole() {
         if (adminBtn.isSelected()) {
             role = "Admin";
-        } if (agentBtn.isSelected()) {
+        }
+        if (agentBtn.isSelected()) {
             role = "Agent";
         } else {
             role = "User";
@@ -122,6 +125,7 @@ public class Controller {
 
     /**
      * Attempts to login, and opens the main window of the application if ok.
+     *
      * @author Jakob Hagman
      */
     @FXML
@@ -222,6 +226,7 @@ public class Controller {
 
     /**
      * Adds a user to the list of users in UserManager.
+     *
      * @param u
      */
     public void newUser(User u) {
@@ -229,9 +234,9 @@ public class Controller {
     }
 
     /**
+     * @return true if login is successful.
      * @author Jakob Hagman
      * Attempts to login
-     * @return true if login is successful.
      */
     public boolean tryLogin() {
         boolean success = false;
@@ -250,26 +255,28 @@ public class Controller {
     /**
      * Attempts to sign up
      * takes the values in the sign up textfields and the selcted role
+     *
      * @author Jakob Hagman
      */
-    public void trySignUp(){
+    public void trySignUp() {
         firstName = tfFirstname.getText();
         lastName = tfLastname.getText();
         email = tfEmail.getText();
         password = pfPassword.getText();
         role = getSelectedRole();
-        if(userManager.checkIfUserExists(email)){
+        if (userManager.checkIfUserExists(email)) {
             showMessage("A user with this e-mail already exists, try another one. ");
-        }if (!validateEmail(email)){
+        }
+        if (!validateEmail(email)) {
             showMessage("Please enter a correct email address");
-        }else{
+        } else {
             user = new User(firstName, lastName, email, password, role);
             userManager.addToUsers(user);
             showMessage("New user created successfully, now sign in");
             resetFields();
-            try{
+            try {
                 dbController.addNormalUser(user);
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -330,14 +337,15 @@ public class Controller {
 
     /**
      * Method is used for checking if email is a correct email.
-     * @param email
-     * @return true if alla requirements for an email is met.
+     * @param String email
+     * @return boolean true if all requirements for an email is met.
+     * @author Jakob Hagman
      */
-    public Boolean validateEmail(String email){
+    public Boolean validateEmail(String email) {
         boolean correct = false;
         Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
         Matcher mat = pattern.matcher(email);
-        if(mat.matches()){
+        if (mat.matches()) {
             correct = true;
         }
         return correct;
@@ -368,6 +376,7 @@ public class Controller {
 
     /**
      * Checks if any of the fields in the sign up fields is empty
+     *
      * @return boolean
      * @author Jakob Hagman
      */
@@ -411,6 +420,7 @@ public class Controller {
     /**
      * Class extends thread.
      * Uses thread to retrieve all users from the database.
+     *
      * @author Jakob Hagman
      */
     private class GetAllUsers extends Thread {
