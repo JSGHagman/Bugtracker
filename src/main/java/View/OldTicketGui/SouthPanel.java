@@ -3,7 +3,7 @@
  * @Author Jakob Hagman
  */
 
-package View;
+package View.OldTicketGui;
 import Controller.*;
 import Model.Ticket;
 import Model.TicketManager;
@@ -14,8 +14,6 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.BasicPermission;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SouthPanel extends JPanel implements ActionListener {

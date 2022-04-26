@@ -3,16 +3,15 @@
  * @author Jakob Hagman
  */
 
-package View;
+package View.OldTicketGui;
 
 import Controller.Controller;
 import Model.TicketManager;
 import Model.User;
 import Model.UserManager;
 import javax.swing.*;
-import java.sql.SQLException;
 
-public class MainFrame extends JFrame {
+public class MainFrameTicket extends JFrame {
     private int width = 600;
     private int height = 600;
     private MainPanel mainPanel;
@@ -20,7 +19,7 @@ public class MainFrame extends JFrame {
     private UserManager userManager;
     private TicketManager ticketManager;
 
-    public MainFrame(Controller controller){
+    public MainFrameTicket(Controller controller){
         setUpframe();
         this.controller = controller;
         this.userManager = UserManager.getInstance();
