@@ -69,7 +69,6 @@ public class Controller {
 
     /**
      * Method is used for creating a user, adds the to the database and the UserManager object.
-     *
      * @param event
      * @throws SQLException
      * @author Jakob Hagman
