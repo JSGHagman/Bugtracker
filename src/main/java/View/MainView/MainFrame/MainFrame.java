@@ -15,6 +15,8 @@
  * Börja med
  */
 package View.MainView.MainFrame;
+import Controller.Controller;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -22,8 +24,10 @@ public class MainFrame extends JFrame {
     private JFrame mainFrame;
     private JPanel menuPanel, contentPanel;
     private Color menuColor = new Color(65, 105, 225);
+    private Controller controller;
 
-    public MainFrame(){
+    public MainFrame(Controller controller){
+        this.controller = controller;
         mainFrame = new JFrame();
         mainFrame.setSize(1650,1080);
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);

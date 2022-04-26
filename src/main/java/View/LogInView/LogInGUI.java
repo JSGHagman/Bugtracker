@@ -40,6 +40,7 @@ public class LogInGUI extends JComponent implements ActionListener {
     private Controller controller;
 
     public LogInGUI(Controller controller) {
+        this.controller = controller;
         setUtilities();
         frame = new JFrame("Bugtracker Log In");
         frame.setSize(new Dimension(400, 500));
@@ -174,7 +175,7 @@ public class LogInGUI extends JComponent implements ActionListener {
             //ATTEMPT LOG IN IN CONTROLLER
             // ----
             //OPEN MAINFRAME
-            new MainFrame();
+            controller.openMainWindow();
             //CLOSE LOG IN GUI
             frame.dispose();
         } if(e.getSource() == btnCreateAccount){

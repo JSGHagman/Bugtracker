@@ -1,8 +1,10 @@
 package Controller;
 import Model.*;
 import View.LogInView.LogInGUI;
+import View.MainView.MainFrame.MainFrame;
 import View.OldTicketGui.MainFrameTicket;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -15,10 +17,11 @@ public class Controller {
     private DatabaseController dbController;
     private Ticket ticket;
     private String userName, email, firstName, lastName, role, password, errorMessage;
-    private MainFrameTicket view;
+    private MainFrame view;
     private LogInGUI logInView;
 
     public Controller() {
+        System.out.println("Constructor called");
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
@@ -27,17 +30,12 @@ public class Controller {
     }
 
 
-    //Creates SignUp view
+    /**
+     * Creates sign up view when you log out
+     */
     public void onSignOutBtnClick() {
-        /*
-        lroot = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Main Menu");
-        scene = new Scene(lroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();*/
+        view.dispose();
+        logInView = new LogInGUI(this);
     }
 
 
@@ -60,10 +58,10 @@ public class Controller {
      * Resets the textfields after a user is created
      */
     private void resetFields() {
-        /*tfFirstname.clear();
-        tfLastname.clear();
-        tfEmail.clear();
-        pfPassword.clear();*/
+        logInView.getEmailTextField().setText("Enter e-mail here");
+        logInView.getFirstNameTextField().setText("Enter last name here");
+        logInView.getLastNameTextField().setText("Enter first name here");
+        logInView.getPasswordField().setText("password");
     }
 
     /**
@@ -71,12 +69,7 @@ public class Controller {
      * @author Jakob Hagman
      */
     public void showMessage(String str) {
-        /*
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("MESSAGE");
-        alert.setHeaderText(null);
-        alert.setContentText(str);
-        alert.show();*/
+        JOptionPane.showMessageDialog(null,str);
     }
 
     /**
@@ -85,14 +78,7 @@ public class Controller {
      * @return string Role
      */
     public String getSelectedRole() {
-        /*if (adminBtn.isSelected()) {
-            role = "Admin";
-        }
-        if (agentBtn.isSelected()) {
-            role = "Agent";
-        } else {
-            role = "User";
-        }*/
+        role = logInView.getRoleBox().getSelectedItem().toString();
         return role;
     }
 
@@ -103,132 +89,81 @@ public class Controller {
      */
 
     public void onSignInBtnClick(){
-        if (isFieldFilledLogin()) {
+        if (isFieldFilledLogIn()) {
             if (tryLogin()) {
             }
         }
     }
 
     /**
-     switch scene to Profile view
+     switch  to Profile view
      loads username,  to profileWindow
      */
     public void switchToProfile() {
-        /*
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Profile.fxml"));
-        pRoot = loader.load();
-        Controller scene1Controller = loader.getController();
-        // scene1Controller.pUsernameText.setText("Username: Användarnamn ska komma in här");
-        //scene1Controller.pEmailText.setText("Email: Email ska komma in här");
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Profile");
-        scene = new Scene(pRoot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();*/
+
     }
 
 
-    //switch scene to ticket view
+    /**
+     * switch scene to ticket view
+     */
     public void switchToTicket(){
-        /*
-        troot = FXMLLoader.load(getClass().getResource("Ticket.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Tickets");
-        scene = new Scene(troot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();*/
+
+    }
+
+    /**
+     * Will be used to switch to main menu
+     */
+    public void switchToMainMenu() {
+
     }
 
 
-    public void switchToMainmenu() {
-        /*
-        lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker MainMenu");
-        scene = new Scene(lroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();*/
-    }
-
-
-    //switch to Settings view
+    /**
+     * Will be used to switch to settings
+     */
     public void switchToSettings(){
-        /*
-        seroot = FXMLLoader.load(getClass().getResource("Settings.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Settings");
-        scene = new Scene(seroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();*/
     }
 
-    //switch scene to Statistics view
+    /**
+     * Will be used to switch to statistics
+     */
     public void switchToStatistics(){
-        /*
-        sroot = FXMLLoader.load(getClass().getResource("Statistics.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Statistics");
-        scene = new Scene(sroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();*/
+
     }
 
     /**
      * This method opens the main window
-     *
-     * @throws IOException
      */
     public void openMainWindow(){
-        // Switch scene to StartView from SignUp View
-        /*
-        lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Main Menu");
-        scene = new Scene(lroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();*/
+        view = new MainFrame(this);
     }
 
     /**
-     * Adds a user to the list of users in UserManager.
-     *
+     * Adds a user to the list of users in UserManager
      * @param u
+     * @author Jakob Hagman
      */
     public void newUser(User u) {
         userManager.addToUsers(u);
     }
 
     /**
+     *  Attempts to login
      * @return true if login is successful.
      * @author Jakob Hagman
-     * Attempts to login
      */
     public boolean tryLogin() {
         boolean success = false;
-        /*
-        String loginMail = tfEmailSignIn.getText();
-        String password = pfPasswordSignIn.getText();
+        String loginMail = logInView.getEmailTextField().getText();
+        String password = logInView.getPasswordField().getText();
         success = userManager.checkPassword(loginMail, password);
         if (!success) {
             errorMessage = "Wrong e-mail or password!";
-            errorMessageLabel.setText(errorMessage);
+            showMessage(errorMessage);
         }
         //System.out.println(success);
         signedInUser = userManager.getSignedInUser();
-
-         */
         return success;
     }
 
@@ -239,11 +174,10 @@ public class Controller {
      * @author Jakob Hagman
      */
     public void trySignUp() {
-        /*
-        firstName = tfFirstname.getText();
-        lastName = tfLastname.getText();
-        email = tfEmail.getText();
-        password = pfPassword.getText();
+        firstName = logInView.getFirstNameTextField().getText();
+        lastName = logInView.getLastNameTextField().getText();
+        email = logInView.getEmailTextField().getText();
+        password = logInView.getPasswordField().getText();
         role = getSelectedRole();
         if (userManager.checkIfUserExists(email)) {
             showMessage("A user with this e-mail already exists, try another one. ");
@@ -260,7 +194,7 @@ public class Controller {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     /**
@@ -345,14 +279,13 @@ public class Controller {
     /**
      * @return IsFilled == false when email or password input is Empty
      */
-    private boolean isFieldFilledLogin() {
+    private boolean isFieldFilledLogIn() {
         boolean isFilled = true;
-        /*
-        if (tfEmailSignIn.getText().isEmpty() || pfPasswordSignIn.getText().isEmpty()) {
+        if (logInView.getEmailTextField().getText().isEmpty() || logInView.getPasswordField().getText().isEmpty()){
             isFilled = false;
             errorMessage = "Missing e-mail or password";
         }
-        errorMessageLabel.setText(errorMessage);*/
+        showMessage(errorMessage);
         return isFilled;
     }
 
@@ -364,21 +297,13 @@ public class Controller {
      */
     private boolean isFieldFilledSignUp() {
         boolean isFilled = true;
-        /*
-        if (tfFirstname.getText().isEmpty()
-                || tfLastname.getText().isEmpty()
-                || tfEmail.getText().isEmpty()
-                || pfPassword.getText().isEmpty()) {
+        if (logInView.getFirstNameTextField().getText().isEmpty()
+                || logInView.getLastNameTextField().getText().isEmpty()
+                || logInView.getEmailTextField().getText().isEmpty()
+                || logInView.getPasswordField().getText().isEmpty()){
             isFilled = false;
-        }*/
+        }
         return isFilled;
-    }
-
-    /**
-     * Opens the makeshift gui for creating a ticket
-     */
-    public void newTicketGUI() {
-        //view = new MainFrame(this);
     }
 
     /**
