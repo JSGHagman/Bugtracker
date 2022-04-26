@@ -16,7 +16,7 @@
  * skapa nya fält för password och email för signup (kan använda samma i dagsläget för panelen målas om vid sign up så ingen risk att den tar fel)
  * Behöver få in logga
  * Behöver annan styling för att göra det snyggare
- * Behöver koppla funktioner mot controller.
+ * Behöver koppla funktioner mot controller när allt är fixat.
  */
 
 
@@ -172,7 +172,8 @@ public class LogInGUI extends JComponent implements ActionListener {
         if(e.getSource() == btnSignUp){
             switchToSignUp();
         } if(e.getSource() == btnLogIn){
-            controller.onSignInBtnClick();
+            //controller.onSignInBtnClick();
+            controller.openMainWindow();
         } if(e.getSource() == btnCreateAccount){
             //CREATE ACCOUNT
             controller.onSignUpBtnClick();
