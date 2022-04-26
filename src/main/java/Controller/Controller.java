@@ -69,7 +69,7 @@ public class Controller {
      * @author Jakob Hagman
      */
     public void showMessage(String str) {
-        JOptionPane.showMessageDialog(null,str);
+        JOptionPane.showMessageDialog(null, str);
     }
 
     /**
@@ -91,6 +91,8 @@ public class Controller {
     public void onSignInBtnClick(){
         if (isFieldFilledLogIn()) {
             if (tryLogin()) {
+                openMainWindow();
+                logInView.getFrame().dispose();
             }
         }
     }
@@ -284,8 +286,8 @@ public class Controller {
         if (logInView.getEmailTextField().getText().isEmpty() || logInView.getPasswordField().getText().isEmpty()){
             isFilled = false;
             errorMessage = "Missing e-mail or password";
+            showMessage(errorMessage);
         }
-        showMessage(errorMessage);
         return isFilled;
     }
 
