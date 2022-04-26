@@ -175,9 +175,8 @@ public class LogInGUI extends JComponent implements ActionListener {
             controller.onSignInBtnClick();
         } if(e.getSource() == btnCreateAccount){
             //CREATE ACCOUNT
-            // ----
+            controller.onSignUpBtnClick();
             //BACK TO LOG IN
-            setLogInPanel();
         }
     }
 

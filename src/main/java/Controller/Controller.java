@@ -191,6 +191,7 @@ public class Controller {
             userManager.addToUsers(user);
             showMessage("New user created successfully, now sign in");
             resetFields();
+            logInView.setLogInPanel();
             try {
                 dbController.addNormalUser(user);
             } catch (SQLException e) {
