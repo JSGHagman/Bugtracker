@@ -4,9 +4,7 @@
  * @author Jakob Hagman
  *
  */
-
 package View;
-
 import Controller.Controller;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,11 +30,9 @@ public class MainPanel extends JPanel {
     public void setUpPanel() {
         layout = new BorderLayout();
         setLayout(layout);
-
         Border border = this.getBorder();
         Border margin = BorderFactory.createEmptyBorder(6,6,6,6);
         setBorder(new CompoundBorder(border, margin));
-
         centerPanel = new CenterPanel(controller,6*width/10, (8*height/10)-100, 6);
         southPanel = new SouthPanel(centerPanel, controller, width,(height/8)+200, 6);
         add(southPanel, BorderLayout.SOUTH);
