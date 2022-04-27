@@ -75,6 +75,10 @@ public class TicketView extends JComponent implements ActionListener{
             public void mouseExited(MouseEvent evt) {
                 btn.setBackground(menuColor);
             }
+
+            public void mousePressed(MouseEvent evt){
+                btn.setBackground(menuColor);
+            }
         });
     }
 
