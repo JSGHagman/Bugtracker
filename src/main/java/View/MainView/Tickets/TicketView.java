@@ -65,6 +65,7 @@ public class TicketView extends JComponent implements ActionListener{
     private void setButtonDesign(JButton btn){
         btn.setBackground(menuColor);
         btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Dialog", Font.BOLD, 20));
         addActionListener(btn);
         btn.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
