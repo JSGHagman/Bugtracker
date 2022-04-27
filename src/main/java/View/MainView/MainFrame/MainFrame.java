@@ -16,6 +16,7 @@
  */
 package View.MainView.MainFrame;
 import Controller.Controller;
+import View.MainView.Tickets.TicketView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,7 @@ public class MainFrame extends JFrame {
     private JPanel menuPanel, contentPanel;
     private Color menuColor = new Color(65, 105, 225);
     private Controller controller;
+    private TicketView ticketView;
 
     public MainFrame(Controller controller){
         this.controller = controller;
@@ -40,6 +42,7 @@ public class MainFrame extends JFrame {
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        ticketView = new TicketView(controller,this);
     }
 
     public void setUpPanels(){
@@ -54,6 +57,14 @@ public class MainFrame extends JFrame {
 
     public JPanel getMenuPanel(){
         return menuPanel;
+    }
+
+    public JPanel getContentPanel(){
+        return contentPanel;
+    }
+
+    public JFrame getFrame(){
+        return mainFrame;
     }
 
 
