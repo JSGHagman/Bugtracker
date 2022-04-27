@@ -11,8 +11,8 @@
  *
  * Att göra:
  * Öka bredden på guit
- * Ändra så att sign up delerna hamnar till höger om login på samma sätt som innan
- * För att göra det behöver man skapa en ny panel, placera dem till höger om den andra och flytta signup fält/lables/combobox från InputPanel till denna
+ * Ändra så att sign up delarna hamnar till höger om login på samma sätt som i Java FX
+ * För att göra det behöver man skapa en ny panel, placera dem till höger om den andra och flytta signup textfält/lables/combobox från InputPanel till denna
  * skapa nya fält för password och email för signup (kan använda samma i dagsläget för panelen målas om vid sign up så ingen risk att den tar fel)
  * Behöver få in logga
  * Behöver annan styling för att göra det snyggare
@@ -110,6 +110,7 @@ public class LogInGUI extends JComponent implements ActionListener {
         roleBox.setSelectedItem("User");
         roleBox.setBackground(Color.WHITE);
     }
+
     public void setLogInPanel(){
         frame.setTitle("Bugtracker Log In");
         mainPanel.removeAll();
