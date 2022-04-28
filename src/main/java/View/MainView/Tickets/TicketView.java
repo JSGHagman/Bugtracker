@@ -32,6 +32,11 @@ public class TicketView extends JComponent implements ActionListener{
     private JScrollPane descriptionScroll;
     private JComboBox priorityBox, categoryBox, ownerBox, collaboratorsBox;
 
+    /**
+     * Constructor, creates all components needed and sets the home view for tickets through initilaizeTicketView();
+     * @param controller
+     * @param mainFrame
+     */
     public TicketView(Controller controller, MainFrame mainFrame){
         this.controller = controller;
         this.mainFrame = mainFrame;
@@ -43,6 +48,9 @@ public class TicketView extends JComponent implements ActionListener{
         initializeTicketView();
     }
 
+    /**
+     * This method creates buttons and sends each button to the design method
+     */
     private void createButtons(){
         //CREATE BUTTONS
         btnMyTickets = new JButton("My Tickets");
@@ -67,6 +75,10 @@ public class TicketView extends JComponent implements ActionListener{
         setButtonDesign(btnRemoveCollaborator);
     }
 
+    /**
+     * This method sets some design of buttons and adds an actionlistener and mouselistener to every button
+     * @param btn
+     */
     private void setButtonDesign(JButton btn){
         btn.setBackground(menuColor);
         btn.setForeground(Color.WHITE);
@@ -88,6 +100,9 @@ public class TicketView extends JComponent implements ActionListener{
     }
 
 
+    /**
+     * This method creates all labels which is placed around the different panels
+     */
     private void createLabels(){
         //FOR CREATE VIEW
         topicLabel = new JLabel("Topic");
@@ -127,6 +142,9 @@ public class TicketView extends JComponent implements ActionListener{
 
     }
 
+    /**
+     * This method creates all the components wich will be used for inout from the user
+     */
     private void createInputFields(){
         //FOR CREATE VIEW
         topicField = new JTextField();
@@ -178,6 +196,9 @@ public class TicketView extends JComponent implements ActionListener{
         
     }
 
+    /**
+     * This method creates the main panels which the user later will be able to switch back and forth between.
+     */
     private void createPanels(){
         //CREATE PANELS
         mainTicketsPanel = new JPanel();
@@ -210,6 +231,9 @@ public class TicketView extends JComponent implements ActionListener{
         mainButtonsPanel.add(btnEditTicket);
     }
 
+    /**
+     * Will set everything needed to edit a ticket. Not done yet, only has two buttons
+     */
     private void setEditPanelDetails() {
         JPanel innerButtonPanelEdit = new JPanel();
         innerButtonPanelEdit.setBounds(0,760, 350, 75);
@@ -219,6 +243,9 @@ public class TicketView extends JComponent implements ActionListener{
         mainEditPanel.add(innerButtonPanelEdit);
     }
 
+    /**
+     * Sets evrything needed to create a ticket in the create ticket panel
+     */
     private void setCreatePanelDetails() {
         JPanel innerButtonPanel = new JPanel();
         innerButtonPanel.setBounds(0,760, 350, 75);
@@ -283,6 +310,9 @@ public class TicketView extends JComponent implements ActionListener{
         mainCreatePanel.add(innerAssigneesListPanel);
     }
 
+    /**
+     * Initializes the first view
+     */
     public void initializeTicketView(){
         mainContentPanel.removeAll();
         mainContentPanel.add(mainTicketsPanel);
@@ -293,6 +323,9 @@ public class TicketView extends JComponent implements ActionListener{
         currentPanelOnDisplay = mainTicketsPanel;
     }
 
+    /**
+     * Updates view to ticket view
+     */
     public void changeToTicketView(){
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(mainTicketsPanel);
@@ -301,6 +334,9 @@ public class TicketView extends JComponent implements ActionListener{
         currentPanelOnDisplay = mainTicketsPanel;
     }
 
+    /**
+     * Changes to create a new ticket view
+     */
     public void changeToCreate(){
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(mainCreatePanel);
@@ -309,6 +345,9 @@ public class TicketView extends JComponent implements ActionListener{
         currentPanelOnDisplay = mainCreatePanel;
     }
 
+    /**
+     * Changes to edit an existing ticket view
+     */
     public void changeToEdit(){
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(mainEditPanel);
@@ -317,10 +356,18 @@ public class TicketView extends JComponent implements ActionListener{
         currentPanelOnDisplay = mainEditPanel;
     }
 
+    /**
+     * Adds actionlistener to the buttons.
+     */
     private void addActionListener(JButton btn){
         btn.addActionListener(this);
     }
 
+
+    /**
+     * Not sure if this is used tbh
+     * @param g
+     */
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
