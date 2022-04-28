@@ -69,4 +69,8 @@ public class UserManager {
         return signedInUser;
     }
 
+    public ArrayList getAllUsers(){
+        return users;
+    }
+
 }

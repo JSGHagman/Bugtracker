@@ -12,12 +12,10 @@
  * Börja med view för att tickets
  * Börja med view för profile
  * Börja med view för Settings
- * Börja med
  */
 package View.MainView.MainFrame;
 import Controller.Controller;
 import View.MainView.Tickets.TicketView;
-
 import javax.swing.*;
 import java.awt.*;
 

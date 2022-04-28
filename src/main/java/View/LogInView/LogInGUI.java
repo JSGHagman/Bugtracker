@@ -2,7 +2,7 @@
  * Gjorde detta guit i går eftermiddag
  * Där finns mycket kvar att göra här
  * Förslår att någon tar detta på sig
- * Ett Gui för att logga in här finns två paneler, en för textfälten och en för knapparna.
+ * Ett Gui för att logga in, här finns två paneler, en för textfälten och en för knapparna.
  * Observera att när man trycker på sign up målas panelerna om.
  * Trycker man på log in öppnas main view
  *

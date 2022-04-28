@@ -2,7 +2,6 @@ package Controller;
 import Model.*;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
-import View.OldTicketGui.MainFrameTicket;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -25,8 +24,9 @@ public class Controller {
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
-        getAllUsers();
-        logInView = new LogInGUI(this);
+        getAllUsersFromDatabase();
+        //logInView = new LogInGUI(this);
+        openMainWindow();
     }
 
 
@@ -237,6 +237,13 @@ public class Controller {
     }
 
     /**
+     * @return User - the user that is currently signed in.
+     */
+    public User getSignedInUser(){
+        return signedInUser;
+    }
+
+    /**
      * Create private GetallTickets object and start thread
      */
     public void getAllTickets() {
@@ -248,7 +255,7 @@ public class Controller {
      * @author Jakob Hagman
      * Creates object of private class and starts its thread.
      */
-    public void getAllUsers() {
+    public void getAllUsersFromDatabase() {
         GetAllUsers getAllUsers = new GetAllUsers();
         getAllUsers.start();
     }
