@@ -45,7 +45,7 @@ public class MainFrame extends JFrame {
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         ticketView = new TicketView(controller,this);
-        menuView = new MenuView(this, controller);
+        menuView = new MenuView(controller, this);
     }
 
     public void setUpPanels(){

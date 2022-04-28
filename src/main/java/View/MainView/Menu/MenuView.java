@@ -1,6 +1,7 @@
 package View.MainView.Menu;
 
 import Controller.Controller;
+import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
@@ -16,12 +17,12 @@ public class MenuView extends JComponent implements ActionListener {
     private MainFrame mainFrame;
     private int height;
     private int width;
-    private JButton tickets, statistics, settings, logout;
+    private JButton btnTickets, btnStatistics, btnSettings, btnLogout;
     private Color menuColor = new Color(255, 255, 255);
     private Color hoverColor = new Color(65,145,225);
 
 
-    public MenuView (MainFrame mainFrame,Controller controller) {
+    public MenuView (Controller controller, MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.controller = controller;
         menuPanel = mainFrame.getMenuPanel();
@@ -30,21 +31,21 @@ public class MenuView extends JComponent implements ActionListener {
     }
 
     public void setUp() {
-        tickets = new JButton("Tickets");
-        setButtonDesign(tickets);
-        menuPanel.add(tickets);
+        btnTickets = new JButton("Tickets");
+        setButtonDesign(btnTickets);
+        menuPanel.add(btnTickets);
 
-        statistics = new JButton("Statistics");
-        setButtonDesign(statistics);
-        menuPanel.add(statistics);
+        btnStatistics = new JButton("Statistics");
+        setButtonDesign(btnStatistics);
+        menuPanel.add(btnStatistics);
 
-        settings = new JButton("Settings");
-        setButtonDesign(settings);
-        menuPanel.add(settings);
+        btnSettings = new JButton("Settings");
+        setButtonDesign(btnSettings);
+        menuPanel.add(btnSettings);
 
-        logout = new JButton("Log out");
-        setButtonDesign(logout);
-        menuPanel.add(logout,0,3);
+        btnLogout = new JButton("Log out");
+        setButtonDesign(btnLogout);
+        menuPanel.add(btnLogout,0,3);
 
 
 
@@ -71,7 +72,23 @@ public class MenuView extends JComponent implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnTickets) {
+            controller.switchToTicket();
+        }
 
+        if (e.getSource() == btnSettings) {
+            controller.switchToSettings();
+        }
+
+        if (e.getSource() == btnStatistics) {
+            controller.switchToStatistics();
+        }
+
+        if (e.getSource() == btnLogout) {
+            mainFrame.getFrame().dispose();
+            LogInGUI loginView = new LogInGUI(controller);
+
+        }
     }
 }
 
