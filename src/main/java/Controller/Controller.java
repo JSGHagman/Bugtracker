@@ -25,8 +25,8 @@ public class Controller {
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
         getAllUsersFromDatabase();
-        //logInView = new LogInGUI(this);
-        openMainWindow();
+        logInView = new LogInGUI(this);
+        //openMainWindow();
     }
 
 

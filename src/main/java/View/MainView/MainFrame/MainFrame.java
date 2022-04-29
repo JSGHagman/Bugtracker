@@ -29,13 +29,16 @@ public class MainFrame extends JFrame {
     public MainFrame(Controller controller){
         this.controller = controller;
         mainFrame = new JFrame();
-        mainFrame.setSize(1650,1080);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenHeight = screenSize.height;
+        int screenWidth = screenSize.width;
+        mainFrame.setSize(screenWidth, screenHeight);
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setTitle("Bugtracker");
         Image icon = Toolkit.getDefaultToolkit().getImage("Images/bugTrackerIcon.png");
         mainFrame.setIconImage(icon);
         mainFrame.setVisible(true);
-        mainFrame.setResizable(false);
+        mainFrame.setResizable(true);
         setUpPanels();
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
@@ -45,13 +48,22 @@ public class MainFrame extends JFrame {
 
     public void setUpPanels(){
         menuPanel = new JPanel();
-        menuPanel.setBounds(0,0,100, mainFrame.getHeight());
+        menuPanel.setBounds(0,0, mainFrame.getWidth()/14, mainFrame.getHeight());
         menuPanel.setBackground(menuColor);
         menuPanel.setLayout(null);
         contentPanel = new JPanel();
-        contentPanel.setBounds(20,0, (mainFrame.getWidth() - 100), mainFrame.getHeight());
+        contentPanel.setBounds(menuPanel.getX() + menuPanel.getWidth(),0, (mainFrame.getWidth() - menuPanel.getWidth()), mainFrame.getHeight());
         contentPanel.setLayout(null);
+        System.out.println(menuPanel.getWidth());
     }
+
+
+    /*menupanel w:
+        menupanel h:
+        contentpanel w:
+        contentpanel h:
+     */
+
 
     public JPanel getMenuPanel(){
         return menuPanel;
