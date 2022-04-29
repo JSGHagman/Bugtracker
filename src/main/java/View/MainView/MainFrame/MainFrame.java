@@ -12,6 +12,7 @@
  * Börja med view för att tickets
  * Börja med view för profile
  * Börja med view för Settings
+ *
  */
 package View.MainView.MainFrame;
 import Controller.Controller;
@@ -56,14 +57,6 @@ public class MainFrame extends JFrame {
         contentPanel.setLayout(null);
         System.out.println(menuPanel.getWidth());
     }
-
-
-    /*menupanel w:
-        menupanel h:
-        contentpanel w:
-        contentpanel h:
-     */
-
 
     public JPanel getMenuPanel(){
         return menuPanel;
