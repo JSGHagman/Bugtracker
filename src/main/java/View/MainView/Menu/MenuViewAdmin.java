@@ -17,7 +17,7 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
     private MainFrame mainFrame;
     private int height;
     private int width;
-    private JButton btnTickets, btnStatistics, btnSettings, btnLogout;
+    private JButton btnTickets, btnStatistics, btnSettings, btnLogout, btnUserAdmin;
     private Color menuColor = new Color(255, 255, 255);
     private Color hoverColor = new Color(65,145,225);
 
@@ -39,13 +39,17 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
         setButtonDesign(btnStatistics);
         menuPanel.add(btnStatistics);
 
-        btnSettings = new JButton("Settings");
+        btnSettings = new JButton("Profile Settings");
         setButtonDesign(btnSettings);
         menuPanel.add(btnSettings);
 
+        btnUserAdmin = new JButton("User Administration");
+        setButtonDesign(btnUserAdmin);
+        menuPanel.add(btnUserAdmin);
+
         btnLogout = new JButton("Log out");
         setButtonDesign(btnLogout);
-        menuPanel.add(btnLogout,0,3);
+        menuPanel.add(btnLogout,0,4);
 
 
 

@@ -35,7 +35,7 @@ public class MenuViewAgent extends JComponent implements ActionListener {
         setButtonDesign(btnTickets);
         menuPanel.add(btnTickets);
 
-        btnSettings = new JButton("Settings");
+        btnSettings = new JButton("Profile Settings");
         setButtonDesign(btnSettings);
         menuPanel.add(btnSettings);
 
