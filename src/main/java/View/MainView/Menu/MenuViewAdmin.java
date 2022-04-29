@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MenuView extends JComponent implements ActionListener {
+public class MenuViewAdmin extends JComponent implements ActionListener {
     private Controller controller;
     private JPanel menuPanel;
     private MainFrame mainFrame;
@@ -22,7 +22,7 @@ public class MenuView extends JComponent implements ActionListener {
     private Color hoverColor = new Color(65,145,225);
 
 
-    public MenuView (Controller controller, MainFrame mainFrame) {
+    public MenuViewAdmin(Controller controller, MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.controller = controller;
         menuPanel = mainFrame.getMenuPanel();

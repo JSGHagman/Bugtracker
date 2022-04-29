@@ -173,8 +173,8 @@ public class LogInGUI extends JComponent implements ActionListener {
         if(e.getSource() == btnSignUp){
             switchToSignUp();
         } if(e.getSource() == btnLogIn){
-            //controller.onSignInBtnClick();
-            controller.openMainWindow();
+            controller.onSignInBtnClick();
+
             frame.dispose();
         } if(e.getSource() == btnCreateAccount){
             //CREATE ACCOUNT
