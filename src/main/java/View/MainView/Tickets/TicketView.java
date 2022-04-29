@@ -108,34 +108,34 @@ public class TicketView extends JComponent implements ActionListener{
         //FOR CREATE VIEW
         topicLabel = new JLabel("Topic");
         topicLabel.setForeground(menuColor);
-        //topicLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        topicLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
         descriptionLabel = new JLabel("Description");
         descriptionLabel.setForeground(menuColor);
-        //descriptionLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        descriptionLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
         priorityLabel = new JLabel("Priority");
-        //priorityLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        priorityLabel.setFont(new Font("Dialog", Font.BOLD, 20));
         priorityLabel.setForeground(menuColor);
 
         categoryLabel = new JLabel("Type");
-        //categoryLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        categoryLabel.setFont(new Font("Dialog", Font.BOLD, 20));
         categoryLabel.setForeground(menuColor);
 
         ownerLabel = new JLabel("Owner");
-        //ownerLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        ownerLabel.setFont(new Font("Dialog", Font.BOLD, 20));
         ownerLabel.setForeground(menuColor);
 
         collaboratorLabel = new JLabel("Collaborators");
-        //collaboratorLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        collaboratorLabel.setFont(new Font("Dialog", Font.BOLD, 20));
         collaboratorLabel.setForeground(menuColor);
 
         assigneesLabel = new JLabel("Assignees");
-        //assigneesLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+        assigneesLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         assigneesLabel.setForeground(menuColor);
 
         assigneesListLabel = new JLabel();
-        //assigneesListLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+        assigneesListLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
         assigneesListLabel.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
 
 
@@ -149,12 +149,12 @@ public class TicketView extends JComponent implements ActionListener{
     private void createInputFields(){
         //FOR CREATE VIEW
         topicField = new JTextField();
-        //topicField.setFont(new Font("Dialog", Font.PLAIN, 16));
+        topicField.setFont(new Font("Dialog", Font.PLAIN, 16));
         topicField.setText(" Enter topic");
         topicField.setBorder(BorderFactory.createLineBorder(menuColor, 3, false));
 
         descriptionText = new JTextArea();
-        //descriptionText.setFont(new Font("Dialog", Font.PLAIN, 16));
+        descriptionText.setFont(new Font("Dialog", Font.PLAIN, 16));
         descriptionText.setText(" Describe the issue");
         descriptionText.setEditable(true);
         descriptionText.setLineWrap(true);
@@ -165,7 +165,7 @@ public class TicketView extends JComponent implements ActionListener{
         descriptionScroll.setBorder(BorderFactory.createLineBorder(menuColor, 3, false));
 
         priorityBox = new JComboBox();
-        //priorityBox.setFont(new Font("Dialog", Font.PLAIN, 16));
+        priorityBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         priorityBox.setBackground(Color.WHITE);
         priorityBox.addItem("Low");
         priorityBox.addItem("Medium");
@@ -173,7 +173,7 @@ public class TicketView extends JComponent implements ActionListener{
         priorityBox.setSelectedItem("Low");
 
         categoryBox = new JComboBox();
-        //categoryBox.setFont(new Font("Dialog", Font.PLAIN, 16));
+        categoryBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         categoryBox.setBackground(Color.WHITE);
         categoryBox.addItem("Issue");
         categoryBox.addItem("Bug");
@@ -181,14 +181,14 @@ public class TicketView extends JComponent implements ActionListener{
         categoryBox.setSelectedItem("Issue");
 
         ownerBox = new JComboBox();
-        //ownerBox.setFont(new Font("Dialog", Font.PLAIN, 16));
+        ownerBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         ownerBox.setBackground(Color.WHITE);
         ownerBox.addItem("None");
         ownerBox.addItem("You");
         ownerBox.setSelectedItem("None");
 
         collaboratorsBox = new JComboBox();
-        //collaboratorsBox.setFont(new Font("Dialog", Font.PLAIN, 16));
+        collaboratorsBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         collaboratorsBox.setBackground(Color.WHITE);
         collaboratorsBox.addItem("None");
         collaboratorsBox.setSelectedItem("None");
