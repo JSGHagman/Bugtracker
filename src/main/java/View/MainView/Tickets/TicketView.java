@@ -1,14 +1,17 @@
 
 /**
  * @todo
- * Kunna sätta kategori, (Issue, Bug, New Feature Request)
- * Kunna sätta prioritet (Low, Medium, High)
+ * FIXA EDIT VIEW
  * Kunna sätta Ägare (Endast möjligt att sätta sig själv om man är agent, kan sätta vem som helst om man ör admin, kan inte sätta alls om man bara är user)
  * HÄMTA ALLA ANVÄNDARE OCH LÄGG I COMBOBOX
- * Lös claimedstatus,
  *
  *
  *
+ */
+
+/**
+ * Class used for different views of tickets
+ * @author Jakob Hagman
  */
 
 package View.MainView.Tickets;
@@ -17,20 +20,29 @@ import View.MainView.MainFrame.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class TicketView extends JComponent implements ActionListener{
+    //GENERAL
     private Controller controller;
     private MainFrame mainFrame;
-    private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, btnEditReturn, btnSaveChanges, claimTicket, btnAddCollaborator, btnRemoveCollaborator;
-    private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
     private Color menuColor = new Color(65, 105, 225);
     private Color hoverColor = new Color(65,145,225);
+    //FOR OTHER VIEWS
+    private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator;
+    private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
     private JTextField topicField;
     private JTextArea descriptionText, comment;
     private JLabel topicLabel, descriptionLabel, priorityLabel, categoryLabel, ownerLabel, collaboratorLabel, assigneesLabel, assigneesListLabel;
-    private JScrollPane descriptionScroll, createScroll;
+    private JScrollPane descriptionScroll;
     private JComboBox priorityBox, categoryBox, ownerBox, collaboratorsBox;
+    //FOR EDIT VIEW
+    private JButton btnEditReturn, btnSaveChanges, btnAddCollaboratorEdit, btnRemoveCollaboratorEdit;
+    private JPanel mainContentPanelEdit, mainCreatePanelEdit, mainTicketsPanelEdit, mainEditPanelEdit, mainCommentPanelEdit, mainButtonsPanelEdit, currentPanelOnDisplayEdit;
+    private JTextField topicFieldEdit;
+    private JTextArea descriptionTextEdit, commentEdit;
+    private JLabel topicLabelEdit, descriptionLabelEdit, priorityLabelEdit, categoryLabelEdit, ownerLabelEdit, collaboratorLabelEdit, assigneesLabelEdit, assigneesListLabelEdit;
+    private JScrollPane descriptionScrollEdit;
+    private JComboBox priorityBoxEdit, categoryBoxEdit, ownerBoxEdit, collaboratorsBoxEdit;
 
     /**
      * Constructor, creates all components needed and sets the home view for tickets through initilaizeTicketView();
@@ -41,9 +53,11 @@ public class TicketView extends JComponent implements ActionListener{
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.mainContentPanel = mainFrame.getContentPanel();
-        createButtons();
+        createAllButtons();
         createLabels();
         createInputFields();
+        createLabelsEdit();
+        createInputFieldsEdit();
         createPanels();
         initializeTicketView();
     }
@@ -52,7 +66,7 @@ public class TicketView extends JComponent implements ActionListener{
      * This method creates buttons.
      * Sends each button to the design method.
      */
-    private void createButtons(){
+    private void createAllButtons(){
         //CREATE BUTTONS
         btnMyTickets = new JButton("My Tickets");
         setButtonDesign(btnMyTickets);
@@ -74,6 +88,10 @@ public class TicketView extends JComponent implements ActionListener{
         setButtonDesign(btnAddCollaborator);
         btnRemoveCollaborator = new JButton("Remove");
         setButtonDesign(btnRemoveCollaborator);
+        btnAddCollaboratorEdit = new JButton("Add");
+        setButtonDesign(btnAddCollaboratorEdit);
+        btnRemoveCollaboratorEdit  = new JButton("Remove");
+        setButtonDesign(btnRemoveCollaboratorEdit);
     }
 
     /**
@@ -83,17 +101,15 @@ public class TicketView extends JComponent implements ActionListener{
     private void setButtonDesign(JButton btn){
         btn.setBackground(menuColor);
         btn.setForeground(Color.WHITE);
-        //btn.setFont(new Font("Dialog", Font.BOLD, 16));
+        btn.setFont(new Font("Dialog", Font.BOLD, 16));
         addActionListener(btn);
         btn.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
                 btn.setBackground(hoverColor);
             }
-
             public void mouseExited(MouseEvent evt) {
                 btn.setBackground(menuColor);
             }
-
             public void mousePressed(MouseEvent evt){
                 btn.setBackground(menuColor);
             }
@@ -137,10 +153,6 @@ public class TicketView extends JComponent implements ActionListener{
         assigneesListLabel = new JLabel();
         assigneesListLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
         assigneesListLabel.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
-
-
-        //FOR EDIT VIEW
-
     }
 
     /**
@@ -192,9 +204,89 @@ public class TicketView extends JComponent implements ActionListener{
         collaboratorsBox.setBackground(Color.WHITE);
         collaboratorsBox.addItem("None");
         collaboratorsBox.setSelectedItem("None");
+    }
 
+    private void createLabelsEdit(){
         //FOR EDIT VIEW
-        
+        topicLabelEdit = new JLabel("Change Topic");
+        topicLabelEdit.setForeground(menuColor);
+        topicLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+
+        descriptionLabelEdit = new JLabel("Change Description");
+        descriptionLabelEdit.setForeground(menuColor);
+        descriptionLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+
+        priorityLabelEdit = new JLabel("Change Priority");
+        priorityLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        priorityLabelEdit.setForeground(menuColor);
+
+        categoryLabelEdit = new JLabel("Change Type");
+        categoryLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        categoryLabelEdit.setForeground(menuColor);
+
+        ownerLabelEdit = new JLabel("Change Owner");
+        ownerLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        ownerLabelEdit.setForeground(menuColor);
+
+        collaboratorLabelEdit = new JLabel("Change Collaborators");
+        collaboratorLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        collaboratorLabelEdit.setForeground(menuColor);
+
+        assigneesLabelEdit = new JLabel("Assignees");
+        assigneesLabelEdit.setFont(new Font("Dialog", Font.BOLD, 16));
+        assigneesLabelEdit.setForeground(menuColor);
+
+        assigneesListLabelEdit = new JLabel();
+        assigneesListLabelEdit.setFont(new Font("Dialog", Font.PLAIN, 12));
+        assigneesListLabelEdit.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
+    }
+
+    private void createInputFieldsEdit(){
+        //FOR EDIT VIEW
+        topicFieldEdit = new JTextField();
+        topicFieldEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
+        topicFieldEdit.setText(" Change topic"); // SKA BORT
+        topicFieldEdit.setBorder(BorderFactory.createLineBorder(menuColor, 3, false));
+
+        descriptionTextEdit = new JTextArea();
+        descriptionTextEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
+        descriptionTextEdit.setText(" Info about the ticket goes here"); // SKA BORT
+        descriptionTextEdit.setEditable(true);
+        descriptionTextEdit.setLineWrap(true);
+        descriptionTextEdit.setWrapStyleWord(true);
+
+        descriptionScrollEdit = new JScrollPane(descriptionTextEdit);
+        descriptionScrollEdit.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        descriptionScrollEdit.setBorder(BorderFactory.createLineBorder(menuColor, 3, false));
+
+        priorityBoxEdit = new JComboBox();
+        priorityBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
+        priorityBoxEdit.setBackground(Color.WHITE);
+        priorityBoxEdit.addItem("Low");
+        priorityBoxEdit.addItem("Medium");
+        priorityBoxEdit.addItem("High");
+        priorityBoxEdit.setSelectedItem("Low"); //SKA BORT
+
+        categoryBoxEdit = new JComboBox();
+        categoryBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
+        categoryBoxEdit.setBackground(Color.WHITE);
+        categoryBoxEdit.addItem("Issue");
+        categoryBoxEdit.addItem("Bug");
+        categoryBoxEdit.addItem("New feature request");
+        categoryBoxEdit.setSelectedItem("Issue"); //SKA BORT
+
+        ownerBoxEdit = new JComboBox();
+        ownerBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
+        ownerBoxEdit.setBackground(Color.WHITE);
+        ownerBoxEdit.addItem("None");
+        ownerBoxEdit.addItem("You");
+        ownerBoxEdit.setSelectedItem("None"); // SKA BORT
+
+        collaboratorsBoxEdit = new JComboBox();
+        collaboratorsBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
+        collaboratorsBoxEdit.setBackground(Color.WHITE);
+        collaboratorsBoxEdit.addItem("None");
+        collaboratorsBoxEdit.setSelectedItem("None"); // SKA BORT
     }
 
     /**
@@ -202,7 +294,6 @@ public class TicketView extends JComponent implements ActionListener{
      */
     private void createPanels(){
         //CREATE PANELS
-
         mainButtonsPanel = new JPanel();
         mainButtonsPanel.setBounds(mainContentPanel.getX() + 10, 10, mainContentPanel.getWidth()/2, mainContentPanel.getHeight()/14 );
         mainButtonsPanel.setLayout(new GridLayout(1,4,10,10));
@@ -218,33 +309,81 @@ public class TicketView extends JComponent implements ActionListener{
 
         mainCreatePanel = new JPanel();
         mainCreatePanel.setBounds(mainContentPanel.getX() + 10, mainButtonsPanel.getY() + mainButtonsPanel.getHeight() +5, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight()-mainButtonsPanel.getHeight());
-        //mainCreatePanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
         mainCreatePanel.setLayout(null);
         setCreatePanelDetails();
 
         mainEditPanel = new JPanel();
-        mainEditPanel.setBounds(150,100, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight()-150);
-        mainEditPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
+        mainEditPanel.setBounds(mainContentPanel.getX() + 10, mainButtonsPanel.getY() + mainButtonsPanel.getHeight() +5, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight()-mainButtonsPanel.getHeight());
         mainEditPanel.setLayout(null);
         setEditPanelDetails();
-
-        /*
-        mainCommentPanel = new JPanel();
-        mainCommentPanel.setBounds(150,100, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight()/8);
-        mainCommentPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));*/
-
     }
 
     /**
      * Will set everything needed to edit a ticket. Not done yet, only has two buttons
      */
     private void setEditPanelDetails() {
+        JPanel innerTopicPanelEdit = new JPanel();
+        innerTopicPanelEdit.setBounds(0,10,mainCreatePanel.getWidth()/2, mainCreatePanel.getHeight()/7);
+        innerTopicPanelEdit.setLayout(new GridLayout(3,1));
+        innerTopicPanelEdit.add(topicLabelEdit);
+        innerTopicPanelEdit.add(topicFieldEdit);
+        innerTopicPanelEdit.add(descriptionLabelEdit);
+
+        JPanel innerDescriptionPanelEdit = new JPanel();
+        innerDescriptionPanelEdit.setBounds(0,innerTopicPanelEdit.getY() + innerTopicPanelEdit.getHeight(),mainCreatePanel.getWidth()/2,mainCreatePanel.getHeight()/5);
+        innerDescriptionPanelEdit.setLayout(new GridLayout());
+        innerDescriptionPanelEdit.add(descriptionScrollEdit);
+
+        JPanel innerChoicesPanelEdit = new JPanel();
+        innerChoicesPanelEdit.setLayout(new GridLayout(4,1,10,10));
+        innerChoicesPanelEdit.setBounds(0, innerDescriptionPanelEdit.getY() + innerDescriptionPanelEdit.getHeight(), (innerDescriptionPanelEdit.getWidth()/2), innerDescriptionPanelEdit.getHeight());
+        //innerChoicesPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
+        innerChoicesPanelEdit.add(priorityLabelEdit);
+        innerChoicesPanelEdit.add(priorityBoxEdit);
+        innerChoicesPanelEdit.add(categoryLabelEdit);
+        innerChoicesPanelEdit.add(categoryBoxEdit);
+
+        JPanel innerPeoplePanelEdit = new JPanel();
+        innerPeoplePanelEdit.setLayout(new GridLayout(4,1,10,10));
+        innerPeoplePanelEdit.setBounds((innerChoicesPanelEdit.getX() + innerChoicesPanelEdit.getWidth()) + 5, innerDescriptionPanelEdit.getY() + innerDescriptionPanelEdit.getHeight(), (innerDescriptionPanelEdit.getWidth()/2), innerDescriptionPanelEdit.getHeight());
+        innerPeoplePanelEdit.add(ownerLabelEdit);
+        innerPeoplePanelEdit.add(ownerBoxEdit);
+        innerPeoplePanelEdit.add(collaboratorLabelEdit);
+        innerPeoplePanelEdit.add(collaboratorsBoxEdit);
+
+        JPanel innerCollaboratorButtonsPanelEdit = new JPanel();
+        innerCollaboratorButtonsPanelEdit.setLayout(new GridLayout(1,2,10,10));
+        innerCollaboratorButtonsPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerPeoplePanelEdit.getY() + innerPeoplePanelEdit.getHeight() + 5, innerPeoplePanelEdit.getWidth(), innerPeoplePanelEdit.getHeight()/4);
+        innerCollaboratorButtonsPanelEdit.add(btnAddCollaboratorEdit);
+        innerCollaboratorButtonsPanelEdit.add(btnRemoveCollaboratorEdit);
+
+        JPanel innerAssigneesPanelEdit = new JPanel();
+        innerAssigneesPanelEdit.setBounds(0, innerCollaboratorButtonsPanelEdit.getY() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth()/2,innerChoicesPanelEdit.getHeight()/4);
+        innerAssigneesPanelEdit.add(assigneesLabelEdit);
+        innerAssigneesPanelEdit.setLayout(new GridLayout(1,2,10,10));
+        //innerAssigneesPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
+
+        JPanel innerAssigneesListPanelEdit = new JPanel();
+        innerAssigneesListPanelEdit.setBounds(0, innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth(), innerChoicesPanelEdit.getHeight()/2);
+        //innerAssigneesListPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
+        innerAssigneesListPanelEdit.setLayout(new GridLayout(1,1,10,10));
+        innerAssigneesListPanelEdit.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
+        innerAssigneesListPanelEdit.add(assigneesListLabelEdit);
+
         JPanel innerButtonPanelEdit = new JPanel();
-        innerButtonPanelEdit.setBounds(0,760, 350, 75);
-        innerButtonPanelEdit.setLayout(new GridLayout(1,1,10,10));
+        innerButtonPanelEdit.setBounds(0,innerAssigneesListPanelEdit.getY() + innerAssigneesListPanelEdit.getHeight() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth(), innerChoicesPanelEdit.getHeight()/4);
+        innerButtonPanelEdit.setLayout(new GridLayout(1,3,10,10));
         innerButtonPanelEdit.add(btnSaveChanges);
         innerButtonPanelEdit.add(btnEditReturn);
+
         mainEditPanel.add(innerButtonPanelEdit);
+        mainEditPanel.add(innerTopicPanelEdit);
+        mainEditPanel.add(innerDescriptionPanelEdit);
+        mainEditPanel.add(innerChoicesPanelEdit);
+        mainEditPanel.add(innerPeoplePanelEdit);
+        mainEditPanel.add(innerCollaboratorButtonsPanelEdit);
+        mainEditPanel.add(innerAssigneesPanelEdit);
+        mainEditPanel.add(innerAssigneesListPanelEdit);
     }
 
     /**
