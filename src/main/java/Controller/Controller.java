@@ -141,6 +141,11 @@ public class Controller {
         view = new MainFrame(this);
     }
 
+    public void switchToUserAdmin() {
+        String[] userList = new String[userManager.infoStrings().size()];
+        userList = userManager.infoStrings().toArray(userList);
+        view.userAdminView(userList);
+    }
     /**
      * Adds a user to the list of users in UserManager
      * @param u

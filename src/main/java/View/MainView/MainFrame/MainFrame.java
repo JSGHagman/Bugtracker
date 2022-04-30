@@ -20,6 +20,8 @@ import View.MainView.Menu.MenuViewAdmin;
 import View.MainView.Menu.MenuViewAgent;
 import View.MainView.Menu.MenuViewUser;
 import View.MainView.Tickets.TicketView;
+import View.MainView.UserAdmin.UserAdminView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,6 +34,7 @@ public class MainFrame extends JFrame {
     private MenuViewAdmin menuViewAdmin;
     private MenuViewAgent menuViewAgent;
     private MenuViewUser menuViewUser;
+    private UserAdminView userAdminView;
 
     public MainFrame(Controller controller){
         this.controller = controller;
@@ -50,7 +53,7 @@ public class MainFrame extends JFrame {
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        ticketView = new TicketView(controller,this);
+        userAdminView = new UserAdminView(controller, this);
 
         switch (controller.getSignedInUser().getRole()) {
             case "User":
@@ -90,6 +93,12 @@ public class MainFrame extends JFrame {
 
     public JFrame getFrame(){
         return mainFrame;
+    }
+
+    public void userAdminView(String[] users) {
+        userAdminView = new UserAdminView(controller, this);
+        userAdminView.setUserList(users);
+
     }
 
 

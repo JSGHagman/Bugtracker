@@ -73,4 +73,10 @@ public class UserManager {
         return users;
     }
 
+    public ArrayList<String> infoStrings() {
+        ArrayList<String> infoStrings = new ArrayList<>();
+
+        return infoStrings;
+    }
+
 }

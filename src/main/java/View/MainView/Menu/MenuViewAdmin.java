@@ -88,6 +88,10 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
             controller.switchToStatistics();
         }
 
+        if (e.getSource() == btnUserAdmin) {
+            controller.switchToUserAdmin();
+        }
+
         if (e.getSource() == btnLogout) {
             mainFrame.getFrame().dispose();
             LogInGUI loginView = new LogInGUI(controller);
