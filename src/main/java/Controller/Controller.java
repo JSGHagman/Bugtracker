@@ -146,6 +146,35 @@ public class Controller {
         userList = userManager.infoStrings().toArray(userList);
         view.userAdminView(userList);
     }
+
+    public void selectUserinList(int index) {
+        User markedUser = userManager.getUserAtIndex(index);
+        view.setUsertxtUserAdmin(markedUser.getFirstName(), markedUser.getLastName(), markedUser.getEmail(), markedUser.getPassword(), markedUser.getRole());
+
+    }
+
+    public void updateUserDB(String firstName, String lastName, String email, String password, String role) {
+        User changedUser = new User(firstName, lastName, email, password, role);
+
+        try {
+            dbController.updateUser(changedUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserManager(User user) {
+        for (User u : userManager.getAllUsers()) {
+            if (user.getEmail().equals(u.getEmail())) {
+                u.setFirstName(user.getFirstName());
+                u.setLastName(user.getLastName());
+                u.setPassword(user.getPassword());
+                u.setRole(user.getRole());
+            }
+            switchToUserAdmin();
+        }
+    }
+
     /**
      * Adds a user to the list of users in UserManager
      * @param u

@@ -69,13 +69,25 @@ public class UserManager {
         return signedInUser;
     }
 
-    public ArrayList getAllUsers(){
+    public ArrayList<User> getAllUsers(){
         return users;
+    }
+
+    public User getUserAtIndex (int index) {
+        if (users.get(index) != null) {
+            return users.get(index);
+        }
+        else {
+            return getSignedInUser();
+        }
     }
 
     public ArrayList<String> infoStrings() {
         ArrayList<String> infoStrings = new ArrayList<>();
+        for (User u : users) {
+            infoStrings.add(String.format("%-50s %30s %70s",u.toString(), u.getEmail(), u.getRole()));
 
+        }
         return infoStrings;
     }
 

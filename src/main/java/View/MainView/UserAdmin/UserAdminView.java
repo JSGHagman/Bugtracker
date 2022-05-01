@@ -4,12 +4,10 @@ import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class UserAdminView extends JComponent implements ActionListener {
 
@@ -20,11 +18,11 @@ public class UserAdminView extends JComponent implements ActionListener {
     private MainFrame mainFrame;
     private JList<String> userList;
     private JPanel mainContentPanel, westPanel, eastPanel;
-
-    private TextField firstNametxt, lastNametxt, passwordtxt, emailtxt;
+    private JPasswordField txtPassword;
+    private JTextField txtFirstName, txtLastName, txtEmail, txtDummy;
     private JComboBox role;
-    private JButton save, cancel;
-    private JLabel firstNamelbl, lastNamelbl, passwordlbl, emaillbl;
+    private JButton btnSave, btnCancel;
+    private JLabel lblFirstName, lblLastName, lblPassword, lblEmail;
     private String[] roles;
 
 
@@ -45,10 +43,10 @@ public class UserAdminView extends JComponent implements ActionListener {
 
 
     public void initiateButtons() {
-        save = new JButton("Save");
-        setButtonDesign(save);
-        cancel = new JButton("Cancel");
-        setButtonDesign(cancel);
+        btnSave = new JButton("Save");
+        setButtonDesign(btnSave);
+        btnCancel = new JButton("Cancel");
+        setButtonDesign(btnCancel);
     }
 
     public void initiateUserList() {
@@ -59,6 +57,10 @@ public class UserAdminView extends JComponent implements ActionListener {
         userList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         addListener();
         add(s);
+        userList.setForeground(menuColor);
+        userList.setBackground(Color.WHITE);
+        userList.setFont(new Font("Dialog", Font.BOLD, 12));
+
     }
 
     private void initiatePanels() {
@@ -67,26 +69,26 @@ public class UserAdminView extends JComponent implements ActionListener {
         eastPanel.add(userList);
 
         westPanel = new JPanel();
-        westPanel.setLayout(new GridLayout(5,2));
+        westPanel.setLayout(new GridLayout(6,2));
         westPanel.setName("Edit user");
-        westPanel.add(firstNamelbl);
-        westPanel.add(firstNametxt);
-        westPanel.add(lastNamelbl);
-        westPanel.add(lastNametxt);
+        westPanel.add(lblFirstName);
+        westPanel.add(txtFirstName);
+        westPanel.add(lblLastName);
+        westPanel.add(txtLastName);
 
-        westPanel.add(emaillbl);
-        westPanel.add(emailtxt);
-        westPanel.add(passwordlbl);
-        westPanel.add(passwordtxt);
+        westPanel.add(lblEmail);
+        westPanel.add(txtEmail);
+        westPanel.add(lblPassword);
+        westPanel.add(txtPassword);
         westPanel.add(role);
+        westPanel.add(txtDummy);
+        westPanel.add(btnSave);
+        westPanel.add(btnCancel);
 
-
-
-        eastPanel.setBounds(mainContentPanel.getWidth()/2, mainContentPanel.getY(), mainContentPanel.getWidth()/3, mainContentPanel.getHeight());
+        eastPanel.setBounds(mainContentPanel.getWidth()/2, mainContentPanel.getY(), mainContentPanel.getWidth()/3, mainContentPanel.getHeight()/5*4);
         eastPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
-        westPanel.setBounds(mainContentPanel.getX() , mainContentPanel.getY() , mainContentPanel.getWidth() /3, mainContentPanel.getHeight()/2);
+        westPanel.setBounds(mainContentPanel.getX()+ mainContentPanel.getWidth()/14+10 , mainContentPanel.getY() , mainContentPanel.getWidth() /3, mainContentPanel.getHeight()/2);
         westPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
-
 
     }
 
@@ -101,15 +103,24 @@ public class UserAdminView extends JComponent implements ActionListener {
     }
 
     private void initiateTextfield() {
-        firstNametxt = new TextField();
-        lastNametxt = new TextField();
-        passwordtxt = new TextField();
-        emailtxt = new TextField();
+        txtFirstName = new JTextField();
+        setTextBoxDesign(txtFirstName);
+        txtLastName = new JTextField();
+        setTextBoxDesign(txtLastName);
+        txtPassword = new JPasswordField();
+        setTextBoxDesign(txtPassword);
+        txtEmail = new JTextField();
+        setTextBoxDesign(txtEmail);
+        txtDummy = new JTextField("");
+        setTextBoxDesign(txtDummy);
     }
 
     private void initiateComboBox() {
         role = new JComboBox(roles);
         role.setSelectedIndex(0);
+        role.setForeground(menuColor);
+        role.setBackground(Color.WHITE);
+        role.setFont(new Font("Dialog", Font.BOLD, 12));
         role.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -119,27 +130,34 @@ public class UserAdminView extends JComponent implements ActionListener {
     }
 
     public void initiateLabels() {
-        firstNamelbl = new JLabel("First Name");
-        setLabelDesign(firstNamelbl);
-        lastNamelbl = new JLabel("Last Name");
-        setLabelDesign(lastNamelbl);
-        emaillbl = new JLabel("Email");
-        setLabelDesign(emaillbl);
-        passwordlbl = new JLabel("Password");
-        setLabelDesign(passwordlbl);
+        lblFirstName = new JLabel("First Name");
+        setLabelDesign(lblFirstName);
+        lblLastName = new JLabel("Last Name");
+        setLabelDesign(lblLastName);
+        lblEmail = new JLabel("Email");
+        setLabelDesign(lblEmail);
+        lblPassword = new JLabel("Password");
+        setLabelDesign(lblPassword);
 
     }
+    private void setTextBoxDesign(JTextField txt) {
+        txt.setForeground(menuColor);
+        txt.setBackground(Color.WHITE);
+        txt.setFont(new Font("Dialog", Font.BOLD, 12));
+        txt.setBorder(BorderFactory.createLineBorder(menuColor, 1));
 
+    }
     private void setLabelDesign(JLabel lbl) {
         lbl.setForeground(menuColor);
         lbl.setBackground(Color.WHITE);
-        lbl.setFont(new Font("Dialog", Font.BOLD, 16));
+        lbl.setFont(new Font("Dialog", Font.BOLD, 12));
+        lbl.setBorder(BorderFactory.createLineBorder(menuColor, 1));
     }
 
     private void setButtonDesign(JButton btn) {
         btn.setBackground(menuColor);
         btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("Dialog", Font.BOLD, 16));
+        btn.setFont(new Font("Dialog", Font.BOLD, 12));
         addActionListener(btn);
         btn.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
@@ -164,11 +182,77 @@ public class UserAdminView extends JComponent implements ActionListener {
     public void setUserList(String[] userList) {
        this.userList.setListData(userList);
 
+
+    }
+
+    public JTextField getTxtFirstName() {
+        return txtFirstName;
+    }
+
+    public void setTxtFirstName(String txtFirstName) {
+        this.txtFirstName.setText(txtFirstName);
+    }
+
+    public JTextField getTxtLastName() {
+        return txtLastName;
+    }
+
+    public void setTxtLastName(String txtLastName) {
+        this.txtLastName.setText(txtLastName);
+    }
+
+    public JTextField getPasswordtxt() {
+        return txtPassword;
+    }
+
+    public void setPasswordtxt(String passwordtxt) {
+        this.txtPassword.setText(passwordtxt);
+        this.txtPassword.setEchoChar('\u25CF');
+    }
+
+    public JTextField getTxtEmail() {
+        return txtEmail;
+    }
+
+    public void setTxtEmail(String txtEmail) {
+        this.txtEmail.setText(txtEmail);
+    }
+
+    public JComboBox getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+
+        if (role.equals("Admin")) {
+            this.role.setSelectedIndex(2);
+        }
+        if (role.equals("User")) {
+            this.role.setSelectedIndex(0);
+        }
+        if (role.equals("Agent")) {
+            this.role.setSelectedIndex(1);
+        }
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnCancel) {
+            setPasswordtxt("");
+            setTxtEmail("");
+            setRole("User");
+            setTxtFirstName("");
+            setTxtLastName("");
+            userList.setSelectedIndex(-1);
 
+        }
+
+        if (e.getSource() == btnSave) {
+            controller.updateUserDB(getTxtFirstName().getText(), getTxtLastName().getText(),
+                    getTxtEmail().getText(), getPasswordtxt().getText(), getRole().getSelectedItem().toString());
+
+        }
     }
 
     private void addActionListener(JButton btn) {
@@ -180,7 +264,7 @@ public class UserAdminView extends JComponent implements ActionListener {
             public void valueChanged(ListSelectionEvent evt) {
                 int index = userList.getSelectedIndex();
                 if (index > -1) {
-                    //controller.guestListIndexChanged(index);
+                   controller.selectUserinList(index);
                 }
             }
         });

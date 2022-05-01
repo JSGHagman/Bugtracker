@@ -53,7 +53,7 @@ public class MainFrame extends JFrame {
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        userAdminView = new UserAdminView(controller, this);
+        ticketView = new TicketView(controller, this);
 
         switch (controller.getSignedInUser().getRole()) {
             case "User":
@@ -101,7 +101,14 @@ public class MainFrame extends JFrame {
 
     }
 
+    public void setUsertxtUserAdmin(String firstName, String lastName, String email, String password, String role) {
+        userAdminView.setTxtFirstName(firstName);
+        userAdminView.setTxtLastName(lastName);
+        userAdminView.setTxtEmail(email);
+        userAdminView.setPasswordtxt(password);
+        userAdminView.setRole(role);
 
+    }
 
 
 }

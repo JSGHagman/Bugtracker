@@ -46,6 +46,21 @@ public class DatabaseController {
         con.close();
     }
 
+    public void updateUser(User user) throws SQLException {
+        Connection con = getDBConnection();
+        String QUERY = "UPDATE userid " +
+                "SET firstname = " + fixSQLString(user.getFirstName()) +
+                ", lastname = " + fixSQLString(user.getLastName()) +
+                ", password = " + fixSQLString(user.getPassword()) +
+                ", role = " + fixSQLString(user.getRole()) +
+                "WHERE email = " + fixSQLString(user.getEmail());
+
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
+        con.close();
+        controller.updateUserManager(user);
+    }
+
     /**
      * @return ArrayList of userobjects
      * @throws Exception
