@@ -73,6 +73,15 @@ public class UserManager {
         return users;
     }
 
+    public boolean deleteUser(User user) {
+        if(users.remove(user)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public User getUserAtIndex (int index) {
         if (users.get(index) != null) {
             return users.get(index);

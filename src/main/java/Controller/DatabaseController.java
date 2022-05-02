@@ -18,6 +18,7 @@ public class DatabaseController {
     private Ticket ticket;
     private Controller controller;
 
+
     public DatabaseController(Controller controller) {
         this.controller = controller;
     }
@@ -55,6 +56,15 @@ public class DatabaseController {
                 ", role = " + fixSQLString(user.getRole()) +
                 "WHERE email = " + fixSQLString(user.getEmail());
 
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
+        con.close();
+        controller.updateUserManager(user);
+    }
+
+    public void deleteUser(User user) throws SQLException {
+        Connection con = getDBConnection();
+        String QUERY = "DELETE FROM userid WHERE email = " + fixSQLString(user.getEmail());
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         con.close();
@@ -158,6 +168,7 @@ public class DatabaseController {
         ResultSet rs = stmt.executeQuery(QUERY);
 
         while (rs.next()) {
+            Ticket t = null;
             int id = rs.getInt("id");
             int priority = rs.getInt("priority");
             String category = rs.getString("category");
@@ -166,8 +177,8 @@ public class DatabaseController {
             String time = rs.getString("time");
             Date startdate = rs.getDate("dateopen");
             Date enddate = rs.getDate("dateclose");
-            ticket = new Ticket(id, category, status, priority, startdate, enddate, file);
-            list.add(ticket);
+            t = new Ticket(id, category, status, priority, startdate, enddate, file);
+            controller.newTicketfromDB(t);
 
         }
         stmt.close();
