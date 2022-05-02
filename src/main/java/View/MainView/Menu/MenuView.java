@@ -3,7 +3,6 @@ package View.MainView.Menu;
 import Controller.Controller;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -46,8 +45,6 @@ public class MenuView extends JComponent implements ActionListener {
         btnLogout = new JButton("Log out");
         setButtonDesign(btnLogout);
         menuPanel.add(btnLogout,0,3);
-
-
 
     }
 
