@@ -111,7 +111,7 @@ public class Controller {
      * switch scene to ticket view
      */
     public void switchToTicket(){
-
+        view.ticketView();
     }
 
     /**

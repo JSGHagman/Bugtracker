@@ -55,6 +55,7 @@ public class MainFrame extends JFrame {
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         ticketView = new TicketView(controller, this);
 
+
         switch (controller.getSignedInUser().getRole()) {
             case "User":
                 menuViewUser = new MenuViewUser(controller, this);
@@ -99,6 +100,10 @@ public class MainFrame extends JFrame {
         userAdminView = new UserAdminView(controller, this);
         userAdminView.setUserList(users);
 
+    }
+
+    public void ticketView () {
+        ticketView.initializeTicketView();
     }
 
     public void setUsertxtUserAdmin(String firstName, String lastName, String email, String password, String role) {

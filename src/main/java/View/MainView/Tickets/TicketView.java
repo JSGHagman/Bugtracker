@@ -73,7 +73,7 @@ public class TicketView extends JComponent implements ActionListener{
         createLabelsEdit();
         createInputFieldsEdit();
         createPanels();
-        initializeTicketView();
+      //  initializeTicketView();
     }
 
     /**
