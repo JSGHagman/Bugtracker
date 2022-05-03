@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TicketManager {
     private final ArrayList<Ticket> tickets;
@@ -61,6 +62,7 @@ public class TicketManager {
     }
 
     public ArrayList getAllTickets(){
+
         return tickets;
     }
 

@@ -138,7 +138,7 @@ public class DatabaseController {
     public ArrayList getAllTickets() throws Exception {
         ArrayList list = new ArrayList<Ticket>();
         Connection con = getDBConnection();
-        String QUERY = String.format("SELECT * FROM ticket");
+        String QUERY = String.format("SELECT * FROM ticket ORDER BY dateopen DESC");
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(QUERY);
 
@@ -151,9 +151,9 @@ public class DatabaseController {
             String time = rs.getString("time");
             Date startdate = rs.getDate("dateopen");
             Date enddate = rs.getDate("dateclose");
-            ticket = new Ticket(id, category, status, priority, startdate, enddate, file);
+            String topic = rs.getString("topic");
+            ticket = new Ticket(id, category, status, priority, startdate, enddate, file, topic);
             list.add(ticket);
-
         }
         stmt.close();
         con.close();

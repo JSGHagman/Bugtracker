@@ -31,7 +31,7 @@ public class Ticket {
         startdate = new Date();
     }
 
-    public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String file) {
+    public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String file, String topic) {
         this.id = id;
         this.category = category;
         this.status = status;
@@ -39,6 +39,7 @@ public class Ticket {
         this.startdate = startdate;
         this.enddate = enddate;
         this.file = file;
+        this.topic = topic;
     }
 
     public void addAgent(User agent) {

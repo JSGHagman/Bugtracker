@@ -25,6 +25,7 @@ public class Controller {
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
         getAllUsersFromDatabase();
+        getAllTickets();
         logInView = new LogInGUI(this);
         //openMainWindow();
     }
@@ -230,6 +231,16 @@ public class Controller {
     }
 
     /**
+     * Gets all tickets from the TicketManager Object
+     * @return
+     */
+    public ArrayList getAllTicketsFromManager(){
+        ArrayList <Ticket> ticketList = new ArrayList<>();
+        ticketList = ticketManager.getAllTickets();
+        return ticketList;
+    }
+
+    /**
      * Get unassigned tickets based on null agent or zero size array
      */
     public void getUnassignedTickets() {
@@ -241,6 +252,16 @@ public class Controller {
      */
     public User getSignedInUser(){
         return signedInUser;
+    }
+
+    /**
+     * Gets all users from UserManager Object
+     * @return
+     */
+    public ArrayList getAllUsersFromManager(){
+        ArrayList <User> userList = new ArrayList<>();
+        userList = userManager.getAllUsers();
+        return userList;
     }
 
     /**
@@ -314,6 +335,14 @@ public class Controller {
             isFilled = false;
         }
         return isFilled;
+    }
+
+    public void populateCollaboratorsBox(JComboBox box) {
+        ArrayList <User> userList = getAllUsersFromManager();
+        for(User u : userList){
+            String user = String.format("%s %s", u.getFirstName(), u.getLastName());
+            box.addItem(user);
+        }
     }
 
     /**
