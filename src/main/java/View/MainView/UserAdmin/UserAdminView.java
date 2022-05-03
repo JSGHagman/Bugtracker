@@ -25,10 +25,10 @@ public class UserAdminView extends JComponent implements ActionListener {
     private JComboBox role;
     private JButton btnSave, btnCancel, btnDelete;
     private JLabel lblFirstName, lblLastName, lblPassword, lblEmail;
-    private String[] roles;
+    private String[] roles, header;
     private JScrollPane scrollPane;
     private JTable userTable;
-    private DefaultTableModel tableModel;
+
 
 
     public UserAdminView(Controller controller, MainFrame mainFrame) {
@@ -36,6 +36,7 @@ public class UserAdminView extends JComponent implements ActionListener {
         this.mainFrame = mainFrame;
         this.mainContentPanel = mainFrame.getContentPanel();
         roles = new String[]{"User", "Agent", "Admin"};
+        header = new String[]{"First Name", "LastName", "Email", "Role"};
         initiateButtons();
         initiateUserList();
         initiateLabels();
@@ -64,21 +65,29 @@ public class UserAdminView extends JComponent implements ActionListener {
         userList.setBackground(Color.WHITE);
         userList.setFont(new Font("Dialog", Font.BOLD, 12));
         scrollPane = new JScrollPane(userList);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         addListener();
+
         /*
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Name");
         tableModel.addColumn("Email");
         tableModel.addColumn("Role");
-        userTable = new JTable(tableModel);
-        tableModel.addRow(new Object[] {"TEST", "TEST", "TEST"});
+
+
+        String[][] test = {{"", "", "", ""}, {"", "", "", ""}};
+        userTable = new JTable(test,header);
+        userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        userTable.setRowSelectionAllowed(true);
+        userTable.setColumnSelectionAllowed(false);
+        userTable.setCellSelectionEnabled(false);
         scrollPane = new JScrollPane(userTable);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         addListener();
-*/
+ */
+
 
     }
 
@@ -314,5 +323,6 @@ public class UserAdminView extends JComponent implements ActionListener {
                 }
             }
         });
+
     }
 }
