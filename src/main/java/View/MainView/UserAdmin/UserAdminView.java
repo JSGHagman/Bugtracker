@@ -1,6 +1,7 @@
 package View.MainView.UserAdmin;
 
 import Controller.Controller;
+import Model.Ticket;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
@@ -10,6 +11,7 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class UserAdminView extends JComponent implements ActionListener {
 
@@ -25,23 +27,24 @@ public class UserAdminView extends JComponent implements ActionListener {
     private JComboBox role;
     private JButton btnSave, btnCancel, btnDelete;
     private JLabel lblFirstName, lblLastName, lblPassword, lblEmail;
-    private String[] roles, header;
+    private Object[][] data;
+    private String [] columnNames, roles;
     private JScrollPane scrollPane;
     private JTable userTable;
 
 
 
-    public UserAdminView(Controller controller, MainFrame mainFrame) {
+    public UserAdminView(Controller controller, MainFrame mainFrame, ArrayList users) {
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.mainContentPanel = mainFrame.getContentPanel();
         roles = new String[]{"User", "Agent", "Admin"};
-        header = new String[]{"First Name", "LastName", "Email", "Role"};
         initiateButtons();
-        initiateUserList();
         initiateLabels();
         initiateComboBox();
         initiateTextfield();
+        setUserList(users);
+        initiateUserList();
         initiatePanels();
         initializeUserAdminView();
 
@@ -64,30 +67,24 @@ public class UserAdminView extends JComponent implements ActionListener {
         userList.setForeground(menuColor);
         userList.setBackground(Color.WHITE);
         userList.setFont(new Font("Dialog", Font.BOLD, 12));
-        scrollPane = new JScrollPane(userList);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        addListener();
+      //  scrollPane = new JScrollPane(userList);
+       // scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        //scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        //addListener();
 
-        /*
-        tableModel = new DefaultTableModel();
-        tableModel.addColumn("Name");
-        tableModel.addColumn("Email");
-        tableModel.addColumn("Role");
-
-
-        String[][] test = {{"", "", "", ""}, {"", "", "", ""}};
-        userTable = new JTable(test,header);
-        userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        //setUserList();
+        userTable = new JTable(data, columnNames);
         userTable.setRowSelectionAllowed(true);
-        userTable.setColumnSelectionAllowed(false);
-        userTable.setCellSelectionEnabled(false);
-        scrollPane = new JScrollPane(userTable);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        addListener();
- */
+      //  userTable.setRowHeight(eastPanel.getHeight()/40);
+        userTable.setFillsViewportHeight(true);
+        userTable.getTableHeader().setBackground(menuColor);
+        userTable.getTableHeader().setForeground(Color.WHITE);
 
+        scrollPane = new JScrollPane(userTable);
+        int verticalPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
+        scrollPane.setVerticalScrollBarPolicy(verticalPolicy);
+       // scrollPane.setBounds(0,mainTicketsPanel.getY() , mainTicketsPanel.getWidth(), mainTicketsPanel.getHeight() - mainContentPanel.getHeight()/2);
+        scrollPane.getVerticalScrollBar().setBackground(menuColor);
 
     }
 
@@ -217,8 +214,26 @@ public class UserAdminView extends JComponent implements ActionListener {
         return userList;
     }
 
-    public void setUserList(String[] userList) {
-       this.userList.setListData(userList);
+    public void setUserList(ArrayList users) {
+        columnNames = new String[]{"First Name", "Last Name", "Email", "Role"};
+
+        data = new Object[users.size()][4];
+        for(int i = 0; i <= users.size()-4; i+=4){
+
+            if (i == 0) {
+                data[i][0] = users.get(i);
+                data[i][1] = users.get(i + 1);
+                data[i][2] = users.get(i + 2);
+                data[i][3] = users.get(i + 3);
+
+            }
+            else {
+                data[(i/4)][0] = users.get(i);
+                data[(i/4)][1] = users.get(i + 1);
+                data[(i/4)][2] = users.get(i + 2);
+                data[(i/4)][3] = users.get(i + 3);
+            }
+        }
 
 
     }
