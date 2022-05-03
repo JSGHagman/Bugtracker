@@ -75,16 +75,27 @@ public class UserAdminView extends JComponent implements ActionListener {
         //setUserList();
         userTable = new JTable(data, columnNames);
         userTable.setRowSelectionAllowed(true);
-      //  userTable.setRowHeight(eastPanel.getHeight()/40);
         userTable.setFillsViewportHeight(true);
         userTable.getTableHeader().setBackground(menuColor);
         userTable.getTableHeader().setForeground(Color.WHITE);
-
+        userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPane = new JScrollPane(userTable);
         int verticalPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
         scrollPane.setVerticalScrollBarPolicy(verticalPolicy);
-       // scrollPane.setBounds(0,mainTicketsPanel.getY() , mainTicketsPanel.getWidth(), mainTicketsPanel.getHeight() - mainContentPanel.getHeight()/2);
         scrollPane.getVerticalScrollBar().setBackground(menuColor);
+        userTable.setRowSelectionAllowed(true);
+
+
+       addListener();
+
+
+        for (int c = 0; c < userTable.getColumnCount(); c++)
+        {
+            Class<?> col_class = userTable.getColumnClass(c);
+            userTable.setDefaultEditor(col_class, null);        // remove editor
+        }
+
+
 
     }
 
@@ -92,7 +103,6 @@ public class UserAdminView extends JComponent implements ActionListener {
         eastPanel = new JPanel(new GridLayout(1,1));
         eastPanel.setName("Users");
         eastPanel.add(scrollPane);
-        //eastPanel.add(userTable);
 
         westPanel = new JPanel();
         westPanel.setLayout(new GridLayout(6,2));
@@ -326,15 +336,19 @@ public class UserAdminView extends JComponent implements ActionListener {
         btn.addActionListener(this);
     }
 
+
+
     public void addListener() {
-        userList.addListSelectionListener(new ListSelectionListener() {
+        ListSelectionModel rowSM = userTable.getSelectionModel();
+        rowSM.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
-                int index = userList.getSelectedIndex();
-                if (index > -1) {
-                   controller.selectUserinList(index);
+                ListSelectionModel lsm = (ListSelectionModel)evt.getSource();
+                int row = lsm.getMinSelectionIndex();
+                System.out.println(row);
                 }
-            }
-        });
+            });
+        }
+
 
     }
-}
+
