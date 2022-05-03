@@ -144,10 +144,16 @@ public class Controller {
     }
 
     public void switchToUserAdmin() {
-        String[] userList = new String[userManager.infoStrings().size()];
-        userList = userManager.infoStrings().toArray(userList);
-        view.userAdminView(userList);
+        ArrayList<String> list = new ArrayList<>();
+        for (User u : userManager.getAllUsers()) {
+            list.add(u.getFirstName());
+            list.add(u.getLastName());
+            list.add(u.getEmail());
+            list.add(u.getRole());
+        }
+        view.userAdminView(list);
     }
+
 
     public void selectUserinList(int index) {
         User markedUser = userManager.getUserAtIndex(index);

@@ -24,6 +24,7 @@ import View.MainView.UserAdmin.UserAdminView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
     private JFrame mainFrame;
@@ -96,9 +97,9 @@ public class MainFrame extends JFrame {
         return mainFrame;
     }
 
-    public void userAdminView(String[] users) {
-        userAdminView = new UserAdminView(controller, this);
-        userAdminView.setUserList(users);
+    public void userAdminView(ArrayList users) {
+        userAdminView = new UserAdminView(controller, this, users);
+
 
     }
 

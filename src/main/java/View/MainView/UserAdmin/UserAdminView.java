@@ -6,10 +6,9 @@ import View.MainView.MainFrame.MainFrame;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class UserAdminView extends JComponent implements ActionListener {
 
@@ -25,23 +24,23 @@ public class UserAdminView extends JComponent implements ActionListener {
     private JComboBox role;
     private JButton btnSave, btnCancel, btnDelete;
     private JLabel lblFirstName, lblLastName, lblPassword, lblEmail;
-    private String[] roles, header;
+    private Object[][] data;
+    private String[] columnNames, roles;
     private JScrollPane scrollPane;
     private JTable userTable;
 
 
-
-    public UserAdminView(Controller controller, MainFrame mainFrame) {
+    public UserAdminView(Controller controller, MainFrame mainFrame, ArrayList users) {
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.mainContentPanel = mainFrame.getContentPanel();
         roles = new String[]{"User", "Agent", "Admin"};
-        header = new String[]{"First Name", "LastName", "Email", "Role"};
         initiateButtons();
-        initiateUserList();
         initiateLabels();
         initiateComboBox();
         initiateTextfield();
+        setUserList(users);
+        initiateUserTable();
         initiatePanels();
         initializeUserAdminView();
 
@@ -58,47 +57,42 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
-    public void initiateUserList() {
-        userList = new JList<>();
-        userList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-        userList.setForeground(menuColor);
-        userList.setBackground(Color.WHITE);
-        userList.setFont(new Font("Dialog", Font.BOLD, 12));
-        scrollPane = new JScrollPane(userList);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        addListener();
+    public void initiateUserTable() {
 
-        /*
-        tableModel = new DefaultTableModel();
-        tableModel.addColumn("Name");
-        tableModel.addColumn("Email");
-        tableModel.addColumn("Role");
-
-
-        String[][] test = {{"", "", "", ""}, {"", "", "", ""}};
-        userTable = new JTable(test,header);
-        userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        userTable = new JTable(data, columnNames);
         userTable.setRowSelectionAllowed(true);
-        userTable.setColumnSelectionAllowed(false);
-        userTable.setCellSelectionEnabled(false);
+        userTable.setFillsViewportHeight(true);
+        userTable.getTableHeader().setBackground(menuColor);
+        userTable.getTableHeader().setForeground(Color.WHITE);
+        userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        userTable.getTableHeader().setBackground(menuColor);
+        userTable.setAutoCreateRowSorter(true);
+        userTable.getTableHeader().setReorderingAllowed(false);
         scrollPane = new JScrollPane(userTable);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        int verticalPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
+        scrollPane.setVerticalScrollBarPolicy(verticalPolicy);
+        scrollPane.getVerticalScrollBar().setBackground(menuColor);
+        userTable.setRowSelectionAllowed(true);
+
+
         addListener();
- */
+
+
+        for (int c = 0; c < userTable.getColumnCount(); c++) {
+            Class<?> col_class = userTable.getColumnClass(c);
+            userTable.setDefaultEditor(col_class, null);        // remove editor
+        }
 
 
     }
 
     private void initiatePanels() {
-        eastPanel = new JPanel(new GridLayout(1,1));
+        eastPanel = new JPanel(new GridLayout(1, 1));
         eastPanel.setName("Users");
         eastPanel.add(scrollPane);
-        //eastPanel.add(userTable);
 
         westPanel = new JPanel();
-        westPanel.setLayout(new GridLayout(6,2));
+        westPanel.setLayout(new GridLayout(6, 2));
         westPanel.setName("Edit user");
         westPanel.add(lblFirstName);
         westPanel.add(txtFirstName);
@@ -114,17 +108,17 @@ public class UserAdminView extends JComponent implements ActionListener {
 
 
         southPanel = new JPanel();
-        southPanel.setLayout(new GridLayout(0,3));
+        southPanel.setLayout(new GridLayout(0, 3));
         southPanel.add(btnSave);
         southPanel.add(btnCancel);
         southPanel.add(btnDelete);
 
 
-        eastPanel.setBounds(mainContentPanel.getWidth()/2, mainContentPanel.getY(), mainContentPanel.getWidth()/3, mainContentPanel.getHeight()/5*4);
+        eastPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
         eastPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
-        westPanel.setBounds(mainContentPanel.getX()+ mainContentPanel.getWidth()/14+10 , mainContentPanel.getY() , mainContentPanel.getWidth() /3, mainContentPanel.getHeight()/2);
+        westPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 2);
         westPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
-        southPanel.setBounds(mainContentPanel.getX()+ mainContentPanel.getWidth()/14+10, westPanel.getHeight(), mainContentPanel.getWidth()/3, mainContentPanel.getHeight()/12);
+        southPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, westPanel.getHeight(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 12);
 
 
     }
@@ -178,6 +172,7 @@ public class UserAdminView extends JComponent implements ActionListener {
         setLabelDesign(lblPassword);
 
     }
+
     private void setTextBoxDesign(JTextField txt) {
         txt.setForeground(menuColor);
         txt.setBackground(Color.WHITE);
@@ -185,6 +180,7 @@ public class UserAdminView extends JComponent implements ActionListener {
         txt.setBorder(BorderFactory.createLineBorder(menuColor, 1));
 
     }
+
     private void setLabelDesign(JLabel lbl) {
         lbl.setForeground(menuColor);
         lbl.setBackground(Color.WHITE);
@@ -217,15 +213,28 @@ public class UserAdminView extends JComponent implements ActionListener {
         return userList;
     }
 
-    public void setUserList(String[] userList) {
-       this.userList.setListData(userList);
+    public void setUserList(ArrayList users) {
+        columnNames = new String[]{"First Name", "Last Name", "Email", "Role"};
 
+        data = new Object[users.size() / 4][4];
+        for (int i = 0; i <= users.size() - 4; i += 4) {
+
+            if (i == 0) {
+                data[i][0] = users.get(i);
+                data[i][1] = users.get(i + 1);
+                data[i][2] = users.get(i + 2);
+                data[i][3] = users.get(i + 3);
+
+            } else {
+                data[(i / 4)][0] = users.get(i);
+                data[(i / 4)][1] = users.get(i + 1);
+                data[(i / 4)][2] = users.get(i + 2);
+                data[(i / 4)][3] = users.get(i + 3);
+            }
+        }
 
     }
 
-    public void setUserTable(String[] userList) {
-      //  this.userTable.addEle
-    }
 
     public JTextField getTxtFirstName() {
         return txtFirstName;
@@ -286,7 +295,7 @@ public class UserAdminView extends JComponent implements ActionListener {
             setRole("User");
             setTxtFirstName("");
             setTxtLastName("");
-            userList.setSelectedIndex(-1);
+
 
         }
 
@@ -298,11 +307,10 @@ public class UserAdminView extends JComponent implements ActionListener {
 
         if (e.getSource() == btnDelete) {
             int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete User: " + getTxtEmail().getText(),
-            "Delete user", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    "Delete user", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (result == JOptionPane.YES_OPTION) {
                 controller.deleteUser(getTxtEmail().getText());
-            }
-            else {
+            } else {
             }
         }
     }
@@ -311,15 +319,24 @@ public class UserAdminView extends JComponent implements ActionListener {
         btn.addActionListener(this);
     }
 
+
     public void addListener() {
-        userList.addListSelectionListener(new ListSelectionListener() {
+        ListSelectionModel rowSM = userTable.getSelectionModel();
+        rowSM.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
-                int index = userList.getSelectedIndex();
-                if (index > -1) {
-                   controller.selectUserinList(index);
+                ListSelectionModel lsm = (ListSelectionModel) evt.getSource();
+                if (lsm.getMinSelectionIndex() > -1) {
+                    int row = lsm.getMinSelectionIndex();
+                    setTxtFirstName(userTable.getValueAt(row, 0).toString());
+                    setTxtLastName(userTable.getValueAt(row, 1).toString());
+                    setTxtEmail(userTable.getValueAt(row, 2).toString());
+                    setRole(userTable.getValueAt(row, 3).toString());
                 }
             }
-        });
 
+        });
     }
+
+
 }
+
