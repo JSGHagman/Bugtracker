@@ -79,6 +79,9 @@ public class UserAdminView extends JComponent implements ActionListener {
         userTable.getTableHeader().setBackground(menuColor);
         userTable.getTableHeader().setForeground(Color.WHITE);
         userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        userTable.getTableHeader().setBackground(menuColor);
+        userTable.setAutoCreateRowSorter(true);
+        userTable.getTableHeader().setReorderingAllowed(false);
         scrollPane = new JScrollPane(userTable);
         int verticalPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
         scrollPane.setVerticalScrollBarPolicy(verticalPolicy);
@@ -227,7 +230,7 @@ public class UserAdminView extends JComponent implements ActionListener {
     public void setUserList(ArrayList users) {
         columnNames = new String[]{"First Name", "Last Name", "Email", "Role"};
 
-        data = new Object[users.size()][4];
+        data = new Object[users.size()/4][4];
         for(int i = 0; i <= users.size()-4; i+=4){
 
             if (i == 0) {
@@ -311,7 +314,7 @@ public class UserAdminView extends JComponent implements ActionListener {
             setRole("User");
             setTxtFirstName("");
             setTxtLastName("");
-            userList.setSelectedIndex(-1);
+
 
         }
 
@@ -343,9 +346,15 @@ public class UserAdminView extends JComponent implements ActionListener {
         rowSM.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
                 ListSelectionModel lsm = (ListSelectionModel)evt.getSource();
-                int row = lsm.getMinSelectionIndex();
-                System.out.println(row);
+                if (lsm.getMinSelectionIndex() > -1) {
+                    int row = lsm.getMinSelectionIndex();
+                    setTxtFirstName(userTable.getValueAt(row, 0).toString());
+                    setTxtLastName(userTable.getValueAt(row,1).toString());
+                    setTxtEmail(userTable.getValueAt(row, 2).toString());
+                    setRole(userTable.getValueAt(row, 3).toString());
+                     }
                 }
+
             });
         }
 
