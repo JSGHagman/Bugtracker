@@ -159,7 +159,7 @@ public class DatabaseController {
      * @throws Exception
      * @author Patrik Brandell
      */
-    public ArrayList getAllTickets() throws Exception {
+    public void getAllTickets() throws Exception {
         ArrayList list = new ArrayList<Ticket>();
         Connection con = getDBConnection();
         String QUERY = String.format("SELECT * FROM ticket ORDER BY dateopen DESC");
@@ -177,11 +177,10 @@ public class DatabaseController {
             Date enddate = rs.getDate("dateclose");
             String topic = rs.getString("topic");
             ticket = new Ticket(id, category, status, priority, startdate, enddate, file, topic);
-            list.add(ticket);
+            controller.addTicketToManager(ticket);
         }
         stmt.close();
         con.close();
-        return list;
     }
 
     /**

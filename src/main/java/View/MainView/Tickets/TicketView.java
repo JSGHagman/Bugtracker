@@ -25,10 +25,11 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-public class TicketView extends JComponent implements ActionListener{
+public class TicketView extends JComponent implements ActionListener {
     //GENERAL
     private Controller controller;
     private MainFrame mainFrame;
@@ -475,6 +476,7 @@ public class TicketView extends JComponent implements ActionListener{
         table.setFillsViewportHeight(true);
         table.getTableHeader().setBackground(menuColor);
         table.getTableHeader().setForeground(Color.WHITE);
+        //table.setCellSelectionEnabled(false);
 
         JScrollPane scrollPane = new JScrollPane(table);
         int verticalPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
@@ -498,6 +500,7 @@ public class TicketView extends JComponent implements ActionListener{
         mainTicketsPanel.add(scrollPane);
         mainTicketsPanel.setBorder((BorderFactory.createMatteBorder(3, 0, 3, 0, menuColor)));
     }
+
 
 
     private void setSorter(){
@@ -543,8 +546,10 @@ public class TicketView extends JComponent implements ActionListener{
             data[i][4] = list.get(i).getStatus();
             data[i][5] = list.get(i).getUser();
             data[i][6] = list.get(i).getStartdate();
+
         }
     }
+
     /**
      * Initializes the first view
      */

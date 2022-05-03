@@ -23,6 +23,12 @@ public class TicketManager {
         tickets.remove(ticket);
     }
 
+    public void printAllTickets(){
+        for(Ticket t : tickets){
+            System.out.println(t.toString());
+        }
+    }
+
     /**
      * @author Patrik Brandell
      * @param username - Username of current user

@@ -26,6 +26,7 @@ public class Controller {
         dbController = new DatabaseController(this);
         getAllUsersFromDatabase();
         getAllTickets();
+        ticketManager.printAllTickets();
         logInView = new LogInGUI(this);
         //openMainWindow();
     }
@@ -396,6 +397,10 @@ public class Controller {
         return isFilled;
     }
 
+    public void addTicketToManager(Ticket t){
+        ticketManager.addTicketToList(t);
+    }
+
     public void populateCollaboratorsBox(JComboBox box) {
         ArrayList <User> userList = getAllUsersFromManager();
         for(User u : userList){
@@ -410,9 +415,8 @@ public class Controller {
      */
     private class GetAllTickets extends Thread {
         public void run() {
-            ArrayList<Ticket> list = new ArrayList<>();
             try {
-                list = dbController.getAllTickets();
+                dbController.getAllTickets();
             } catch (Exception e) {
                 e.printStackTrace();
             }
