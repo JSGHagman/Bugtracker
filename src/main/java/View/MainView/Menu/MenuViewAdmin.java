@@ -10,18 +10,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MenuView extends JComponent implements ActionListener {
+public class MenuViewAdmin extends JComponent implements ActionListener {
     private Controller controller;
     private JPanel menuPanel;
     private MainFrame mainFrame;
     private int height;
     private int width;
-    private JButton btnTickets, btnStatistics, btnSettings, btnLogout;
+    private JButton btnTickets, btnStatistics, btnSettings, btnLogout, btnUserAdmin;
     private Color menuColor = new Color(255, 255, 255);
     private Color hoverColor = new Color(65,145,225);
 
 
-    public MenuView (Controller controller, MainFrame mainFrame) {
+    public MenuViewAdmin(Controller controller, MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.controller = controller;
         menuPanel = mainFrame.getMenuPanel();
@@ -38,13 +38,17 @@ public class MenuView extends JComponent implements ActionListener {
         setButtonDesign(btnStatistics);
         menuPanel.add(btnStatistics);
 
-        btnSettings = new JButton("Settings");
+        btnSettings = new JButton("Profile Settings");
         setButtonDesign(btnSettings);
         menuPanel.add(btnSettings);
 
+        btnUserAdmin = new JButton("User Administration");
+        setButtonDesign(btnUserAdmin);
+        menuPanel.add(btnUserAdmin);
+
         btnLogout = new JButton("Log out");
         setButtonDesign(btnLogout);
-        menuPanel.add(btnLogout,0,3);
+        menuPanel.add(btnLogout,0,4);
 
     }
 
@@ -79,6 +83,10 @@ public class MenuView extends JComponent implements ActionListener {
 
         if (e.getSource() == btnStatistics) {
             controller.switchToStatistics();
+        }
+
+        if (e.getSource() == btnUserAdmin) {
+            controller.switchToUserAdmin();
         }
 
         if (e.getSource() == btnLogout) {

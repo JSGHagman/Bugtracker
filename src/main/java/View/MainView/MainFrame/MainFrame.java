@@ -16,8 +16,12 @@
  */
 package View.MainView.MainFrame;
 import Controller.Controller;
-import View.MainView.Menu.MenuView;
+import View.MainView.Menu.MenuViewAdmin;
+import View.MainView.Menu.MenuViewAgent;
+import View.MainView.Menu.MenuViewUser;
 import View.MainView.Tickets.TicketView;
+import View.MainView.UserAdmin.UserAdminView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,7 +31,10 @@ public class MainFrame extends JFrame {
     private Color menuColor = new Color(65, 105, 225);
     private Controller controller;
     private TicketView ticketView;
-    private MenuView menuView;
+    private MenuViewAdmin menuViewAdmin;
+    private MenuViewAgent menuViewAgent;
+    private MenuViewUser menuViewUser;
+    private UserAdminView userAdminView;
 
     public MainFrame(Controller controller){
         this.controller = controller;
@@ -46,8 +53,23 @@ public class MainFrame extends JFrame {
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        ticketView = new TicketView(controller,this);
-        menuView = new MenuView(controller, this);
+        ticketView = new TicketView(controller, this);
+
+        switch (controller.getSignedInUser().getRole()) {
+            case "User":
+                menuViewUser = new MenuViewUser(controller, this);
+                break;
+            case "Admin":
+                menuViewAdmin = new MenuViewAdmin(controller, this);
+                break;
+            case "Agent":
+                menuViewAgent = new MenuViewAgent(controller, this);
+                break;
+            default:
+                menuViewUser = new MenuViewUser(controller, this);
+                break;
+        }
+
     }
 
     public void setUpPanels(){
@@ -73,7 +95,20 @@ public class MainFrame extends JFrame {
         return mainFrame;
     }
 
+    public void userAdminView(String[] users) {
+        userAdminView = new UserAdminView(controller, this);
+        userAdminView.setUserList(users);
 
+    }
+
+    public void setUsertxtUserAdmin(String firstName, String lastName, String email, String password, String role) {
+        userAdminView.setTxtFirstName(firstName);
+        userAdminView.setTxtLastName(lastName);
+        userAdminView.setTxtEmail(email);
+        userAdminView.setPasswordtxt(password);
+        userAdminView.setRole(role);
+
+    }
 
 
 }

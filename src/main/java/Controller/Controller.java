@@ -142,6 +142,62 @@ public class Controller {
         view = new MainFrame(this);
     }
 
+    public void switchToUserAdmin() {
+        String[] userList = new String[userManager.infoStrings().size()];
+        userList = userManager.infoStrings().toArray(userList);
+        view.userAdminView(userList);
+    }
+
+    public void selectUserinList(int index) {
+        User markedUser = userManager.getUserAtIndex(index);
+        view.setUsertxtUserAdmin(markedUser.getFirstName(), markedUser.getLastName(), markedUser.getEmail(), markedUser.getPassword(), markedUser.getRole());
+
+    }
+
+    public void updateUserDB(String firstName, String lastName, String email, String password, String role) {
+        User changedUser = new User(firstName, lastName, email, password, role);
+
+        try {
+            dbController.updateUser(changedUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserManager(User user) {
+        for (User u : userManager.getAllUsers()) {
+            if (user.getEmail().equals(u.getEmail())) {
+                u.setFirstName(user.getFirstName());
+                u.setLastName(user.getLastName());
+                u.setPassword(user.getPassword());
+                u.setRole(user.getRole());
+            }
+            switchToUserAdmin();
+        }
+    }
+
+    public void deleteUser(String email){
+        if (!signedInUser.getEmail().equals(email)) {
+            for (User u : userManager.getAllUsers()) {
+                if (u.getEmail().equals(email)) {
+                    if (userManager.deleteUser(u)) {
+                        try {
+                            dbController.deleteUser(u);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("error");
+                    }
+                }
+            }
+        }
+        else {
+            showMessage("Can't delete current logged in user");
+        }
+        switchToUserAdmin();
+    }
+
     /**
      * Adds a user to the list of users in UserManager
      * @param u
@@ -213,6 +269,9 @@ public class Controller {
         dbController.updateTicket(ticket);
     }
 
+    public void newTicketfromDB(Ticket ticket) {
+        ticketManager.addTicketToList(ticket);
+    }
 
     public void updateTicket() throws Exception {
         if (ticket == null) {
@@ -356,10 +415,6 @@ public class Controller {
                 list = dbController.getAllTickets();
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            for (Ticket t : list) {
-                ticketManager.addTicketToList(t);
-                //System.out.println(t.getId());
             }
         }
     }
