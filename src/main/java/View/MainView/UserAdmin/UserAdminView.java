@@ -92,7 +92,7 @@ public class UserAdminView extends JComponent implements ActionListener {
     }
 
     private void initiatePanels() {
-        eastPanel = new JPanel();
+        eastPanel = new JPanel(new GridLayout(1,1));
         eastPanel.setName("Users");
         eastPanel.add(scrollPane);
         //eastPanel.add(userTable);
@@ -126,16 +126,13 @@ public class UserAdminView extends JComponent implements ActionListener {
         westPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
         southPanel.setBounds(mainContentPanel.getX()+ mainContentPanel.getWidth()/14+10, westPanel.getHeight(), mainContentPanel.getWidth()/3, mainContentPanel.getHeight()/12);
 
-       scrollPane.setBounds(mainContentPanel.getWidth()/2, mainContentPanel.getY(), mainContentPanel.getWidth()/3, mainContentPanel.getHeight()/5*4);
-       scrollPane.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
-
 
     }
 
     public void initializeUserAdminView() {
         mainContentPanel.removeAll();
         mainContentPanel.add(westPanel);
-        mainContentPanel.add(scrollPane);
+        mainContentPanel.add(eastPanel);
         mainContentPanel.add(southPanel);
 
         mainFrame.getFrame().revalidate();
