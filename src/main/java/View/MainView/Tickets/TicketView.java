@@ -471,12 +471,12 @@ public class TicketView extends JComponent implements ActionListener {
     private void setTicketPanelDetails(){
         setTicketList();
         table = new JTable(data, columnNames);
-        table.setRowSelectionAllowed(true);
         table.setRowHeight(mainTicketsPanel.getHeight()/40);
         table.setFillsViewportHeight(true);
         table.getTableHeader().setBackground(menuColor);
         table.getTableHeader().setForeground(Color.WHITE);
-        //table.setCellSelectionEnabled(false);
+        table.setRowSelectionAllowed(true);
+
 
         JScrollPane scrollPane = new JScrollPane(table);
         int verticalPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
@@ -546,7 +546,11 @@ public class TicketView extends JComponent implements ActionListener {
             data[i][4] = list.get(i).getStatus();
             data[i][5] = list.get(i).getUser();
             data[i][6] = list.get(i).getStartdate();
+        }
 
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            Class<?> col_class = table.getColumnClass(i);
+            table.setDefaultEditor(col_class, null);
         }
     }
 
