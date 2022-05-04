@@ -3,7 +3,9 @@ package View.MainView.ProfileView;
 import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
 
+import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,9 +35,6 @@ public class ProfileView implements ActionListener {
         this.mainFrame = mainFrame;
         this.mainContentPanel = mainFrame.getContentPanel();
         CreateProfileView();
-    }
-
-    public void createLabel(){
     }
 
     public void createButton(){
@@ -78,63 +77,77 @@ public class ProfileView implements ActionListener {
         buttonPanel = new JPanel();
         buttonPanel.setBounds(mainContentPanel.getX() + 10, 10, mainContentPanel.getWidth()/2, mainContentPanel.getHeight()/10 );
         buttonPanel.setLayout(new GridLayout(1,2,10,10));
-        buttonPanel.setBackground(Color.black);
+        buttonPanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         infoPanel = new JPanel();
-        infoPanel.setBounds(mainContentPanel.getX() + 10, mainContentPanel.getY() + buttonPanel.getHeight(), mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - 150);
-        infoPanel.setBackground(Color.GREEN);
+        infoPanel.setBounds(mainContentPanel.getX() + 10, mainContentPanel.getY() + buttonPanel.getHeight() + 12, mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - mainContentPanel.getHeight()/6);
+        infoPanel.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 3));
+        infoPanel.setLayout(new GridLayout(3, 1, 5, 5));
+        setInfoPanelDetails();
 
+        /*
         changePanel = new JPanel();
         changePanel = new JPanel();
         changePanel.setBounds(mainContentPanel.getX() + 10, mainContentPanel.getY() + buttonPanel.getHeight(), mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - 150);
         changePanel.setBackground(Color.BLUE);
+        setChangePanelDetails();
+
+         */
 
         mainContentPanel.add(infoPanel);
         mainContentPanel.add(buttonPanel);
-
     }
-
-
+    public void createLabel(){
+        randomeText = new JLabel();
+        randomeText.setText("Hejsan");
+        randomeText.setForeground(Color.RED);
+        randomeText.setFont(new Font("Dialog", Font.BOLD, 20));
+    }
 
 
     public void creatInputField(){
         fName = new JTextField();
         //fName.setText(controller.getSignedInUser().getFirstName());
         fName.setText("Förnamn");
-        fName.setFont(new Font("Firstname", Font.BOLD, 16));
         fName.setForeground(menuColor);
-        //fName.setBorder(BorderFactory.createLineBorder(menuColor, 3, false));
+        fName.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         lName = new JTextField();
         lName.setText(controller.getSelectedRole());
         lName.setForeground(menuColor);
-        lName.setFont(new Font("Lastname", Font.BOLD, 16));
+        lName.setBorder(BorderFactory.createLineBorder(menuColor, 3));
+
 
         eMail = new JTextField();
         eMail.setText("LogIn user email");
-        eMail.setFont(new Font("E-mail", Font.BOLD, 16));
+        eMail.setBackground(Color.magenta);
+        eMail.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
 
-
-
-        //infoPanel.add(lName);
-        //infoPanel.add(fName);
-        //infoPanel.add(eMail);
     }
 
-    private void setCreatePanelDetails() {
-        //set details for infoPlane
+    private void setInfoPanelDetails() {
+        //set details for infoPanel
+        JPanel topInfoPanel = new JPanel();
+        topInfoPanel.setLayout(new GridLayout(1, 1));
+        topInfoPanel.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 3));
+
+        //topInfoPanel.add(randomeText);
+        //topInfoPanel.add(lName);
+        //topInfoPanel.add(eMail);
 
 
+        infoPanel.add(topInfoPanel);
     }
 
     public void CreateProfileView(){
         createMainPanels();
         creatInputField();
         createButton();
+        createLabel();
     }
 
-    public void setEditPanelDetails(){
+    public void setChangePanelDetails(){
 
     }
     /**
