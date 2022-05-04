@@ -21,6 +21,7 @@ import View.MainView.Menu.MenuViewAgent;
 import View.MainView.Menu.MenuViewUser;
 import View.MainView.Tickets.TicketView;
 import View.MainView.UserAdmin.UserAdminView;
+import View.StaticsView.StatisticView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +37,7 @@ public class MainFrame extends JFrame {
     private MenuViewAgent menuViewAgent;
     private MenuViewUser menuViewUser;
     private UserAdminView userAdminView;
+    private StatisticView statisticView;
 
     public MainFrame(Controller controller){
         this.controller = controller;
@@ -103,6 +105,7 @@ public class MainFrame extends JFrame {
 
     }
 
+
     public void ticketView () {
         ticketView.initializeTicketView();
     }
@@ -114,6 +117,10 @@ public class MainFrame extends JFrame {
         userAdminView.setPasswordtxt(password);
         userAdminView.setRole(role);
 
+    }
+
+    public void setStatistics() {
+        statisticView = new StatisticView(this, controller);
     }
 
 

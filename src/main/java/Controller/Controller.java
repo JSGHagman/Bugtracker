@@ -133,7 +133,7 @@ public class Controller {
      * Will be used to switch to statistics
      */
     public void switchToStatistics(){
-
+        view.setStatistics();
     }
 
     /**

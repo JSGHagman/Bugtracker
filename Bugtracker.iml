@@ -31,6 +31,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: org.jfree:jfreechart:1.5.3" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:18" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:18" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:18" level="project" />
