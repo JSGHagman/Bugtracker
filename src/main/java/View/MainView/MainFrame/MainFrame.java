@@ -17,6 +17,7 @@
 package View.MainView.MainFrame;
 import Controller.Controller;
 import View.MainView.Menu.MenuView;
+import View.MainView.ProfileView.ProfileView;
 import View.MainView.Tickets.TicketView;
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +47,8 @@ public class MainFrame extends JFrame {
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        ticketView = new TicketView(controller,this);
+        //ticketView = new TicketView(controller,this);
+        ProfileView profileView = new ProfileView(controller, this);
         menuView = new MenuView(controller, this);
     }
 
