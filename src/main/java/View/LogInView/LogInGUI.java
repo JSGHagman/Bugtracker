@@ -28,6 +28,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class LogInGUI extends JComponent implements ActionListener {
     private JFrame frame;
     private JButton btnLogIn, btnSignUp, btnCreateAccount;
@@ -167,7 +169,6 @@ public class LogInGUI extends JComponent implements ActionListener {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btnSignUp){

@@ -321,6 +321,7 @@ public class TicketView extends JComponent implements ActionListener{
     /**
      * Will set everything needed to edit a ticket. Not done yet, only has two buttons
      */
+
     private void setEditPanelDetails() {
         JPanel innerTopicPanelEdit = new JPanel();
         innerTopicPanelEdit.setBounds(0,10,mainCreatePanel.getWidth()/2, mainCreatePanel.getHeight()/7);
