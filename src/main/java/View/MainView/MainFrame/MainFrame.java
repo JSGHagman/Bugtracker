@@ -82,7 +82,6 @@ public class MainFrame extends JFrame {
         contentPanel = new JPanel();
         contentPanel.setBounds(menuPanel.getX() + menuPanel.getWidth(),0, (mainFrame.getWidth() - menuPanel.getWidth()), mainFrame.getHeight());
         contentPanel.setLayout(null);
-        System.out.println(menuPanel.getWidth());
     }
 
     public JPanel getMenuPanel(){

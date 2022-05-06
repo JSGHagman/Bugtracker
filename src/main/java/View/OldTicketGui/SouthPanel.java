@@ -53,7 +53,6 @@ public class SouthPanel extends JPanel implements ActionListener {
     }
 
     private void createImportantStuff() {
-
         ticketInnerPanel1 = new JPanel(new GridLayout(4, 1, 10, 10));
         ticketInnerPanel2 = new JPanel(new GridLayout(4, 1, 10, 10));
         topicLabel = new JLabel("TOPIC:  ", SwingConstants.LEFT);
@@ -106,7 +105,7 @@ public class SouthPanel extends JPanel implements ActionListener {
             String topic = this.topic.getText();
             String comment = this.comment.getText();
             try {
-                controller.newTicket(u, topic, comment);
+                //controller.newTicket(u, topic, comment);
                 setTickets(ticketManager.getAllTickets());
                 this.topic.setText("");
                 this.comment.setText("");

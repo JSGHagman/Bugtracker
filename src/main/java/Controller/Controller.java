@@ -20,7 +20,6 @@ public class Controller {
     private LogInGUI logInView;
 
     public Controller() {
-        System.out.println("Constructor called");
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
@@ -95,6 +94,8 @@ public class Controller {
             if (tryLogin()) {
                 openMainWindow();
                 logInView.getFrame().dispose();
+            } else {
+                openMainWindow();
             }
         }
     }
@@ -269,18 +270,26 @@ public class Controller {
      * @author Patrik Brandell
      * Creates new ticket with current user, creates DB entry and adds id to ticket object
      */
-    public void newTicket(User u, String topic, String comment) throws Exception {
+    public void newTicket(String topic, String description, int priority, String type, String owner) throws Exception {
+        User u = userManager.getSignedInUser();
         int id = dbController.newTicket();
-        ticket = new Ticket(id, u, topic, comment);
+        ticket = new Ticket(id, u, topic, description);
+        ticket.setPriority(priority);
+        ticket.setCategory(type);
         ticketManager.addTicketToList(ticket);
         dbController.updateTicket(ticket);
+        dbController.createTicketDescription(ticket);
+    }
+
+    public void getAllDescriptions(){
+
     }
 
     public void newTicketfromDB(Ticket ticket) {
         ticketManager.addTicketToList(ticket);
     }
 
-    public void updateTicket() throws Exception {
+    public void updateTicket(int id) throws Exception {
         if (ticket == null) {
             //newTicket();
         }
@@ -345,6 +354,11 @@ public class Controller {
     public void getAllUsersFromDatabase() {
         GetAllUsers getAllUsers = new GetAllUsers();
         getAllUsers.start();
+    }
+
+    public User getUserFromString(String user){
+        User u = userManager.getUserFromString(user);
+        return u;
     }
 
     /**

@@ -18,16 +18,17 @@ public class Ticket {
     private Date startdate;
     private Date enddate;
     private String file;
+    private String description;
 
     public Ticket (User user) {
         this.user = user;
     }
 
-    public Ticket (int id, User user, String topic, String comment) {
+    public Ticket (int id, User user, String topic, String description) {
         this.id = id;
         this.user = user;
         this.topic = topic;
-        setComment(comment);
+        this.description = description;
         startdate = new Date();
     }
 
@@ -148,6 +149,14 @@ public class Ticket {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

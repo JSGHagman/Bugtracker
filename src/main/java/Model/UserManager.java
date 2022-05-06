@@ -73,6 +73,16 @@ public class UserManager {
         return users;
     }
 
+    public User getUserFromString(String user){
+        User userFound = null;
+        for(User u : users){
+            if (u.getEmail().equals(user)){
+                userFound = u;
+            }
+        }
+        return userFound;
+    }
+
     public boolean deleteUser(User user) {
         if(users.remove(user)) {
             return true;

@@ -1,12 +1,17 @@
 
 /**
- * @todo
- * FIXA EDIT VIEW
+ * @todo Under ticket list:
+ * Visa ticket id och all info.
+ * Kunna lägga till kommentar.
+ * Kunna displaya alla kommentarer kring en ticket, i en jscrollpane med vem som skrivit kommentaren och kommentaren själv.
  * Kunna sätta Ägare (Endast möjligt att sätta sig själv om man är agent, kan sätta vem som helst om man ör admin, kan inte sätta alls om man bara är user)
- * HÄMTA ALLA ANVÄNDARE OCH LÄGG I COMBOBOX
- *
- *
- *
+ * uppdatera lable för assignees
+ * Fixa all funktionalitet.
+ * <p>
+ * <p>
+ * <p>
+ * Class used for different views of tickets
+ * @author Jakob Hagman
  */
 
 /**
@@ -15,8 +20,8 @@
  */
 
 package View.MainView.Tickets;
+
 import Controller.Controller;
-import Model.Ticket;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
@@ -25,23 +30,22 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 public class TicketView extends JComponent implements ActionListener {
     //GENERAL
     private Controller controller;
     private MainFrame mainFrame;
     private Color menuColor = new Color(65, 105, 225);
-    private Color hoverColor = new Color(65,145,225);
+    private Color hoverColor = new Color(65, 145, 225);
     private Object[][] data;
-    private String [] columnNames;
+    private String[] columnNames;
     private JTable table;
-    private JLabel searchLabel;
+    private JLabel searchLabel, summaryLabel, commentsLabel;
     private JTextField searchField;
     private JButton btnSearch;
     private TableRowSorter sorter;
+    private JList commentsList;
     //FOR OTHER VIEWS
     private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator;
     private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
@@ -64,7 +68,7 @@ public class TicketView extends JComponent implements ActionListener {
      * @param controller
      * @param mainFrame
      */
-    public TicketView(Controller controller, MainFrame mainFrame){
+    public TicketView(Controller controller, MainFrame mainFrame) {
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.mainContentPanel = mainFrame.getContentPanel();
@@ -74,14 +78,14 @@ public class TicketView extends JComponent implements ActionListener {
         createLabelsEdit();
         createInputFieldsEdit();
         createPanels();
-      //  initializeTicketView();
+        //  initializeTicketView();
     }
 
     /**
      * This method creates buttons.
      * Sends each button to the design method.
      */
-    private void createAllButtons(){
+    private void createAllButtons() {
         //CREATE BUTTONS
         btnMyTickets = new JButton("My Tickets");
         setButtonDesign(btnMyTickets);
@@ -105,7 +109,7 @@ public class TicketView extends JComponent implements ActionListener {
         setButtonDesign(btnRemoveCollaborator);
         btnAddCollaboratorEdit = new JButton("Add");
         setButtonDesign(btnAddCollaboratorEdit);
-        btnRemoveCollaboratorEdit  = new JButton("Remove");
+        btnRemoveCollaboratorEdit = new JButton("Remove");
         setButtonDesign(btnRemoveCollaboratorEdit);
         btnSearch = new JButton("Go");
         setButtonDesign(btnSearch);
@@ -117,27 +121,30 @@ public class TicketView extends JComponent implements ActionListener {
      * This method sets some design of buttons and adds an actionlistener and mouselistener to every button
      * @param btn
      */
-    private void setButtonDesign(JButton btn){
+    private void setButtonDesign(JButton btn) {
         btn.setBackground(menuColor);
         btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("Dialog", Font.BOLD, 16));
+        btn.setFont(new Font("Dialog", Font.BOLD, 12));
         addActionListener(btn);
         btn.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
                 btn.setBackground(hoverColor);
             }
+
             public void mouseExited(MouseEvent evt) {
                 btn.setBackground(menuColor);
             }
-            public void mousePressed(MouseEvent evt){
+
+            public void mousePressed(MouseEvent evt) {
                 btn.setBackground(menuColor);
             }
         });
     }
+
     /**
      * This method creates all labels which is placed around the different panels
      */
-    private void createLabels(){
+    private void createLabels() {
         //FOR CREATE VIEW
         topicLabel = new JLabel("Topic");
         topicLabel.setForeground(menuColor);
@@ -174,20 +181,29 @@ public class TicketView extends JComponent implements ActionListener {
         searchLabel = new JLabel("Search");
         searchLabel.setForeground(menuColor);
         searchLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+
+        summaryLabel = new JLabel("Summary");
+        summaryLabel.setForeground(menuColor);
+        summaryLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+
+        commentsLabel = new JLabel("Comments");
+        commentsLabel.setForeground(menuColor);
+        commentsLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+
+
     }
+
     /**
      * This method creates all the components wich will be used for inout from the user
      */
-    private void createInputFields(){
+    private void createInputFields() {
         //FOR CREATE VIEW
         topicField = new JTextField();
         topicField.setFont(new Font("Dialog", Font.PLAIN, 16));
-        topicField.setText(" Enter topic");
         topicField.setBorder(BorderFactory.createLineBorder(menuColor, 3, false));
 
         descriptionText = new JTextArea();
         descriptionText.setFont(new Font("Dialog", Font.PLAIN, 16));
-        descriptionText.setText(" Describe the issue");
         descriptionText.setEditable(true);
         descriptionText.setLineWrap(true);
         descriptionText.setWrapStyleWord(true);
@@ -225,8 +241,10 @@ public class TicketView extends JComponent implements ActionListener {
         controller.populateCollaboratorsBox(collaboratorsBox);
         collaboratorsBox.addItem("None");
         collaboratorsBox.setSelectedItem("None");
+        setDefaultValuesInFields();
     }
-    private void createLabelsEdit(){
+
+    private void createLabelsEdit() {
         //FOR EDIT VIEW
         topicLabelEdit = new JLabel("Change Topic");
         topicLabelEdit.setForeground(menuColor);
@@ -260,7 +278,8 @@ public class TicketView extends JComponent implements ActionListener {
         assigneesListLabelEdit.setFont(new Font("Dialog", Font.PLAIN, 12));
         assigneesListLabelEdit.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
     }
-    private void createInputFieldsEdit(){
+
+    private void createInputFieldsEdit() {
         //FOR EDIT VIEW
         topicFieldEdit = new JTextField();
         topicFieldEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -308,14 +327,15 @@ public class TicketView extends JComponent implements ActionListener {
         collaboratorsBoxEdit.addItem("None");
         collaboratorsBoxEdit.setSelectedItem("None"); // SKA BORT
     }
+
     /**
      * This method creates the main panels which the user later will be able to switch back and forth between.
      */
-    private void createPanels(){
+    private void createPanels() {
         //CREATE PANELS
         mainButtonsPanel = new JPanel();
-        mainButtonsPanel.setBounds(mainContentPanel.getX() + 10, 10, mainContentPanel.getWidth()/2, mainContentPanel.getHeight()/14 );
-        mainButtonsPanel.setLayout(new GridLayout(1,4,10,10));
+        mainButtonsPanel.setBounds(mainContentPanel.getX() + 10, 10, mainContentPanel.getWidth() / 2, mainContentPanel.getHeight() / 14);
+        mainButtonsPanel.setLayout(new GridLayout(1, 4, 10, 10));
 
         mainButtonsPanel.add(btnMyTickets);
         mainButtonsPanel.add(btnAllTickets);
@@ -323,73 +343,74 @@ public class TicketView extends JComponent implements ActionListener {
         mainButtonsPanel.add(btnEditTicket);
 
         mainTicketsPanel = new JPanel();
-        mainTicketsPanel.setBounds(mainContentPanel.getX() + 10, mainContentPanel.getY() + 100, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight()-150);
+        mainTicketsPanel.setBounds(mainContentPanel.getX() + 10, mainContentPanel.getY() + 100, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight() - 150);
         //mainTicketsPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
         mainTicketsPanel.setLayout(null);
         setTicketPanelDetails();
 
         mainCreatePanel = new JPanel();
-        mainCreatePanel.setBounds(mainContentPanel.getX() + 10, mainButtonsPanel.getY() + mainButtonsPanel.getHeight() +5, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight()-mainButtonsPanel.getHeight());
+        mainCreatePanel.setBounds(mainContentPanel.getX() + 10, mainButtonsPanel.getY() + mainButtonsPanel.getHeight() + 5, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight() - mainButtonsPanel.getHeight());
         mainCreatePanel.setLayout(null);
         setCreatePanelDetails();
 
         mainEditPanel = new JPanel();
-        mainEditPanel.setBounds(mainContentPanel.getX() + 10, mainButtonsPanel.getY() + mainButtonsPanel.getHeight() +5, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight()-mainButtonsPanel.getHeight());
+        mainEditPanel.setBounds(mainContentPanel.getX() + 10, mainButtonsPanel.getY() + mainButtonsPanel.getHeight() + 5, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight() - mainButtonsPanel.getHeight());
         mainEditPanel.setLayout(null);
         setEditPanelDetails();
     }
+
     /**
      * Will set everything needed to edit a ticket. Not done yet, only has two buttons
      */
     private void setEditPanelDetails() {
         JPanel innerTopicPanelEdit = new JPanel();
-        innerTopicPanelEdit.setBounds(0,10,mainCreatePanel.getWidth()/2, mainCreatePanel.getHeight()/7);
-        innerTopicPanelEdit.setLayout(new GridLayout(3,1));
+        innerTopicPanelEdit.setBounds(0, 10, mainCreatePanel.getWidth() / 2, mainCreatePanel.getHeight() / 7);
+        innerTopicPanelEdit.setLayout(new GridLayout(3, 1));
         innerTopicPanelEdit.add(topicLabelEdit);
         innerTopicPanelEdit.add(topicFieldEdit);
         innerTopicPanelEdit.add(descriptionLabelEdit);
 
         JPanel innerDescriptionPanelEdit = new JPanel();
-        innerDescriptionPanelEdit.setBounds(0,innerTopicPanelEdit.getY() + innerTopicPanelEdit.getHeight(),mainCreatePanel.getWidth()/2,mainCreatePanel.getHeight()/5);
+        innerDescriptionPanelEdit.setBounds(0, innerTopicPanelEdit.getY() + innerTopicPanelEdit.getHeight(), mainCreatePanel.getWidth() / 2, mainCreatePanel.getHeight() / 5);
         innerDescriptionPanelEdit.setLayout(new GridLayout());
         innerDescriptionPanelEdit.add(descriptionScrollEdit);
 
         JPanel innerChoicesPanelEdit = new JPanel();
-        innerChoicesPanelEdit.setLayout(new GridLayout(4,1,10,10));
-        innerChoicesPanelEdit.setBounds(0, innerDescriptionPanelEdit.getY() + innerDescriptionPanelEdit.getHeight(), (innerDescriptionPanelEdit.getWidth()/2), innerDescriptionPanelEdit.getHeight());
+        innerChoicesPanelEdit.setLayout(new GridLayout(4, 1, 10, 10));
+        innerChoicesPanelEdit.setBounds(0, innerDescriptionPanelEdit.getY() + innerDescriptionPanelEdit.getHeight(), (innerDescriptionPanelEdit.getWidth() / 2), innerDescriptionPanelEdit.getHeight());
         innerChoicesPanelEdit.add(priorityLabelEdit);
         innerChoicesPanelEdit.add(priorityBoxEdit);
         innerChoicesPanelEdit.add(categoryLabelEdit);
         innerChoicesPanelEdit.add(categoryBoxEdit);
 
         JPanel innerPeoplePanelEdit = new JPanel();
-        innerPeoplePanelEdit.setLayout(new GridLayout(4,1,10,10));
-        innerPeoplePanelEdit.setBounds((innerChoicesPanelEdit.getX() + innerChoicesPanelEdit.getWidth()) + 5, innerDescriptionPanelEdit.getY() + innerDescriptionPanelEdit.getHeight(), (innerDescriptionPanelEdit.getWidth()/2), innerDescriptionPanelEdit.getHeight());
+        innerPeoplePanelEdit.setLayout(new GridLayout(4, 1, 10, 10));
+        innerPeoplePanelEdit.setBounds((innerChoicesPanelEdit.getX() + innerChoicesPanelEdit.getWidth()) + 5, innerDescriptionPanelEdit.getY() + innerDescriptionPanelEdit.getHeight(), (innerDescriptionPanelEdit.getWidth() / 2), innerDescriptionPanelEdit.getHeight());
         innerPeoplePanelEdit.add(ownerLabelEdit);
         innerPeoplePanelEdit.add(ownerBoxEdit);
         innerPeoplePanelEdit.add(collaboratorLabelEdit);
         innerPeoplePanelEdit.add(collaboratorsBoxEdit);
 
         JPanel innerCollaboratorButtonsPanelEdit = new JPanel();
-        innerCollaboratorButtonsPanelEdit.setLayout(new GridLayout(1,2,10,10));
-        innerCollaboratorButtonsPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerPeoplePanelEdit.getY() + innerPeoplePanelEdit.getHeight() + 5, innerPeoplePanelEdit.getWidth(), innerPeoplePanelEdit.getHeight()/4);
+        innerCollaboratorButtonsPanelEdit.setLayout(new GridLayout(1, 2, 10, 10));
+        innerCollaboratorButtonsPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerPeoplePanelEdit.getY() + innerPeoplePanelEdit.getHeight() + 5, innerPeoplePanelEdit.getWidth(), innerPeoplePanelEdit.getHeight() / 4);
         innerCollaboratorButtonsPanelEdit.add(btnAddCollaboratorEdit);
         innerCollaboratorButtonsPanelEdit.add(btnRemoveCollaboratorEdit);
 
         JPanel innerAssigneesPanelEdit = new JPanel();
-        innerAssigneesPanelEdit.setBounds(0, innerCollaboratorButtonsPanelEdit.getY() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth()/2,innerChoicesPanelEdit.getHeight()/4);
+        innerAssigneesPanelEdit.setBounds(0, innerCollaboratorButtonsPanelEdit.getY() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth() / 2, innerChoicesPanelEdit.getHeight() / 4);
         innerAssigneesPanelEdit.add(assigneesLabelEdit);
-        innerAssigneesPanelEdit.setLayout(new GridLayout(1,2,10,10));
+        innerAssigneesPanelEdit.setLayout(new GridLayout(1, 2, 10, 10));
 
         JPanel innerAssigneesListPanelEdit = new JPanel();
-        innerAssigneesListPanelEdit.setBounds(0, innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth(), innerChoicesPanelEdit.getHeight()/2);
-        innerAssigneesListPanelEdit.setLayout(new GridLayout(1,1,10,10));
+        innerAssigneesListPanelEdit.setBounds(0, innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth(), innerChoicesPanelEdit.getHeight() / 2);
+        innerAssigneesListPanelEdit.setLayout(new GridLayout(1, 1, 10, 10));
         innerAssigneesListPanelEdit.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
         innerAssigneesListPanelEdit.add(assigneesListLabelEdit);
 
         JPanel innerButtonPanelEdit = new JPanel();
-        innerButtonPanelEdit.setBounds(0,innerAssigneesListPanelEdit.getY() + innerAssigneesListPanelEdit.getHeight() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth() * 2, innerChoicesPanelEdit.getHeight()/4);
-        innerButtonPanelEdit.setLayout(new GridLayout(1,3,10,10));
+        innerButtonPanelEdit.setBounds(0, innerAssigneesListPanelEdit.getY() + innerAssigneesListPanelEdit.getHeight() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth() * 2, innerChoicesPanelEdit.getHeight() / 4);
+        innerButtonPanelEdit.setLayout(new GridLayout(1, 3, 10, 10));
         innerButtonPanelEdit.add(btnCloseTicket);
         innerButtonPanelEdit.add(btnSaveChanges);
         innerButtonPanelEdit.add(btnEditReturn);
@@ -403,59 +424,60 @@ public class TicketView extends JComponent implements ActionListener {
         mainEditPanel.add(innerAssigneesPanelEdit);
         mainEditPanel.add(innerAssigneesListPanelEdit);
     }
+
     /**
      * Sets evrything needed to create a ticket in the create ticket panel
      */
     private void setCreatePanelDetails() {
         JPanel innerTopicPanel = new JPanel();
-        innerTopicPanel.setBounds(0,10,mainCreatePanel.getWidth()/2, mainCreatePanel.getHeight()/7);
-        innerTopicPanel.setLayout(new GridLayout(3,1));
+        innerTopicPanel.setBounds(0, 10, mainCreatePanel.getWidth() / 2, mainCreatePanel.getHeight() / 7);
+        innerTopicPanel.setLayout(new GridLayout(3, 1));
         innerTopicPanel.add(topicLabel);
         innerTopicPanel.add(topicField);
         innerTopicPanel.add(descriptionLabel);
 
         JPanel innerDescriptionPanel = new JPanel();
-        innerDescriptionPanel.setBounds(0,innerTopicPanel.getY() + innerTopicPanel.getHeight(),mainCreatePanel.getWidth()/2,mainCreatePanel.getHeight()/5);
+        innerDescriptionPanel.setBounds(0, innerTopicPanel.getY() + innerTopicPanel.getHeight(), mainCreatePanel.getWidth() / 2, mainCreatePanel.getHeight() / 5);
         innerDescriptionPanel.setLayout(new GridLayout());
         innerDescriptionPanel.add(descriptionScroll);
 
         JPanel innerChoicesPanel = new JPanel();
-        innerChoicesPanel.setLayout(new GridLayout(4,1,10,10));
-        innerChoicesPanel.setBounds(0, innerDescriptionPanel.getY() + innerDescriptionPanel.getHeight(), (innerDescriptionPanel.getWidth()/2), innerDescriptionPanel.getHeight());
+        innerChoicesPanel.setLayout(new GridLayout(4, 1, 10, 10));
+        innerChoicesPanel.setBounds(0, innerDescriptionPanel.getY() + innerDescriptionPanel.getHeight(), (innerDescriptionPanel.getWidth() / 2), innerDescriptionPanel.getHeight());
         innerChoicesPanel.add(priorityLabel);
         innerChoicesPanel.add(priorityBox);
         innerChoicesPanel.add(categoryLabel);
         innerChoicesPanel.add(categoryBox);
 
         JPanel innerPeoplePanel = new JPanel();
-        innerPeoplePanel.setLayout(new GridLayout(4,1,10,10));
-        innerPeoplePanel.setBounds((innerChoicesPanel.getX() + innerChoicesPanel.getWidth()) + 5, innerDescriptionPanel.getY() + innerDescriptionPanel.getHeight(), (innerDescriptionPanel.getWidth()/2), innerDescriptionPanel.getHeight());
+        innerPeoplePanel.setLayout(new GridLayout(4, 1, 10, 10));
+        innerPeoplePanel.setBounds((innerChoicesPanel.getX() + innerChoicesPanel.getWidth()) + 5, innerDescriptionPanel.getY() + innerDescriptionPanel.getHeight(), (innerDescriptionPanel.getWidth() / 2), innerDescriptionPanel.getHeight());
         innerPeoplePanel.add(ownerLabel);
         innerPeoplePanel.add(ownerBox);
         innerPeoplePanel.add(collaboratorLabel);
         innerPeoplePanel.add(collaboratorsBox);
 
         JPanel innerCollaboratorButtonsPanel = new JPanel();
-        innerCollaboratorButtonsPanel.setLayout(new GridLayout(1,2,10,10));
-        innerCollaboratorButtonsPanel.setBounds(innerPeoplePanel.getX(), innerPeoplePanel.getY() + innerPeoplePanel.getHeight() + 5, innerPeoplePanel.getWidth(), innerPeoplePanel.getHeight()/4);
+        innerCollaboratorButtonsPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        innerCollaboratorButtonsPanel.setBounds(innerPeoplePanel.getX(), innerPeoplePanel.getY() + innerPeoplePanel.getHeight() + 5, innerPeoplePanel.getWidth(), innerPeoplePanel.getHeight() / 4);
         innerCollaboratorButtonsPanel.add(btnAddCollaborator);
         innerCollaboratorButtonsPanel.add(btnRemoveCollaborator);
 
         JPanel innerAssigneesPanel = new JPanel();
-        innerAssigneesPanel.setBounds(0, innerCollaboratorButtonsPanel.getY() + innerCollaboratorButtonsPanel.getHeight(), innerChoicesPanel.getWidth()/2,innerChoicesPanel.getHeight()/4);
+        innerAssigneesPanel.setBounds(0, innerCollaboratorButtonsPanel.getY() + innerCollaboratorButtonsPanel.getHeight(), innerChoicesPanel.getWidth() / 2, innerChoicesPanel.getHeight() / 4);
         innerAssigneesPanel.add(assigneesLabel);
-        innerAssigneesPanel.setLayout(new GridLayout(1,2,10,10));
+        innerAssigneesPanel.setLayout(new GridLayout(1, 2, 10, 10));
 
         JPanel innerAssigneesListPanel = new JPanel();
-        innerAssigneesListPanel.setBounds(0, innerAssigneesPanel.getY() + innerAssigneesPanel.getHeight(), innerTopicPanel.getWidth(), innerChoicesPanel.getHeight()/2);
-        innerAssigneesListPanel.setLayout(new GridLayout(1,1,10,10));
+        innerAssigneesListPanel.setBounds(0, innerAssigneesPanel.getY() + innerAssigneesPanel.getHeight(), innerTopicPanel.getWidth(), innerChoicesPanel.getHeight() / 2);
+        innerAssigneesListPanel.setLayout(new GridLayout(1, 1, 10, 10));
         innerAssigneesListPanel.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
         innerAssigneesListPanel.add(assigneesListLabel);
 
 
         JPanel innerButtonPanel = new JPanel();
-        innerButtonPanel.setBounds(0,innerAssigneesListPanel.getY() + innerAssigneesListPanel.getHeight() + innerCollaboratorButtonsPanel.getHeight(), innerChoicesPanel.getWidth(), innerChoicesPanel.getHeight()/4);
-        innerButtonPanel.setLayout(new GridLayout(1,3,10,10));
+        innerButtonPanel.setBounds(0, innerAssigneesListPanel.getY() + innerAssigneesListPanel.getHeight() + innerCollaboratorButtonsPanel.getHeight(), innerChoicesPanel.getWidth(), innerChoicesPanel.getHeight() / 4);
+        innerButtonPanel.setLayout(new GridLayout(1, 3, 10, 10));
         innerButtonPanel.add(btnCreateTicket);
         innerButtonPanel.add(btnCreateReturn);
 
@@ -468,42 +490,101 @@ public class TicketView extends JComponent implements ActionListener {
         mainCreatePanel.add(innerAssigneesPanel);
         mainCreatePanel.add(innerAssigneesListPanel);
     }
-    private void setTicketPanelDetails(){
+
+
+    private void setTicketPanelDetails() {
+        mainTicketsPanel.removeAll();
+        JPanel innerSearchPanel = new JPanel();
+        innerSearchPanel.setBounds(0, mainTicketsPanel.getY() - mainButtonsPanel.getHeight() + 10, mainButtonsPanel.getWidth() / 12, mainButtonsPanel.getHeight() / 2);
+        innerSearchPanel.setLayout(new GridLayout(1, 1));
+        innerSearchPanel.add(searchLabel);
+        JPanel innerSearchFieldPanel = new JPanel();
+        innerSearchFieldPanel.setBounds(innerSearchPanel.getX() + innerSearchPanel.getWidth(), innerSearchPanel.getY(), mainButtonsPanel.getWidth() / 5, mainButtonsPanel.getHeight() / 2);
+        innerSearchFieldPanel.setLayout(new GridLayout(1, 1, 10, 10));
+        searchField = new JTextField();
+        innerSearchFieldPanel.add(searchField);
+
         setTicketList();
         table = new JTable(data, columnNames);
-        table.setRowHeight(mainTicketsPanel.getHeight()/40);
+        table.setRowHeight(mainTicketsPanel.getHeight() / 40);
         table.setFillsViewportHeight(true);
         table.getTableHeader().setBackground(menuColor);
         table.getTableHeader().setForeground(Color.WHITE);
+        table.getTableHeader().setEnabled(false);
         table.setRowSelectionAllowed(true);
-
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        removeEditors();
+        setSorter();
 
         JScrollPane scrollPane = new JScrollPane(table);
         int verticalPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
         scrollPane.setVerticalScrollBarPolicy(verticalPolicy);
-        scrollPane.setBounds(0,mainTicketsPanel.getY() , mainTicketsPanel.getWidth(), mainTicketsPanel.getHeight() - mainContentPanel.getHeight()/2);
-        scrollPane.getVerticalScrollBar().setBackground(menuColor);
+        scrollPane.setBounds(0, mainTicketsPanel.getY(), mainTicketsPanel.getWidth(), mainTicketsPanel.getHeight() - mainContentPanel.getHeight() / 2);
 
-        JPanel innerSearchPanel = new JPanel();
-        innerSearchPanel.setBounds(0, mainTicketsPanel.getY() - mainButtonsPanel.getHeight() + 10 , mainButtonsPanel.getWidth()/12, mainButtonsPanel.getHeight()/2);
-        innerSearchPanel.setLayout(new GridLayout(1,1));
-        innerSearchPanel.add(searchLabel);
+        JPanel innerSummaryPanel = new JPanel();
+        innerSummaryPanel.setBounds(0, mainTicketsPanel.getY() + scrollPane.getHeight() + 5, mainTicketsPanel.getWidth(), scrollPane.getHeight());
 
-        JPanel innerSearchFieldPanel = new JPanel();
-        innerSearchFieldPanel.setBounds(innerSearchPanel.getX() + innerSearchPanel.getWidth(), innerSearchPanel.getY(), mainButtonsPanel.getWidth()/5,mainButtonsPanel.getHeight()/2);
-        innerSearchFieldPanel.setLayout(new GridLayout(1,1,10,10));
-        searchField = new JTextField();
-        innerSearchFieldPanel.add(searchField);
-        setSorter();
+        JPanel summaryHeadlinePanel = new JPanel();
+        summaryHeadlinePanel.setBounds(0, innerSummaryPanel.getY() + innerSearchPanel.getHeight() / 2, innerSearchPanel.getWidth(), innerSearchPanel.getHeight());
+        summaryHeadlinePanel.setLayout(new GridLayout(1, 1));
+        summaryHeadlinePanel.add(summaryLabel);
+
+        JTextArea summaryText = new JTextArea();
+        summaryText.setLineWrap(true);
+        summaryText.setLineWrap(true);
+        summaryText.setEditable(false);
+        summaryText.setOpaque(false);
+
+        JScrollPane summaryScroll = new JScrollPane(summaryText);
+        summaryScroll.setBounds(0, innerSummaryPanel.getY() + innerSearchPanel.getHeight() * 2, mainTicketsPanel.getWidth() / 2, innerSummaryPanel.getHeight() - innerSearchPanel.getHeight() * 2);
+        int verticalScrollbarPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
+        summaryScroll.setVerticalScrollBarPolicy(verticalScrollbarPolicy);
+
+        JPanel commentsHeadlinePanel = new JPanel();
+        commentsHeadlinePanel.setBounds(summaryHeadlinePanel.getX() + mainTicketsPanel.getWidth() / 2 + 5, innerSummaryPanel.getY() + innerSearchPanel.getHeight() / 2, mainButtonsPanel.getWidth() / 8, innerSearchPanel.getHeight());
+        commentsHeadlinePanel.setLayout(new GridLayout(1, 1));
+        commentsHeadlinePanel.add(commentsLabel);
+
+        commentsList = new JList();
+        JScrollPane commentsListScroll = new JScrollPane(commentsList);
+        commentsListScroll.setBounds(summaryScroll.getX() + summaryScroll.getWidth() + 5, innerSummaryPanel.getY() + innerSearchPanel.getHeight() * 2, mainTicketsPanel.getWidth() / 2 - 5, summaryScroll.getHeight() - summaryScroll.getHeight() / 3);
+        commentsListScroll.setVerticalScrollBarPolicy(verticalPolicy);
+
+        JTextArea commentText = new JTextArea();
+        commentText.setLineWrap(true);
+        commentText.setLineWrap(true);
+        JScrollPane commentTextScroll = new JScrollPane(commentText);
+        commentTextScroll.setBounds(summaryScroll.getX() + summaryScroll.getWidth() + 5, innerSummaryPanel.getY() + innerSearchPanel.getHeight() * 2 + commentsListScroll.getHeight() + 5, mainTicketsPanel.getWidth() / 2 - 5, summaryScroll.getHeight() / 6);
+        commentTextScroll.setVerticalScrollBarPolicy(verticalPolicy);
+
+        mainTicketsPanel.add(commentTextScroll);
+        mainTicketsPanel.add(commentsHeadlinePanel);
+        mainTicketsPanel.add(summaryHeadlinePanel);
+        mainTicketsPanel.add(summaryScroll);
+        mainTicketsPanel.add(commentsListScroll);
         mainTicketsPanel.add(innerSearchPanel);
         mainTicketsPanel.add(innerSearchFieldPanel);
         mainTicketsPanel.add(scrollPane);
+        mainTicketsPanel.add(innerSummaryPanel);
         mainTicketsPanel.setBorder((BorderFactory.createMatteBorder(3, 0, 3, 0, menuColor)));
     }
 
+    /**
+     * Sets every column on everyu row as uneditable
+     */
+    private void removeEditors() {
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            Class<?> col_class = table.getColumnClass(i);
+            table.setDefaultEditor(col_class, null);
+        }
+    }
+
+    private void setCommentsList(String[] list) {
+        commentsList.setListData(list);
+    }
 
 
-    private void setSorter(){
+    private void setSorter() {
         sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
@@ -511,14 +592,17 @@ public class TicketView extends JComponent implements ActionListener {
             public void insertUpdate(DocumentEvent e) {
                 search(searchField.getText());
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 search(searchField.getText());
             }
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 search(searchField.getText());
             }
+
             public void search(String str) {
                 if (str.length() == 0) {
                     sorter.setRowFilter(null);
@@ -528,36 +612,44 @@ public class TicketView extends JComponent implements ActionListener {
             }
         });
     }
-    public void setTicketList(){
-        columnNames = new String[]{"ID","Type", "Topic", "Priority", "Status", "Owner", "Date"};
-        ArrayList <Model.Ticket> list = controller.getAllTicketsFromManager();
+
+
+    public void setTicketList() {
+        data = null;
+        columnNames = new String[]{"ID", "Type", "Topic", "Priority", "Status", "Owner", "Date"};
+        ArrayList<Model.Ticket> list = controller.getAllTicketsFromManager();
         data = new Object[list.size()][7];
-        for(int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             data[i][0] = list.get(i).getId();
             data[i][1] = list.get(i).getCategory();
             data[i][2] = list.get(i).getTopic();
-            if(list.get(i).getPriority() == 1){
+
+            if (list.get(i).getPriority() == 1) {
                 data[i][3] = "High";
-            }else if(list.get(i).getPriority() == 2){
+            } else if (list.get(i).getPriority() == 2) {
                 data[i][3] = "Medium";
-            }else{
+            } else {
                 data[i][3] = "Low";
             }
             data[i][4] = list.get(i).getStatus();
-            data[i][5] = list.get(i).getUser();
+            if (list.get(i).getUser() != null) {
+                String firstName = list.get(i).getUser().getFirstName();
+                char lastName = list.get(i).getUser().getLastName().charAt(0);
+                char lastNameUpper = Character.toUpperCase(lastName);
+                String userName = String.format("%s %s", firstName, lastNameUpper);
+                data[i][5] = userName;
+            } else {
+                data[i][5] = list.get(i).getUser();
+            }
             data[i][6] = list.get(i).getStartdate();
         }
-
-        for (int i = 0; i < table.getColumnCount(); i++) {
-            Class<?> col_class = table.getColumnClass(i);
-            table.setDefaultEditor(col_class, null);
-        }
     }
+
 
     /**
      * Initializes the first view
      */
-    public void initializeTicketView(){
+    public void initializeTicketView() {
         mainContentPanel.removeAll();
         mainContentPanel.add(mainTicketsPanel);
         mainContentPanel.add(mainButtonsPanel);
@@ -565,42 +657,83 @@ public class TicketView extends JComponent implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainTicketsPanel;
     }
+
     /**
      * Updates view to ticket view
      */
-    public void changeToTicketView(){
+    public void changeToTicketView() {
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(mainTicketsPanel);
         mainFrame.getFrame().revalidate();
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainTicketsPanel;
     }
+
     /**
      * Changes to create a new ticket view
      */
-    public void changeToCreate(){
+    public void changeToCreate() {
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(mainCreatePanel);
         mainFrame.getFrame().revalidate();
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainCreatePanel;
     }
+
     /**
      * Changes to edit an existing ticket view
      */
-    public void changeToEdit(){
+    public void changeToEdit() {
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(mainEditPanel);
         mainFrame.getFrame().revalidate();
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainEditPanel;
     }
+
+    private void createTicket() {
+        String topic = topicField.getText();
+        String description = descriptionText.getText();
+        String priorityString = (String) priorityBox.getSelectedItem();
+        int priority = 0;
+        if (priorityString.equals("Low")) {
+            priority = 3;
+        }
+        if (priorityString.equals("Medium")) {
+            priority = 2;
+        }
+        if (priorityString.equals("High")) {
+            priority = 3;
+        }
+        String type = (String) categoryBox.getSelectedItem();
+        String owner = (String) ownerBox.getSelectedItem();
+
+        try {
+            controller.newTicket(topic, description, priority, type, owner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateTicket() throws Exception {
+        controller.updateTicket(0);
+    }
+
     /**
      * Adds actionlistener to the buttons.
      */
-    private void addActionListener(JButton btn){
+    private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
+
+    private void setDefaultValuesInFields(){
+        topicField.setText(" Enter topic");
+        descriptionText.setText(" Describe the issue");
+        priorityBox.setSelectedItem("Low");
+        categoryBox.setSelectedItem("Issue");
+        ownerBox.setSelectedItem("None");
+    }
+
     /**
      * Not sure if this is used tbh
      * @param g
@@ -610,44 +743,62 @@ public class TicketView extends JComponent implements ActionListener {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btnMyTickets){
+        if (e.getSource() == btnMyTickets) {
             changeToTicketView();
             //CLEAN TABLE
             //UPDATE LIST IN CASE OF CHANGES
             //SHOW ONLY SIGNED IN USERS TICKETS IN TABEL
-        } if(e.getSource() == btnAllTickets){
+        }
+        if (e.getSource() == btnAllTickets) {
             changeToTicketView();
             //CLEAN TABLE
             //UPDATE LIST IN CASE OF CHANGES
             //GET ALL TICKETS
             //SHOW TICKETS IN TABLE
-        } if(e.getSource() == btnNewTicket){
+        }
+        if (e.getSource() == btnNewTicket) {
             changeToCreate();
-        } if(e.getSource() == btnEditTicket){
-            changeToEdit();
+        }
+        if (e.getSource() == btnEditTicket) {
+            int selectionRow =  table.getSelectedRow();
+            int idColumn = 0;
+            String idString = table.getModel().getValueAt(selectionRow, idColumn).toString();
+            int id = Integer.parseInt(idString);
+            System.out.println(id);
+            //changeToEdit();
             //READ ALL INFO FROM SELECTED TICKET
             //PLACE VALUES IN EDITPANEL
-        } if(e.getSource() == btnEditReturn || e.getSource() == btnCreateReturn){
+        }
+        if (e.getSource() == btnEditReturn || e.getSource() == btnCreateReturn) {
             changeToTicketView();
-        } if(e.getSource() == btnCreateTicket){
+        }
+        if (e.getSource() == btnCreateTicket) {
             //GET VALUES FROM VIEW
-            //CREATE TICKET
+            createTicket();
             //UPDATE TABLE WITH LATEST CREATED ADDED TICKET AT THE TOP OF THE LIST
-        } if(e.getSource() == btnSaveChanges){
+            setTicketPanelDetails();
+            //CLEAR TEXTFIELDS
+            setDefaultValuesInFields();
+            //BACK TO TICKET VIEW
+            changeToTicketView();
+        }
+        if (e.getSource() == btnSaveChanges) {
             //GET VALUES FROM VIEW
             //UPDATE CURRENT TICKET
             //UPDATE LIST
-        } if (e.getSource() == btnAddCollaborator){
+        }
+        if (e.getSource() == btnAddCollaborator) {
             //ADD SELECTED VALUE FROM COMBOBOX TO TICKET ARRAYLIST "AGENT"
         }
 
-        if (e.getSource() == btnAddCollaboratorEdit){
+        if (e.getSource() == btnAddCollaboratorEdit) {
             //ADD SELECTED VALUE FROM COMBOBOX TO TICKET ARRAYLIST "AGENT"
         }
 
-        if(e.getSource() == btnCloseTicket){
+        if (e.getSource() == btnCloseTicket) {
             //SET CLOSING DATE // UPDATE STATUS -> CLOSED
         }
 

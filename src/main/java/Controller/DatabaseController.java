@@ -154,6 +154,19 @@ public class DatabaseController {
         con.close();
     }
 
+    public void createTicketDescription(Ticket ticket) throws SQLException {
+        Connection con = getDBConnection();
+        int id = ticket.getId();
+        String description = ticket.getDescription();
+        String owner = ticket.getUser().getEmail();
+        String QUERY1 = "INSERT INTO \"ticketInfo\" (\"ticketid\", \"description\", \"user\")" +
+        " VALUES ('" + id + "','" + description + "','" + owner + "')";
+
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY1);
+        stmt.close();
+        con.close();
+    }
     /**
      * @return ArrayList of all current tickets in db
      * @throws Exception
@@ -178,7 +191,36 @@ public class DatabaseController {
             String topic = rs.getString("topic");
             ticket = new Ticket(id, category, status, priority, startdate, enddate, file, topic);
             controller.addTicketToManager(ticket);
+            if(ticket.getEnddate() == null || ticket.getUser() == null){
+                ticket.setStatus("Open");
+            }if(ticket.getEnddate() != null){
+                ticket.setStatus("Closed");
+            }if(ticket.getEnddate() == null || ticket.getUser() != null){
+                ticket.setStatus("In progress");
+            }
+            setDescription(ticket);
         }
+        stmt.close();
+        con.close();
+    }
+
+    public void setDescription(Ticket ticket) throws SQLException {
+        Connection con = getDBConnection();
+        int id = ticket.getId();
+        String QUERY = "select * from \"ticketInfo\"\n" +
+                "WHERE ticketid = '" + id + "'";
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(QUERY);
+        while (rs.next()){
+            String description = rs.getString("description");
+            String user = rs.getString("user");
+            User u = controller.getUserFromString(user);
+            ticket.setDescription(description);
+            ticket.setUser(u);
+        }
+
+
+
         stmt.close();
         con.close();
     }
