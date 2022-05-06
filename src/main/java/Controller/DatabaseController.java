@@ -2,12 +2,10 @@ package Controller;
 import Model.Ticket;
 import Model.User;
 
-import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.*;
 import java.util.Date;
@@ -130,7 +128,6 @@ public class DatabaseController {
                 ", status =" + fixSQLString(ticket.getStatus()) + ", files =" + fixSQLString(ticket.getFile()) + ", time =" + ticket.getTime() +
                 ", dateopen =" + fixSQLDate(ticket.getStartdate()) + ", dateclose =" + fixSQLDate(ticket.getEnddate()) +
                 ", topic = " + fixSQLString(ticket.getTopic()) + " WHERE id = " + ticket.getId();
-
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         stmt.close();
@@ -158,10 +155,9 @@ public class DatabaseController {
         Connection con = getDBConnection();
         int id = ticket.getId();
         String description = ticket.getDescription();
-        String owner = ticket.getUser().getEmail();
+        String owner = ticket.getOwner().getEmail();
         String QUERY1 = "INSERT INTO \"ticketInfo\" (\"ticketid\", \"description\", \"user\")" +
         " VALUES ('" + id + "','" + description + "','" + owner + "')";
-
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY1);
         stmt.close();
@@ -191,11 +187,11 @@ public class DatabaseController {
             String topic = rs.getString("topic");
             ticket = new Ticket(id, category, status, priority, startdate, enddate, file, topic);
             controller.addTicketToManager(ticket);
-            if(ticket.getEnddate() == null || ticket.getUser() == null){
+            if(ticket.getEnddate() == null || ticket.getOwner() == null){
                 ticket.setStatus("Open");
             }if(ticket.getEnddate() != null){
                 ticket.setStatus("Closed");
-            }if(ticket.getEnddate() == null || ticket.getUser() != null){
+            }if(ticket.getEnddate() == null || ticket.getOwner() != null){
                 ticket.setStatus("In progress");
             }
             setDescription(ticket);
@@ -208,7 +204,7 @@ public class DatabaseController {
         Connection con = getDBConnection();
         int id = ticket.getId();
         String QUERY = "select * from \"ticketInfo\"\n" +
-                "WHERE ticketid = '" + id + "'";
+                "WHERE \"ticketid\" = '" + id + "'";
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(QUERY);
         while (rs.next()){
@@ -216,11 +212,21 @@ public class DatabaseController {
             String user = rs.getString("user");
             User u = controller.getUserFromString(user);
             ticket.setDescription(description);
-            ticket.setUser(u);
+            ticket.setOwner(u);
         }
+        stmt.close();
+        con.close();
+    }
 
-
-
+    public void updateDescriptionInDatabase(Ticket ticket) throws SQLException {
+        Connection con = getDBConnection();
+        int id = ticket.getId();
+        String QUERY = "UPDATE \"ticketInfo\"\n" +
+                "SET \"description\" = '"+ ticket.getDescription() +"',\n" +
+                "\t\"user\" = '" + ticket.getOwner().getEmail() +
+                "where \"ticketid\" = " + id + "';";
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
         stmt.close();
         con.close();
     }

@@ -98,8 +98,6 @@ public class MainFrame extends JFrame {
 
     public void userAdminView(ArrayList users) {
         userAdminView = new UserAdminView(controller, this, users);
-
-
     }
 
     public void ticketView () {
@@ -112,7 +110,6 @@ public class MainFrame extends JFrame {
         userAdminView.setTxtEmail(email);
         userAdminView.setPasswordtxt(password);
         userAdminView.setRole(role);
-
     }
 
 

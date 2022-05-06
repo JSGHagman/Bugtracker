@@ -22,6 +22,7 @@
 package View.MainView.Tickets;
 
 import Controller.Controller;
+import Model.Ticket;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
@@ -62,6 +63,7 @@ public class TicketView extends JComponent implements ActionListener {
     private JLabel topicLabelEdit, descriptionLabelEdit, priorityLabelEdit, categoryLabelEdit, ownerLabelEdit, collaboratorLabelEdit, assigneesLabelEdit, assigneesListLabelEdit;
     private JScrollPane descriptionScrollEdit;
     private JComboBox priorityBoxEdit, categoryBoxEdit, ownerBoxEdit, collaboratorsBoxEdit;
+    private int id;
 
     /**
      * Constructor, creates all components needed and sets the home view for tickets through initilaizeTicketView();
@@ -232,20 +234,19 @@ public class TicketView extends JComponent implements ActionListener {
         ownerBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         ownerBox.setBackground(Color.WHITE);
         ownerBox.addItem("None");
-        ownerBox.addItem("You");
-        ownerBox.setSelectedItem("None");
+        ownerBox.addItem(controller.getSignedInUser().toString());
+        ownerBox.setSelectedItem(controller.getSignedInUser().toString());
 
         collaboratorsBox = new JComboBox();
         collaboratorsBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         collaboratorsBox.setBackground(Color.WHITE);
-        controller.populateCollaboratorsBox(collaboratorsBox);
+        controller.populatePeopleBox(collaboratorsBox);
         collaboratorsBox.addItem("None");
         collaboratorsBox.setSelectedItem("None");
         setDefaultValuesInFields();
     }
 
     private void createLabelsEdit() {
-        //FOR EDIT VIEW
         topicLabelEdit = new JLabel("Change Topic");
         topicLabelEdit.setForeground(menuColor);
         topicLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -266,7 +267,7 @@ public class TicketView extends JComponent implements ActionListener {
         ownerLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
         ownerLabelEdit.setForeground(menuColor);
 
-        collaboratorLabelEdit = new JLabel("Change Collaborators");
+        collaboratorLabelEdit = new JLabel("Collaborators");
         collaboratorLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
         collaboratorLabelEdit.setForeground(menuColor);
 
@@ -283,12 +284,10 @@ public class TicketView extends JComponent implements ActionListener {
         //FOR EDIT VIEW
         topicFieldEdit = new JTextField();
         topicFieldEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
-        topicFieldEdit.setText(" Change topic"); // SKA BORT
         topicFieldEdit.setBorder(BorderFactory.createLineBorder(menuColor, 3, false));
 
         descriptionTextEdit = new JTextArea();
         descriptionTextEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
-        descriptionTextEdit.setText(" Info about the ticket goes here"); // SKA BORT
         descriptionTextEdit.setEditable(true);
         descriptionTextEdit.setLineWrap(true);
         descriptionTextEdit.setWrapStyleWord(true);
@@ -303,7 +302,6 @@ public class TicketView extends JComponent implements ActionListener {
         priorityBoxEdit.addItem("Low");
         priorityBoxEdit.addItem("Medium");
         priorityBoxEdit.addItem("High");
-        priorityBoxEdit.setSelectedItem("Low"); //SKA BORT
 
         categoryBoxEdit = new JComboBox();
         categoryBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -311,21 +309,20 @@ public class TicketView extends JComponent implements ActionListener {
         categoryBoxEdit.addItem("Issue");
         categoryBoxEdit.addItem("Bug");
         categoryBoxEdit.addItem("New feature request");
-        categoryBoxEdit.setSelectedItem("Issue"); //SKA BORT
+
 
         ownerBoxEdit = new JComboBox();
         ownerBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
         ownerBoxEdit.setBackground(Color.WHITE);
         ownerBoxEdit.addItem("None");
-        ownerBoxEdit.addItem("You");
-        ownerBoxEdit.setSelectedItem("None"); // SKA BORT
+        controller.populatePeopleBox(ownerBoxEdit);
 
         collaboratorsBoxEdit = new JComboBox();
         collaboratorsBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
         collaboratorsBoxEdit.setBackground(Color.WHITE);
-        controller.populateCollaboratorsBox(collaboratorsBoxEdit);
+        controller.populatePeopleBox(collaboratorsBoxEdit);
         collaboratorsBoxEdit.addItem("None");
-        collaboratorsBoxEdit.setSelectedItem("None"); // SKA BORT
+        collaboratorsBoxEdit.setSelectedItem(null);
     }
 
     /**
@@ -356,13 +353,13 @@ public class TicketView extends JComponent implements ActionListener {
         mainEditPanel = new JPanel();
         mainEditPanel.setBounds(mainContentPanel.getX() + 10, mainButtonsPanel.getY() + mainButtonsPanel.getHeight() + 5, mainContentPanel.getWidth() - 500, mainContentPanel.getHeight() - mainButtonsPanel.getHeight());
         mainEditPanel.setLayout(null);
-        setEditPanelDetails();
     }
 
     /**
      * Will set everything needed to edit a ticket. Not done yet, only has two buttons
      */
     private void setEditPanelDetails() {
+        mainEditPanel.removeAll();
         JPanel innerTopicPanelEdit = new JPanel();
         innerTopicPanelEdit.setBounds(0, 10, mainCreatePanel.getWidth() / 2, mainCreatePanel.getHeight() / 7);
         innerTopicPanelEdit.setLayout(new GridLayout(3, 1));
@@ -612,8 +609,6 @@ public class TicketView extends JComponent implements ActionListener {
             }
         });
     }
-
-
     public void setTicketList() {
         data = null;
         columnNames = new String[]{"ID", "Type", "Topic", "Priority", "Status", "Owner", "Date"};
@@ -623,23 +618,22 @@ public class TicketView extends JComponent implements ActionListener {
             data[i][0] = list.get(i).getId();
             data[i][1] = list.get(i).getCategory();
             data[i][2] = list.get(i).getTopic();
-
             if (list.get(i).getPriority() == 1) {
                 data[i][3] = "High";
             } else if (list.get(i).getPriority() == 2) {
                 data[i][3] = "Medium";
-            } else {
+            } else if (list.get(i).getPriority() == 3){
                 data[i][3] = "Low";
             }
             data[i][4] = list.get(i).getStatus();
-            if (list.get(i).getUser() != null) {
-                String firstName = list.get(i).getUser().getFirstName();
-                char lastName = list.get(i).getUser().getLastName().charAt(0);
+            if (list.get(i).getOwner() != null) {
+                String firstName = list.get(i).getOwner().getFirstName();
+                char lastName = list.get(i).getOwner().getLastName().charAt(0);
                 char lastNameUpper = Character.toUpperCase(lastName);
                 String userName = String.format("%s %s", firstName, lastNameUpper);
                 data[i][5] = userName;
             } else {
-                data[i][5] = list.get(i).getUser();
+                data[i][5] = null;
             }
             data[i][6] = list.get(i).getStartdate();
         }
@@ -698,12 +692,10 @@ public class TicketView extends JComponent implements ActionListener {
         int priority = 0;
         if (priorityString.equals("Low")) {
             priority = 3;
-        }
-        if (priorityString.equals("Medium")) {
+        }if (priorityString.equals("Medium")) {
             priority = 2;
-        }
-        if (priorityString.equals("High")) {
-            priority = 3;
+        }if (priorityString.equals("High")) {
+            priority = 1;
         }
         String type = (String) categoryBox.getSelectedItem();
         String owner = (String) ownerBox.getSelectedItem();
@@ -715,8 +707,42 @@ public class TicketView extends JComponent implements ActionListener {
         }
     }
 
-    private void updateTicket() throws Exception {
-        controller.updateTicket(0);
+    private void setEditTicket(int id) throws Exception {
+        Ticket t = controller.getTicketInfo(id);
+        int priority = t.getPriority();
+        topicFieldEdit.setText(t.getTopic());
+        descriptionTextEdit.setText(t.getDescription());
+        categoryBoxEdit.setSelectedItem(t.getCategory());
+        ownerBoxEdit.setSelectedItem(controller.getSignedInUser().toString());
+        if(priority == 1){
+            priorityBoxEdit.setSelectedItem("High");
+        }if(priority == 2){
+            priorityBoxEdit.setSelectedItem("Medium");
+        }else{
+            priorityBoxEdit.setSelectedItem("Low");
+        }
+    }
+
+    private void saveTicketChanges(int id){
+        String topic = topicFieldEdit.getText();
+        String description = descriptionTextEdit.getText();
+        String priorityString = priorityBoxEdit.getSelectedItem().toString();
+        int priority = 0;
+        if (priorityString.equals("High")){
+            priority = 1;
+        }if(priorityString.equals("Medium")){
+            priority = 2;
+        }if (priorityString.equals("Low")){
+            priority = 3;
+        }
+        String owner = ownerBoxEdit.getSelectedItem().toString();
+        String type =  categoryBoxEdit.getSelectedItem().toString();
+        int ticketid = id;
+        try {
+            controller.updateTicket(id, topic, description, priority, owner, type);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -744,6 +770,8 @@ public class TicketView extends JComponent implements ActionListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnMyTickets) {
@@ -765,10 +793,15 @@ public class TicketView extends JComponent implements ActionListener {
         if (e.getSource() == btnEditTicket) {
             int selectionRow =  table.getSelectedRow();
             int idColumn = 0;
-            String idString = table.getModel().getValueAt(selectionRow, idColumn).toString();
-            int id = Integer.parseInt(idString);
-            System.out.println(id);
-            //changeToEdit();
+            String idString = table.getValueAt(selectionRow, idColumn).toString();
+            id = Integer.parseInt(idString);
+            try {
+                setEditTicket(id);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            setEditPanelDetails();
+            changeToEdit();
             //READ ALL INFO FROM SELECTED TICKET
             //PLACE VALUES IN EDITPANEL
         }
@@ -786,9 +819,9 @@ public class TicketView extends JComponent implements ActionListener {
             changeToTicketView();
         }
         if (e.getSource() == btnSaveChanges) {
-            //GET VALUES FROM VIEW
-            //UPDATE CURRENT TICKET
-            //UPDATE LIST
+            saveTicketChanges(id);
+            setTicketPanelDetails();
+            changeToTicketView();
         }
         if (e.getSource() == btnAddCollaborator) {
             //ADD SELECTED VALUE FROM COMBOBOX TO TICKET ARRAYLIST "AGENT"

@@ -1,7 +1,6 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class TicketManager {
     private final ArrayList<Ticket> tickets;
@@ -38,8 +37,8 @@ public class TicketManager {
     public ArrayList getMyTickets (String email) {
         ArrayList myTickets = new ArrayList();
         for (Ticket t : tickets) {
-            if (t.getUser() != null) {
-                if (t.getUser().getEmail().equals(email)) {
+            if (t.getOwner() != null) {
+                if (t.getOwner().getEmail().equals(email)) {
                     myTickets.add(t);
                 }
                 for (User u : t.getAgent()) {

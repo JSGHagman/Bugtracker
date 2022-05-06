@@ -1,6 +1,5 @@
 package Model;
 
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -13,20 +12,20 @@ public class Ticket {
     private String status;
     private int priority;
     private ArrayList<User> agent = new ArrayList<>();
-    private User user;
+    private User owner;
     private int time;
     private Date startdate;
     private Date enddate;
     private String file;
     private String description;
 
-    public Ticket (User user) {
-        this.user = user;
+    public Ticket (User owner) {
+        this.owner = owner;
     }
 
-    public Ticket (int id, User user, String topic, String description) {
+    public Ticket (int id, User owner, String topic, String description) {
         this.id = id;
-        this.user = user;
+        this.owner = owner;
         this.topic = topic;
         this.description = description;
         startdate = new Date();
@@ -87,12 +86,12 @@ public class Ticket {
         return agent;
     }
 
-    public User getUser() {
-        return user;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public int getTime() {
@@ -161,6 +160,6 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return String.format("ID: %s | OWNER: %s | TOPIC: %s | COMMENTS: %s", this.id, this.user, this.topic, this.comment);
+        return String.format("ID: %s | OWNER: %s | TOPIC: %s | COMMENTS: %s", this.id, this.owner, this.topic, this.comment);
     }
 }

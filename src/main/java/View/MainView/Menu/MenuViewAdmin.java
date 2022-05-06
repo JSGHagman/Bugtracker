@@ -49,7 +49,6 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
         btnLogout = new JButton("Log out");
         setButtonDesign(btnLogout);
         menuPanel.add(btnLogout,0,4);
-
     }
 
     private void setButtonDesign(JButton btn){

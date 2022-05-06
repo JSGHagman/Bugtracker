@@ -289,11 +289,15 @@ public class Controller {
         ticketManager.addTicketToList(ticket);
     }
 
-    public void updateTicket(int id) throws Exception {
-        if (ticket == null) {
-            //newTicket();
-        }
-        dbController.updateTicket(ticket);
+    public void updateTicket(int id, String topic, String description, int priority, String owner, String type) throws Exception {
+        Ticket ticketToUpdate = ticketManager.getTicket(id);
+        ticketToUpdate.setTopic(topic);
+        ticketToUpdate.setDescription(description);
+        ticketToUpdate.setPriority(priority);
+        ticketToUpdate.setCategory(type);
+        User user = userManager.getUserFromString(owner);
+        ticketToUpdate.setOwner(user);
+        dbController.updateTicket(ticketToUpdate);
     }
 
     /**
@@ -421,12 +425,16 @@ public class Controller {
         ticketManager.addTicketToList(t);
     }
 
-    public void populateCollaboratorsBox(JComboBox box) {
+    public void populatePeopleBox(JComboBox box) {
         ArrayList <User> userList = getAllUsersFromManager();
         for(User u : userList){
-            String user = String.format("%s %s", u.getFirstName(), u.getLastName());
-            box.addItem(user);
+            box.addItem(u.toString());
         }
+    }
+
+    public Ticket getTicketInfo(int id) {
+        Ticket editTicket = ticketManager.getTicket(id);
+        return editTicket;
     }
 
     /**

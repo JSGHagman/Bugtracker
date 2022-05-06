@@ -76,7 +76,7 @@ public class UserManager {
     public User getUserFromString(String user){
         User userFound = null;
         for(User u : users){
-            if (u.getEmail().equals(user)){
+            if (u.toString().equals(user) || u.getEmail().equals(user)){
                 userFound = u;
             }
         }
