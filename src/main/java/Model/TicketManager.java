@@ -67,7 +67,6 @@ public class TicketManager {
     }
 
     public ArrayList getAllTickets(){
-
         return tickets;
     }
 

@@ -6,7 +6,8 @@ import java.util.Date;
 public class Ticket {
 
     private String topic;
-    private ArrayList<String> comment = new ArrayList<>();
+    private ArrayList<String> comments = new ArrayList<>();
+    private ArrayList<String> assigneesStrings = new ArrayList<>();
     private int id;
     private String category;
     private String status;
@@ -18,6 +19,7 @@ public class Ticket {
     private Date enddate;
     private String file;
     private String description;
+    private String[] infoStrings;
 
     public Ticket (User owner) {
         this.owner = owner;
@@ -110,16 +112,16 @@ public class Ticket {
         this.topic = topic;
     }
 
-    public ArrayList<String> getComment() {
-        return comment;
+    public ArrayList<String> getComments() {
+        return comments;
     }
 
-    public void setComment(ArrayList<String> comment) {
-        this.comment = comment;
+    public void setComments(ArrayList<String> comments) {
+        this.comments = comments;
     }
 
     public void setComment (String comment) {
-        this.comment.add(comment);
+        this.comments.add(comment);
     }
 
     public void setAgent(ArrayList<User> agent) {
@@ -158,8 +160,43 @@ public class Ticket {
         this.description = description;
     }
 
+    public void addComment(String comment){
+        comments.add(comment);
+    }
+
     @Override
     public String toString() {
-        return String.format("ID: %s | OWNER: %s | TOPIC: %s | COMMENTS: %s", this.id, this.owner, this.topic, this.comment);
+        return String.format("ID: %s | OWNER: %s | TOPIC: %s | COMMENTS: %s", this.id, this.owner, this.topic, this.comments);
     }
+
+    public String getPriorityAsString() {
+        String priority = "";
+        if(this.priority == 1){
+            priority = "High";
+        }if(this.priority == 2){
+            priority = "Medium";
+        }if(this.priority == 3){
+            priority = "Low";
+        }
+        return priority;
+    }
+
+    public String[] getCommentsAsStringList(){
+        return infoStrings;
+    }
+
+    public void setCommentsList(){
+        new commentsThread().start();
+    }
+
+    class commentsThread extends Thread{
+        @Override
+        public void run() {
+            infoStrings = new String[comments.size()];
+            for (int i = 0; i < comments.size(); i++ ){
+                infoStrings[i] = comments.get(i).toString();
+            }
+        }
+    }
+
 }

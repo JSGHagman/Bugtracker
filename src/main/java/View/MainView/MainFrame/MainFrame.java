@@ -74,6 +74,8 @@ public class MainFrame extends JFrame {
 
     }
 
+
+
     public void setUpPanels(){
         menuPanel = new JPanel();
         menuPanel.setBounds(0,0, mainFrame.getWidth()/14, mainFrame.getHeight());

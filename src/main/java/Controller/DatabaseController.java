@@ -1,4 +1,5 @@
 package Controller;
+
 import Model.Ticket;
 import Model.User;
 
@@ -9,6 +10,7 @@ import java.sql.Statement;
 import java.util.*;
 import java.sql.*;
 import java.util.Date;
+
 public class DatabaseController {
     private final String url = "jdbc:postgresql://pgserver.mau.se:5432/bugtracker";
     private final String user = "am4032";
@@ -113,7 +115,6 @@ public class DatabaseController {
         }
         stmt.close();
         con.close();
-
         return id;
     }
 
@@ -127,12 +128,13 @@ public class DatabaseController {
         String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category =" + fixSQLString(ticket.getCategory()) +
                 ", status =" + fixSQLString(ticket.getStatus()) + ", files =" + fixSQLString(ticket.getFile()) + ", time =" + ticket.getTime() +
                 ", dateopen =" + fixSQLDate(ticket.getStartdate()) + ", dateclose =" + fixSQLDate(ticket.getEnddate()) +
-                ", topic = " + fixSQLString(ticket.getTopic()) + " WHERE id = " + ticket.getId();
+                ", topic = " + fixSQLString(ticket.getTopic()) + ", owner =" + fixSQLString(ticket.getOwner().getEmail()) +
+                ", description = " + fixSQLString(ticket.getDescription()) +
+                " WHERE id = " + ticket.getId();
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         stmt.close();
         con.close();
-        updateTicketComments(ticket);
     }
 
     /**
@@ -140,29 +142,28 @@ public class DatabaseController {
      * @throws SQLException writes comments in table ticketcomments with a new id. Can connect to ticket through ticketId
      * @author Patrik Brandell
      */
-    public void updateTicketComments(Ticket ticket) throws SQLException {
+    public void newTicketComment(String comment, String email, int id) throws SQLException {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
-        for (String str : ticket.getComment()) {
-            String QUERY = "INSERT INTO ticketcomments (id, ticketid, comment) VALUES (default," + ticket.getId() + ", " + fixSQLString(str) + ")";
+        String QUERY = "INSERT INTO ticketcomments (ticketid, comment, id, email) VALUES (" + id + ", " + fixSQLString(comment) + ", default, " + fixSQLString(email) + ")";
+        stmt.executeUpdate(QUERY);
+        stmt.close();
+        con.close();
+    }
+
+    public void addAgentToTicket(ArrayList<User> assignees, Ticket t) throws SQLException {
+        Connection con = getDBConnection();
+        Statement stmt = con.createStatement();
+        int id = t.getId();
+        for (User u : assignees){
+            String QUERY = "INSERT INTO ticketuser (id, email) VALUES (" + id + ", " + fixSQLString(u.getEmail()) + ")";
             stmt.executeUpdate(QUERY);
         }
         stmt.close();
         con.close();
     }
 
-    public void createTicketDescription(Ticket ticket) throws SQLException {
-        Connection con = getDBConnection();
-        int id = ticket.getId();
-        String description = ticket.getDescription();
-        String owner = ticket.getOwner().getEmail();
-        String QUERY1 = "INSERT INTO \"ticketInfo\" (\"ticketid\", \"description\", \"user\")" +
-        " VALUES ('" + id + "','" + description + "','" + owner + "')";
-        Statement stmt = con.createStatement();
-        stmt.executeUpdate(QUERY1);
-        stmt.close();
-        con.close();
-    }
+
     /**
      * @return ArrayList of all current tickets in db
      * @throws Exception
@@ -185,35 +186,41 @@ public class DatabaseController {
             Date startdate = rs.getDate("dateopen");
             Date enddate = rs.getDate("dateclose");
             String topic = rs.getString("topic");
+            String user = rs.getString("owner");
+            String description = rs.getString("description");
+            User u = controller.getUserFromString(user);
             ticket = new Ticket(id, category, status, priority, startdate, enddate, file, topic);
+            ticket.setOwner(u);
+            ticket.setDescription(description);
             controller.addTicketToManager(ticket);
-            if(ticket.getEnddate() == null || ticket.getOwner() == null){
+            if (ticket.getEnddate() == null || ticket.getOwner() == null) {
                 ticket.setStatus("Open");
-            }if(ticket.getEnddate() != null){
+            }
+            if (ticket.getEnddate() != null) {
                 ticket.setStatus("Closed");
-            }if(ticket.getEnddate() == null || ticket.getOwner() != null){
+            }
+            if (ticket.getEnddate() == null || ticket.getOwner() != null) {
                 ticket.setStatus("In progress");
             }
-            setDescription(ticket);
+            setComments(ticket);
         }
         stmt.close();
         con.close();
     }
 
-    public void setDescription(Ticket ticket) throws SQLException {
+    public void setComments(Ticket ticket) throws SQLException {
         Connection con = getDBConnection();
         int id = ticket.getId();
-        String QUERY = "select * from \"ticketInfo\"\n" +
-                "WHERE \"ticketid\" = '" + id + "'";
+        String QUERY = "select \"comment\", \"email\"  from \"ticketcomments\"\n" +
+                "where \"ticketid\" = '" + id + "'";
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(QUERY);
-        while (rs.next()){
-            String description = rs.getString("description");
-            String user = rs.getString("user");
-            User u = controller.getUserFromString(user);
-            ticket.setDescription(description);
-            ticket.setOwner(u);
+        while (rs.next()) {
+            String commentString = rs.getString("comment");
+            String email = rs.getString("email");
+            controller.addComment(commentString, email, ticket);
         }
+        ticket.setCommentsList();
         stmt.close();
         con.close();
     }
@@ -222,7 +229,7 @@ public class DatabaseController {
         Connection con = getDBConnection();
         int id = ticket.getId();
         String QUERY = "UPDATE \"ticketInfo\"\n" +
-                "SET \"description\" = '"+ ticket.getDescription() +"',\n" +
+                "SET \"description\" = '" + ticket.getDescription() + "',\n" +
                 "\t\"user\" = '" + ticket.getOwner().getEmail() +
                 "where \"ticketid\" = " + id + "';";
         Statement stmt = con.createStatement();

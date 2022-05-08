@@ -4,6 +4,7 @@ import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -23,11 +24,13 @@ public class Controller {
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
-        getAllUsersFromDatabase();
-        getAllTickets();
-        ticketManager.printAllTickets();
+        startThreads();
         logInView = new LogInGUI(this);
         //openMainWindow();
+    }
+
+    public void startThreads(){
+        getAllUsersFromDatabase();
     }
 
 
@@ -270,19 +273,16 @@ public class Controller {
      * @author Patrik Brandell
      * Creates new ticket with current user, creates DB entry and adds id to ticket object
      */
-    public void newTicket(String topic, String description, int priority, String type, String owner) throws Exception {
-        User u = userManager.getSignedInUser();
+    public void newTicket(String topic, String description, int priority, String type, String owner, ArrayList <String> assignees) throws Exception {
+        User u = userManager.getUserFromString(owner);
         int id = dbController.newTicket();
         ticket = new Ticket(id, u, topic, description);
+        new AssigneesThread(ticket, assignees);
         ticket.setPriority(priority);
         ticket.setCategory(type);
+        ticket.setStatus("In progress");
         ticketManager.addTicketToList(ticket);
         dbController.updateTicket(ticket);
-        dbController.createTicketDescription(ticket);
-    }
-
-    public void getAllDescriptions(){
-
     }
 
     public void newTicketfromDB(Ticket ticket) {
@@ -437,6 +437,36 @@ public class Controller {
         return editTicket;
     }
 
+    public String showTicketSummary(int id){
+        Ticket ticketToShow = ticketManager.getTicket(id);
+        return String.format("ID: %s\nTOPIC: %s\nDESCRIPTION: %s\nTYPE: %s\nPRIORITY: %s\nSTATUS: %s\nOWNER: %s\nDATE OPEN: %s\n",
+                ticketToShow.getId(), ticketToShow.getTopic(), ticketToShow.getDescription(), ticketToShow.getCategory(),
+                ticketToShow.getPriorityAsString(), ticketToShow.getStatus(), ticketToShow.getOwner(), ticketToShow.getStartdate());
+    }
+
+    public String[] getTicketComments(int id){
+        Ticket ticketToShow = ticketManager.getTicket(id);
+        String[] list = ticketToShow.getCommentsAsStringList();
+        return list;
+    }
+
+    public void addComment(String comment, String email, Ticket ticket){
+        User u = userManager.getUserFromString(email);
+        String commentToAdd = String.format("%s: %s", u.toString(), comment);
+        ticket.addComment(commentToAdd);
+    }
+
+    public void addCommentToTicket(String comment, String email, int id){
+        Ticket ticketToUpdate = ticketManager.getTicket(id);
+        String commentToAdd = String.format("%s: %s", email, comment);
+        ticketToUpdate.addComment(commentToAdd);
+        try {
+            dbController.newTicketComment(comment, email, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * @Author Patrik Brandell
      * Separate thread to get all tickets from DB and add to TicketManager
@@ -464,6 +494,33 @@ public class Controller {
                 dbController.getAllUsers();
             } catch (SQLException e) {
                 e.printStackTrace();
+            }
+
+            getAllTickets();
+        }
+    }
+
+
+    private class AssigneesThread extends Thread{
+        private Ticket ticket;
+        private ArrayList <String> assignees;
+
+        public AssigneesThread(Ticket t, ArrayList<String> assignees){
+            this.ticket = t;
+            this.assignees = assignees;
+            start();
+        }
+
+        @Override
+        public void run() {
+            for(String s : assignees){
+                User u = getUserFromString(s);
+                ticket.addAgent(u);
+                try {
+                    dbController.addAgentToTicket(ticket.getAgent(),ticket);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

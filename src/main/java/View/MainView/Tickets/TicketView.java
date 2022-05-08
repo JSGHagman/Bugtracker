@@ -24,7 +24,6 @@ package View.MainView.Tickets;
 import Controller.Controller;
 import Model.Ticket;
 import View.MainView.MainFrame.MainFrame;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -32,6 +31,7 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class TicketView extends JComponent implements ActionListener {
     //GENERAL
@@ -44,14 +44,17 @@ public class TicketView extends JComponent implements ActionListener {
     private JTable table;
     private JLabel searchLabel, summaryLabel, commentsLabel;
     private JTextField searchField;
-    private JButton btnSearch;
+    private JButton btnAddComment, btnRemoveComment;
     private TableRowSorter sorter;
-    private JList commentsList;
+    private JList<String> commentsList = new JList<>();
+    private JTextArea summaryText, commentText;
+    private ArrayList<String> assignees;
+    private String owner;
     //FOR OTHER VIEWS
     private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator;
     private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
     private JTextField topicField;
-    private JTextArea descriptionText, comment;
+    private JTextArea descriptionText, comment, assigneesText;
     private JLabel topicLabel, descriptionLabel, priorityLabel, categoryLabel, ownerLabel, collaboratorLabel, assigneesLabel, assigneesListLabel;
     private JScrollPane descriptionScroll;
     private JComboBox priorityBox, categoryBox, ownerBox, collaboratorsBox;
@@ -59,7 +62,7 @@ public class TicketView extends JComponent implements ActionListener {
     private JButton btnEditReturn, btnSaveChanges, btnAddCollaboratorEdit, btnRemoveCollaboratorEdit, btnCloseTicket;
     private JPanel mainContentPanelEdit, mainCreatePanelEdit, mainTicketsPanelEdit, mainEditPanelEdit, mainCommentPanelEdit, mainButtonsPanelEdit, currentPanelOnDisplayEdit;
     private JTextField topicFieldEdit;
-    private JTextArea descriptionTextEdit, commentEdit;
+    private JTextArea descriptionTextEdit, commentEdit, assigneesTextEdit;
     private JLabel topicLabelEdit, descriptionLabelEdit, priorityLabelEdit, categoryLabelEdit, ownerLabelEdit, collaboratorLabelEdit, assigneesLabelEdit, assigneesListLabelEdit;
     private JScrollPane descriptionScrollEdit;
     private JComboBox priorityBoxEdit, categoryBoxEdit, ownerBoxEdit, collaboratorsBoxEdit;
@@ -113,10 +116,10 @@ public class TicketView extends JComponent implements ActionListener {
         setButtonDesign(btnAddCollaboratorEdit);
         btnRemoveCollaboratorEdit = new JButton("Remove");
         setButtonDesign(btnRemoveCollaboratorEdit);
-        btnSearch = new JButton("Go");
-        setButtonDesign(btnSearch);
         btnCloseTicket = new JButton("Close Ticket");
         setButtonDesign(btnCloseTicket);
+        btnAddComment = new JButton("Add comment");
+        setButtonDesign(btnAddComment);
     }
 
     /**
@@ -236,7 +239,6 @@ public class TicketView extends JComponent implements ActionListener {
         ownerBox.addItem("None");
         ownerBox.addItem(controller.getSignedInUser().toString());
         ownerBox.setSelectedItem(controller.getSignedInUser().toString());
-
         collaboratorsBox = new JComboBox();
         collaboratorsBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         collaboratorsBox.setBackground(Color.WHITE);
@@ -309,7 +311,6 @@ public class TicketView extends JComponent implements ActionListener {
         categoryBoxEdit.addItem("Issue");
         categoryBoxEdit.addItem("Bug");
         categoryBoxEdit.addItem("New feature request");
-
 
         ownerBoxEdit = new JComboBox();
         ownerBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -396,14 +397,20 @@ public class TicketView extends JComponent implements ActionListener {
 
         JPanel innerAssigneesPanelEdit = new JPanel();
         innerAssigneesPanelEdit.setBounds(0, innerCollaboratorButtonsPanelEdit.getY() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth() / 2, innerChoicesPanelEdit.getHeight() / 4);
-        innerAssigneesPanelEdit.add(assigneesLabelEdit);
         innerAssigneesPanelEdit.setLayout(new GridLayout(1, 2, 10, 10));
+        innerAssigneesPanelEdit.add(assigneesLabel);
 
         JPanel innerAssigneesListPanelEdit = new JPanel();
         innerAssigneesListPanelEdit.setBounds(0, innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth(), innerChoicesPanelEdit.getHeight() / 2);
         innerAssigneesListPanelEdit.setLayout(new GridLayout(1, 1, 10, 10));
         innerAssigneesListPanelEdit.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
-        innerAssigneesListPanelEdit.add(assigneesListLabelEdit);
+        assigneesTextEdit = new JTextArea();
+        assigneesTextEdit.setLineWrap(true);
+        assigneesTextEdit.setLineWrap(true);
+        assigneesTextEdit.setEditable(false);
+        assigneesTextEdit.setOpaque(false);
+        assigneesText.setBorder(BorderFactory.createEmptyBorder());
+        innerAssigneesListPanelEdit.add(assigneesTextEdit);
 
         JPanel innerButtonPanelEdit = new JPanel();
         innerButtonPanelEdit.setBounds(0, innerAssigneesListPanelEdit.getY() + innerAssigneesListPanelEdit.getHeight() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth() * 2, innerChoicesPanelEdit.getHeight() / 4);
@@ -469,7 +476,14 @@ public class TicketView extends JComponent implements ActionListener {
         innerAssigneesListPanel.setBounds(0, innerAssigneesPanel.getY() + innerAssigneesPanel.getHeight(), innerTopicPanel.getWidth(), innerChoicesPanel.getHeight() / 2);
         innerAssigneesListPanel.setLayout(new GridLayout(1, 1, 10, 10));
         innerAssigneesListPanel.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
-        innerAssigneesListPanel.add(assigneesListLabel);
+        assigneesText = new JTextArea();
+        assigneesText.setLineWrap(true);
+        assigneesText.setLineWrap(true);
+        assigneesText.setEditable(false);
+        assigneesText.setOpaque(false);
+        assigneesText.setBorder(BorderFactory.createEmptyBorder());
+        assigneesText.setText("Owner: \nAssignees: ");
+        innerAssigneesListPanel.add(assigneesText);
 
 
         JPanel innerButtonPanel = new JPanel();
@@ -526,34 +540,50 @@ public class TicketView extends JComponent implements ActionListener {
         summaryHeadlinePanel.setLayout(new GridLayout(1, 1));
         summaryHeadlinePanel.add(summaryLabel);
 
-        JTextArea summaryText = new JTextArea();
+        summaryText = new JTextArea();
         summaryText.setLineWrap(true);
         summaryText.setLineWrap(true);
         summaryText.setEditable(false);
         summaryText.setOpaque(false);
+        summaryText.setBorder(BorderFactory.createEmptyBorder());
 
         JScrollPane summaryScroll = new JScrollPane(summaryText);
         summaryScroll.setBounds(0, innerSummaryPanel.getY() + innerSearchPanel.getHeight() * 2, mainTicketsPanel.getWidth() / 2, innerSummaryPanel.getHeight() - innerSearchPanel.getHeight() * 2);
         int verticalScrollbarPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;
         summaryScroll.setVerticalScrollBarPolicy(verticalScrollbarPolicy);
+        summaryScroll.setBorder(BorderFactory.createEmptyBorder());
 
         JPanel commentsHeadlinePanel = new JPanel();
         commentsHeadlinePanel.setBounds(summaryHeadlinePanel.getX() + mainTicketsPanel.getWidth() / 2 + 5, innerSummaryPanel.getY() + innerSearchPanel.getHeight() / 2, mainButtonsPanel.getWidth() / 8, innerSearchPanel.getHeight());
         commentsHeadlinePanel.setLayout(new GridLayout(1, 1));
         commentsHeadlinePanel.add(commentsLabel);
 
-        commentsList = new JList();
         JScrollPane commentsListScroll = new JScrollPane(commentsList);
         commentsListScroll.setBounds(summaryScroll.getX() + summaryScroll.getWidth() + 5, innerSummaryPanel.getY() + innerSearchPanel.getHeight() * 2, mainTicketsPanel.getWidth() / 2 - 5, summaryScroll.getHeight() - summaryScroll.getHeight() / 3);
         commentsListScroll.setVerticalScrollBarPolicy(verticalPolicy);
 
-        JTextArea commentText = new JTextArea();
+        commentText = new JTextArea();
         commentText.setLineWrap(true);
         commentText.setLineWrap(true);
         JScrollPane commentTextScroll = new JScrollPane(commentText);
         commentTextScroll.setBounds(summaryScroll.getX() + summaryScroll.getWidth() + 5, innerSummaryPanel.getY() + innerSearchPanel.getHeight() * 2 + commentsListScroll.getHeight() + 5, mainTicketsPanel.getWidth() / 2 - 5, summaryScroll.getHeight() / 6);
         commentTextScroll.setVerticalScrollBarPolicy(verticalPolicy);
+        btnAddComment.setBounds(commentTextScroll.getX(), commentTextScroll.getY() + commentTextScroll.getHeight() + 5, commentTextScroll.getWidth()/4, commentTextScroll.getHeight());
 
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    id = getIdFromTable();
+                    setSummaryInView(id);
+                    String[] comments = controller.getTicketComments(id);
+                    if(comments != null){
+                        setCommentsList(comments);
+                    }
+                }
+            }
+        });
+
+        mainTicketsPanel.add(btnAddComment);
         mainTicketsPanel.add(commentTextScroll);
         mainTicketsPanel.add(commentsHeadlinePanel);
         mainTicketsPanel.add(summaryHeadlinePanel);
@@ -564,6 +594,14 @@ public class TicketView extends JComponent implements ActionListener {
         mainTicketsPanel.add(scrollPane);
         mainTicketsPanel.add(innerSummaryPanel);
         mainTicketsPanel.setBorder((BorderFactory.createMatteBorder(3, 0, 3, 0, menuColor)));
+    }
+
+    private void setSummaryInView(int id) {
+        String summary = controller.showTicketSummary(id);
+        summaryText.setText(summary);
+        summaryText.setFont(new Font("Dialog", Font.PLAIN, 16));
+        mainTicketsPanel.revalidate();
+        mainTicketsPanel.repaint();
     }
 
     /**
@@ -577,9 +615,11 @@ public class TicketView extends JComponent implements ActionListener {
     }
 
     private void setCommentsList(String[] list) {
+        commentsList.removeAll();
         commentsList.setListData(list);
+        mainTicketsPanel.revalidate();
+        mainTicketsPanel.repaint();
     }
-
 
     private void setSorter() {
         sorter = new TableRowSorter<>(table.getModel());
@@ -609,6 +649,7 @@ public class TicketView extends JComponent implements ActionListener {
             }
         });
     }
+
     public void setTicketList() {
         data = null;
         columnNames = new String[]{"ID", "Type", "Topic", "Priority", "Status", "Owner", "Date"};
@@ -638,8 +679,6 @@ public class TicketView extends JComponent implements ActionListener {
             data[i][6] = list.get(i).getStartdate();
         }
     }
-
-
     /**
      * Initializes the first view
      */
@@ -651,7 +690,6 @@ public class TicketView extends JComponent implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainTicketsPanel;
     }
-
     /**
      * Updates view to ticket view
      */
@@ -662,7 +700,6 @@ public class TicketView extends JComponent implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainTicketsPanel;
     }
-
     /**
      * Changes to create a new ticket view
      */
@@ -673,7 +710,6 @@ public class TicketView extends JComponent implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainCreatePanel;
     }
-
     /**
      * Changes to edit an existing ticket view
      */
@@ -699,9 +735,8 @@ public class TicketView extends JComponent implements ActionListener {
         }
         String type = (String) categoryBox.getSelectedItem();
         String owner = (String) ownerBox.getSelectedItem();
-
         try {
-            controller.newTicket(topic, description, priority, type, owner);
+            controller.newTicket(topic, description, priority, type, owner, assignees);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -713,14 +748,8 @@ public class TicketView extends JComponent implements ActionListener {
         topicFieldEdit.setText(t.getTopic());
         descriptionTextEdit.setText(t.getDescription());
         categoryBoxEdit.setSelectedItem(t.getCategory());
-        ownerBoxEdit.setSelectedItem(controller.getSignedInUser().toString());
-        if(priority == 1){
-            priorityBoxEdit.setSelectedItem("High");
-        }if(priority == 2){
-            priorityBoxEdit.setSelectedItem("Medium");
-        }else{
-            priorityBoxEdit.setSelectedItem("Low");
-        }
+        ownerBoxEdit.setSelectedItem(t.getOwner().toString());
+        priorityBoxEdit.setSelectedItem(t.getPriorityAsString());
     }
 
     private void saveTicketChanges(int id){
@@ -744,7 +773,6 @@ public class TicketView extends JComponent implements ActionListener {
             e.printStackTrace();
         }
     }
-
     /**
      * Adds actionlistener to the buttons.
      */
@@ -758,8 +786,46 @@ public class TicketView extends JComponent implements ActionListener {
         priorityBox.setSelectedItem("Low");
         categoryBox.setSelectedItem("Issue");
         ownerBox.setSelectedItem("None");
+
     }
 
+    public void setAssigneesCreate(){
+        assignees.add(collaboratorsBox.getSelectedItem().toString());
+    }
+
+    public void setAssigneesEdit(){
+        assignees.add(collaboratorsBoxEdit.getSelectedItem().toString());
+    }
+
+    private void updateAssigneesTextCreate(){
+        String assigneesString = String.format("Owner: %s\nAssignees: %s",
+                owner, createAssigneesString(assignees));
+        assigneesText.setText(assigneesString);
+    }
+
+    private void updateAssigneesTextEdit(){
+        String assigneesString = String.format("Owner: %s\nAssignees: %s",
+                owner, createAssigneesString(assignees));
+        assigneesTextEdit.setText(assigneesString);
+    }
+
+    private void setAssigneesTextEdit(int id){
+
+    }
+
+    private String createAssigneesString(ArrayList <String> assignees) {
+        String listString = assignees.stream().map(Object::toString)
+                    .collect(Collectors.joining(", "));
+         return listString;
+    }
+
+    private int getIdFromTable(){
+        int selectionRow =  table.getSelectedRow();
+        int idColumn = 0;
+        String idString = table.getValueAt(selectionRow, idColumn).toString();
+        int id = Integer.parseInt(idString);
+        return id;
+    }
     /**
      * Not sure if this is used tbh
      * @param g
@@ -770,8 +836,6 @@ public class TicketView extends JComponent implements ActionListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnMyTickets) {
@@ -779,22 +843,20 @@ public class TicketView extends JComponent implements ActionListener {
             //CLEAN TABLE
             //UPDATE LIST IN CASE OF CHANGES
             //SHOW ONLY SIGNED IN USERS TICKETS IN TABEL
-        }
-        if (e.getSource() == btnAllTickets) {
+        } if (e.getSource() == btnAllTickets) {
             changeToTicketView();
-            //CLEAN TABLE
-            //UPDATE LIST IN CASE OF CHANGES
-            //GET ALL TICKETS
-            //SHOW TICKETS IN TABLE
-        }
-        if (e.getSource() == btnNewTicket) {
+        } if (e.getSource() == btnNewTicket) {
             changeToCreate();
-        }
-        if (e.getSource() == btnEditTicket) {
-            int selectionRow =  table.getSelectedRow();
-            int idColumn = 0;
-            String idString = table.getValueAt(selectionRow, idColumn).toString();
-            id = Integer.parseInt(idString);
+            assignees = new ArrayList<>();
+            ownerBox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    owner = ownerBox.getSelectedItem().toString();
+                    updateAssigneesTextCreate();
+                }
+            });
+        } if (e.getSource() == btnEditTicket) {
+            id = getIdFromTable();
             try {
                 setEditTicket(id);
             } catch (Exception ex) {
@@ -802,40 +864,47 @@ public class TicketView extends JComponent implements ActionListener {
             }
             setEditPanelDetails();
             changeToEdit();
-            //READ ALL INFO FROM SELECTED TICKET
-            //PLACE VALUES IN EDITPANEL
-        }
-        if (e.getSource() == btnEditReturn || e.getSource() == btnCreateReturn) {
+            assignees = new ArrayList<>();
+            ownerBoxEdit.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    owner = ownerBoxEdit.getSelectedItem().toString();
+                    updateAssigneesTextEdit();
+                }
+            });
+        } if (e.getSource() == btnEditReturn || e.getSource() == btnCreateReturn) {
             changeToTicketView();
-        }
-        if (e.getSource() == btnCreateTicket) {
-            //GET VALUES FROM VIEW
-            createTicket();
-            //UPDATE TABLE WITH LATEST CREATED ADDED TICKET AT THE TOP OF THE LIST
-            setTicketPanelDetails();
-            //CLEAR TEXTFIELDS
             setDefaultValuesInFields();
-            //BACK TO TICKET VIEW
+        } if (e.getSource() == btnCreateTicket) {
+            createTicket();
+            setTicketPanelDetails();
+            setDefaultValuesInFields();
             changeToTicketView();
-        }
-        if (e.getSource() == btnSaveChanges) {
+        } if (e.getSource() == btnSaveChanges) {
             saveTicketChanges(id);
             setTicketPanelDetails();
             changeToTicketView();
-        }
-        if (e.getSource() == btnAddCollaborator) {
-            //ADD SELECTED VALUE FROM COMBOBOX TO TICKET ARRAYLIST "AGENT"
-        }
-
-        if (e.getSource() == btnAddCollaboratorEdit) {
-            //ADD SELECTED VALUE FROM COMBOBOX TO TICKET ARRAYLIST "AGENT"
-        }
-
-        if (e.getSource() == btnCloseTicket) {
+        } if (e.getSource() == btnAddCollaborator) {
+            setAssigneesCreate();
+            updateAssigneesTextCreate();
+        }if (e.getSource() == btnAddCollaboratorEdit) {
+            setAssigneesEdit();
+            updateAssigneesTextEdit();
+        } if (e.getSource() == btnCloseTicket) {
             //SET CLOSING DATE // UPDATE STATUS -> CLOSED
+        } if (e.getSource() == btnAddComment){
+            String check = commentText.getText().trim(); //read contents of text area into 'data'
+            if(check.equals("")) {
+                controller.showMessage("Comment cannot be null");
+            } else{
+                id = getIdFromTable();
+                controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
+                String[] comments = controller.getTicketComments(id);
+                setCommentsList(comments);
+                commentText.setText("");
+            }
         }
 
 
     }
-
 }
