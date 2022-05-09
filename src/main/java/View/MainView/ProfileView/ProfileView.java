@@ -3,33 +3,32 @@ package View.MainView.ProfileView;
 import Controller.Controller;
 import Model.UserManager;
 import View.MainView.MainFrame.MainFrame;
+import javafx.scene.image.Image;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ProfileView implements ActionListener {
 
     private JPanel mainContentPanel, infoPanel, changePanel, buttonPanel, currentPanelOnDisplay, imagePanel, topInfoPanel, middleInfoPanel, loweInfoPanel, roleInfoPanel;
     private JPanel changeBtnPanel, imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
-    private JTextField fName, lName, password, eMail;
+    private JTextField fName, lName, passwordField, eMail;
     private JLabel roleInfoLabel, firstnameLabel, lastnameLabel, emailLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
     private JTextArea infoBox;
     private JButton btnChangeInfo, btnShowInfo, btnChange;
-    private ImageIcon profilePicture;
     private JTextPane infoArea;
-
-    private String mail;
-    private String logInPassword;
-    private String logInFname;
-    private String logInLname;
-    private String infotext;
 
     //GENERAL
     private Controller controller;
     private MainFrame mainFrame;
     private Color menuColor = new Color(65, 105, 225);
     private Color hoverColor = new Color(65, 145, 225);
+    private Object image;
 
     public ProfileView(Controller controller, MainFrame mainFrame) {
         this.controller = controller;
@@ -37,6 +36,12 @@ public class ProfileView implements ActionListener {
         this.mainContentPanel = mainFrame.getContentPanel();
         CreateProfileView();
     }
+    /*public void setProfilePicture() throws IOException {
+        BufferedImage myPicture = ImageIO. read(new File("Images/bugTrackerIcon.png"));
+        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+    }
+
+     */
 
     public void createButton(){
         btnShowInfo = new JButton("Show profileinfo");
@@ -81,7 +86,6 @@ public class ProfileView implements ActionListener {
         currentPanelOnDisplay = infoPanel;
         mainContentPanel.add(buttonPanel);
         mainContentPanel.add(currentPanelOnDisplay);
-
     }
 
     public void createLabel(){
@@ -141,23 +145,21 @@ public class ProfileView implements ActionListener {
         roleInfoLabel.setFont(new Font("Dialog", Font.BOLD, 20));
     }
 
-
     public void creatInputField(){
         fName = new JTextField();
-        //fName.setText(controller.getSignedInUser().getFirstName());
-        fName.setText("Förnamn");
+        fName.setText(controller.getSignedInUser().getFirstName());
         fName.setForeground(menuColor);
         fName.setFont(new Font("Dialog", Font.PLAIN, 16));
         fName.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         lName = new JTextField();
-        lName.setText("Lastname");
+        lName.setText(controller.getSignedInUser().getLastName());
         lName.setForeground(menuColor);
         lName.setFont(new Font("Dialog", Font.PLAIN, 16));
         lName.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         eMail = new JTextField();
-        eMail.setText("LogIn user email");
+        eMail.setText(controller.getSignedInUser().getEmail());
         eMail.setForeground(menuColor);
         eMail.setFont(new Font("Dialog", Font.PLAIN, 16));
         eMail.setBorder(BorderFactory.createLineBorder(menuColor, 3));
@@ -178,6 +180,7 @@ public class ProfileView implements ActionListener {
         //set details for infoPanel
         imagePanel = new JPanel();
         imagePanel.setBounds(infoPanel.getX() - infoPanel.getX()*5/6, infoPanel.getY() - infoPanel.getY()*4/5, infoPanel.getWidth()/4, infoPanel.getHeight()/6);
+        imagePanel.createImage(imagePanel.getWidth(), imagePanel.getHeight());
         imagePanel.setBackground(menuColor);
 
         topInfoPanel = new JPanel();
@@ -273,23 +276,25 @@ public class ProfileView implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = infoPanel;
     }
+
     public void changeInfo(){
-        String newFirstname = fName.getText();
-        String newLastname = lName.getText();
-        String newEmail = eMail.getText();
-        if (newFirstname != "Förnamn:"){
-            controller.getSignedInUser().setFirstName(newFirstname);
-            infoFirstname.setText(newFirstname);
+        String firstName = fName.getText();
+        String lastName = lName.getText();
+        String email = eMail.getText();
+        String password = controller.getSignedInUser().getPassword();
+        String role = controller.getSignedInUser().getRole();
+
+        if (firstName != controller.getSignedInUser().getFirstName() && lastName != controller.getSignedInUser().getLastName() && email != controller.getSignedInUser().getEmail()){
+            firstName = fName.getText();
+            lastName = lName.getText();
+            email = eMail.getText();
+
+            infoFirstname.setText(firstName);
+            infolastname.setText(lastName);
+            infoEmail.setText(email);
+
         }
-        if(newLastname != "Lastname:"){
-            controller.getSignedInUser().setLastName(newLastname);
-            infolastname.setText(newLastname);
-        }
-        if (newEmail != "Email:"){
-            controller.getSignedInUser().setEmail(newEmail);
-            infoEmail.setText(newEmail);
-        }
-        System.out.println(infoFirstname);
+
     }
 
     public void CreateProfileView(){
