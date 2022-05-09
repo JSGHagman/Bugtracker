@@ -12,6 +12,12 @@
  * <p>
  * Class used for different views of tickets
  * @author Jakob Hagman
+ * <p>
+ * Class used for different views of tickets
+ * @author Jakob Hagman
+ * <p>
+ * Class used for different views of tickets
+ * @author Jakob Hagman
  */
 
 /**
@@ -24,6 +30,7 @@ package View.MainView.Tickets;
 import Controller.Controller;
 import Model.Ticket;
 import View.MainView.MainFrame.MainFrame;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -48,8 +55,9 @@ public class TicketView extends JComponent implements ActionListener {
     private TableRowSorter sorter;
     private JList<String> commentsList = new JList<>();
     private JTextArea summaryText, commentText;
-    private ArrayList<String> assignees;
+    private ArrayList<String> assignees, comments;
     private String owner;
+    private boolean myTicketsView = false;
     //FOR OTHER VIEWS
     private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator;
     private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
@@ -83,6 +91,8 @@ public class TicketView extends JComponent implements ActionListener {
         createLabelsEdit();
         createInputFieldsEdit();
         createPanels();
+        comments = new ArrayList<>();
+        assignees = new ArrayList<>();
         //  initializeTicketView();
     }
 
@@ -315,8 +325,7 @@ public class TicketView extends JComponent implements ActionListener {
         ownerBoxEdit = new JComboBox();
         ownerBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
         ownerBoxEdit.setBackground(Color.WHITE);
-        ownerBoxEdit.addItem("None");
-        controller.populatePeopleBox(ownerBoxEdit);
+        ownerBoxEdit.addItem(controller.getSignedInUser());
 
         collaboratorsBoxEdit = new JComboBox();
         collaboratorsBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -485,7 +494,6 @@ public class TicketView extends JComponent implements ActionListener {
         assigneesText.setText("Owner: \nAssignees: ");
         innerAssigneesListPanel.add(assigneesText);
 
-
         JPanel innerButtonPanel = new JPanel();
         innerButtonPanel.setBounds(0, innerAssigneesListPanel.getY() + innerAssigneesListPanel.getHeight() + innerCollaboratorButtonsPanel.getHeight(), innerChoicesPanel.getWidth(), innerChoicesPanel.getHeight() / 4);
         innerButtonPanel.setLayout(new GridLayout(1, 3, 10, 10));
@@ -568,16 +576,20 @@ public class TicketView extends JComponent implements ActionListener {
         JScrollPane commentTextScroll = new JScrollPane(commentText);
         commentTextScroll.setBounds(summaryScroll.getX() + summaryScroll.getWidth() + 5, innerSummaryPanel.getY() + innerSearchPanel.getHeight() * 2 + commentsListScroll.getHeight() + 5, mainTicketsPanel.getWidth() / 2 - 5, summaryScroll.getHeight() / 6);
         commentTextScroll.setVerticalScrollBarPolicy(verticalPolicy);
-        btnAddComment.setBounds(commentTextScroll.getX(), commentTextScroll.getY() + commentTextScroll.getHeight() + 5, commentTextScroll.getWidth()/4, commentTextScroll.getHeight());
+        btnAddComment.setBounds(commentTextScroll.getX(), commentTextScroll.getY() + commentTextScroll.getHeight() + 5, commentTextScroll.getWidth() / 4, commentTextScroll.getHeight());
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
-                    id = getIdFromTable();
-                    setSummaryInView(id);
-                    String[] comments = controller.getTicketComments(id);
-                    if(comments != null){
-                        setCommentsList(comments);
+                    try {
+                        id = getIdFromTable();
+                        setSummaryInView(id);
+                        comments = controller.getTicketComments(id);
+                        if (comments != null) {
+                            String[] list = comments.toArray(new String[comments.size()]);
+                            setCommentsList(list);
+                        }
+                    } catch (IndexOutOfBoundsException exception) {
                     }
                 }
             }
@@ -615,10 +627,7 @@ public class TicketView extends JComponent implements ActionListener {
     }
 
     private void setCommentsList(String[] list) {
-        commentsList.removeAll();
         commentsList.setListData(list);
-        mainTicketsPanel.revalidate();
-        mainTicketsPanel.repaint();
     }
 
     private void setSorter() {
@@ -651,34 +660,65 @@ public class TicketView extends JComponent implements ActionListener {
     }
 
     public void setTicketList() {
-        data = null;
-        columnNames = new String[]{"ID", "Type", "Topic", "Priority", "Status", "Owner", "Date"};
-        ArrayList<Model.Ticket> list = controller.getAllTicketsFromManager();
-        data = new Object[list.size()][7];
-        for (int i = 0; i < list.size(); i++) {
-            data[i][0] = list.get(i).getId();
-            data[i][1] = list.get(i).getCategory();
-            data[i][2] = list.get(i).getTopic();
-            if (list.get(i).getPriority() == 1) {
-                data[i][3] = "High";
-            } else if (list.get(i).getPriority() == 2) {
-                data[i][3] = "Medium";
-            } else if (list.get(i).getPriority() == 3){
-                data[i][3] = "Low";
+        if (!myTicketsView) {
+            data = null;
+            columnNames = new String[]{"ID", "Type", "Topic", "Priority", "Status", "Owner", "Date"};
+            ArrayList<Model.Ticket> list = controller.getAllTicketsFromManager();
+            data = new Object[list.size()][7];
+            for (int i = 0; i < list.size(); i++) {
+                data[i][0] = list.get(i).getId();
+                data[i][1] = list.get(i).getCategory();
+                data[i][2] = list.get(i).getTopic();
+                if (list.get(i).getPriority() == 1) {
+                    data[i][3] = "High";
+                } else if (list.get(i).getPriority() == 2) {
+                    data[i][3] = "Medium";
+                } else if (list.get(i).getPriority() == 3) {
+                    data[i][3] = "Low";
+                }
+                data[i][4] = list.get(i).getStatus();
+                if (list.get(i).getOwner().getEmail() != "none@email.com") {
+                    String firstName = list.get(i).getOwner().getFirstName();
+                    char lastName = list.get(i).getOwner().getLastName().charAt(0);
+                    char lastNameUpper = Character.toUpperCase(lastName);
+                    String userName = String.format("%s %s", firstName, lastNameUpper);
+                    data[i][5] = userName;
+                } else {
+                    data[i][5] = "None";
+                }
+                data[i][6] = list.get(i).getStartdate();
             }
-            data[i][4] = list.get(i).getStatus();
-            if (list.get(i).getOwner() != null) {
-                String firstName = list.get(i).getOwner().getFirstName();
-                char lastName = list.get(i).getOwner().getLastName().charAt(0);
-                char lastNameUpper = Character.toUpperCase(lastName);
-                String userName = String.format("%s %s", firstName, lastNameUpper);
-                data[i][5] = userName;
-            } else {
-                data[i][5] = null;
+        } if (myTicketsView) {
+            data = null;
+            columnNames = new String[]{"ID", "Type", "Topic", "Priority", "Status", "Owner", "Date"};
+            ArrayList<Model.Ticket> list = controller.getMyTickets();
+            data = new Object[list.size()][7];
+            for (int i = 0; i < list.size(); i++) {
+                data[i][0] = list.get(i).getId();
+                data[i][1] = list.get(i).getCategory();
+                data[i][2] = list.get(i).getTopic();
+                if (list.get(i).getPriority() == 1) {
+                    data[i][3] = "High";
+                } else if (list.get(i).getPriority() == 2) {
+                    data[i][3] = "Medium";
+                } else if (list.get(i).getPriority() == 3) {
+                    data[i][3] = "Low";
+                }
+                data[i][4] = list.get(i).getStatus();
+                if (list.get(i).getOwner().getEmail() != "none@email.com") {
+                    String firstName = list.get(i).getOwner().getFirstName();
+                    char lastName = list.get(i).getOwner().getLastName().charAt(0);
+                    char lastNameUpper = Character.toUpperCase(lastName);
+                    String userName = String.format("%s %s", firstName, lastNameUpper);
+                    data[i][5] = userName;
+                } else {
+                    data[i][5] = "None";
+                }
+                data[i][6] = list.get(i).getStartdate();
             }
-            data[i][6] = list.get(i).getStartdate();
         }
     }
+
     /**
      * Initializes the first view
      */
@@ -690,6 +730,7 @@ public class TicketView extends JComponent implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainTicketsPanel;
     }
+
     /**
      * Updates view to ticket view
      */
@@ -700,6 +741,7 @@ public class TicketView extends JComponent implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainTicketsPanel;
     }
+
     /**
      * Changes to create a new ticket view
      */
@@ -710,6 +752,7 @@ public class TicketView extends JComponent implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = mainCreatePanel;
     }
+
     /**
      * Changes to edit an existing ticket view
      */
@@ -728,13 +771,19 @@ public class TicketView extends JComponent implements ActionListener {
         int priority = 0;
         if (priorityString.equals("Low")) {
             priority = 3;
-        }if (priorityString.equals("Medium")) {
+        }
+        if (priorityString.equals("Medium")) {
             priority = 2;
-        }if (priorityString.equals("High")) {
+        }
+        if (priorityString.equals("High")) {
             priority = 1;
         }
         String type = (String) categoryBox.getSelectedItem();
         String owner = (String) ownerBox.getSelectedItem();
+        if(ownerBox.getSelectedItem().equals("None")){
+            owner = "none@email.com";
+        }
+
         try {
             controller.newTicket(topic, description, priority, type, owner, assignees);
         } catch (Exception e) {
@@ -744,35 +793,46 @@ public class TicketView extends JComponent implements ActionListener {
 
     private void setEditTicket(int id) throws Exception {
         Ticket t = controller.getTicketInfo(id);
+        if(controller.getSignedInUser().getRole().equals("Admin")){
+            controller.populatePeopleBox(ownerBoxEdit);
+        }
+
+        if(((DefaultComboBoxModel)ownerBoxEdit.getModel()).getIndexOf(t.getOwner()) < 0) {
+            ownerBoxEdit.addItem(t.getOwner());
+        }
         int priority = t.getPriority();
         topicFieldEdit.setText(t.getTopic());
         descriptionTextEdit.setText(t.getDescription());
         categoryBoxEdit.setSelectedItem(t.getCategory());
-        ownerBoxEdit.setSelectedItem(t.getOwner().toString());
+        ownerBoxEdit.setSelectedItem(t.getOwner());
         priorityBoxEdit.setSelectedItem(t.getPriorityAsString());
+        owner = ownerBoxEdit.getSelectedItem().toString();
     }
 
-    private void saveTicketChanges(int id){
+    private void saveTicketChanges(int id) {
         String topic = topicFieldEdit.getText();
         String description = descriptionTextEdit.getText();
         String priorityString = priorityBoxEdit.getSelectedItem().toString();
         int priority = 0;
-        if (priorityString.equals("High")){
+        if (priorityString.equals("High")) {
             priority = 1;
-        }if(priorityString.equals("Medium")){
+        }
+        if (priorityString.equals("Medium")) {
             priority = 2;
-        }if (priorityString.equals("Low")){
+        }
+        if (priorityString.equals("Low")) {
             priority = 3;
         }
         String owner = ownerBoxEdit.getSelectedItem().toString();
-        String type =  categoryBoxEdit.getSelectedItem().toString();
+        String type = categoryBoxEdit.getSelectedItem().toString();
         int ticketid = id;
         try {
-            controller.updateTicket(id, topic, description, priority, owner, type);
+            controller.updateTicket(id, topic, description, priority, owner, type, assignees);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     /**
      * Adds actionlistener to the buttons.
      */
@@ -780,52 +840,81 @@ public class TicketView extends JComponent implements ActionListener {
         btn.addActionListener(this);
     }
 
-    private void setDefaultValuesInFields(){
+    private void setDefaultValuesInFields() {
         topicField.setText(" Enter topic");
         descriptionText.setText(" Describe the issue");
         priorityBox.setSelectedItem("Low");
         categoryBox.setSelectedItem("Issue");
         ownerBox.setSelectedItem("None");
-
     }
 
-    public void setAssigneesCreate(){
+    public void setAssigneesCreate() {
         assignees.add(collaboratorsBox.getSelectedItem().toString());
     }
 
-    public void setAssigneesEdit(){
+    public void setAssigneesEdit() {
         assignees.add(collaboratorsBoxEdit.getSelectedItem().toString());
     }
 
-    private void updateAssigneesTextCreate(){
+    private void updateAssigneesTextCreate() {
         String assigneesString = String.format("Owner: %s\nAssignees: %s",
                 owner, createAssigneesString(assignees));
         assigneesText.setText(assigneesString);
     }
 
-    private void updateAssigneesTextEdit(){
+    private void updateAssigneesTextEdit() {
         String assigneesString = String.format("Owner: %s\nAssignees: %s",
                 owner, createAssigneesString(assignees));
         assigneesTextEdit.setText(assigneesString);
     }
 
-    private void setAssigneesTextEdit(int id){
-
+    private void setAssigneesTextEdit(int id) {
+        assignees = controller.getAgentsOnTicket(id);
     }
 
-    private String createAssigneesString(ArrayList <String> assignees) {
+    private String createAssigneesString(ArrayList<String> assignees) {
         String listString = assignees.stream().map(Object::toString)
-                    .collect(Collectors.joining(", "));
-         return listString;
+                .collect(Collectors.joining(", "));
+        return listString;
     }
 
-    private int getIdFromTable(){
-        int selectionRow =  table.getSelectedRow();
+    private int getIdFromTable() {
+        int selectionRow = table.getSelectedRow();
         int idColumn = 0;
         String idString = table.getValueAt(selectionRow, idColumn).toString();
         int id = Integer.parseInt(idString);
         return id;
     }
+
+    private void removeCollaborator(String user) {
+        boolean found = false;
+        for(String s : assignees){
+            if(s.equals(user)){
+                assignees.remove(user);
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            controller.showMessage("Cannot remove unassigned user");
+        }
+    }
+
+    private void removeCollaboratorFromOldTicket(String user, int id){
+        boolean found = false;
+        for(String s : assignees){
+            if(s.equals(user)){
+                assignees.remove(user);
+                controller.removeAgent(user, id);
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            controller.showMessage("Cannot remove unassigned user");
+        }
+    }
+
     /**
      * Not sure if this is used tbh
      * @param g
@@ -839,15 +928,22 @@ public class TicketView extends JComponent implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnMyTickets) {
+            myTicketsView = true;
+            setTicketPanelDetails();
             changeToTicketView();
-            //CLEAN TABLE
-            //UPDATE LIST IN CASE OF CHANGES
-            //SHOW ONLY SIGNED IN USERS TICKETS IN TABEL
-        } if (e.getSource() == btnAllTickets) {
+        }
+
+
+        if (e.getSource() == btnAllTickets) {
+            myTicketsView = false;
+            setTicketPanelDetails();
             changeToTicketView();
-        } if (e.getSource() == btnNewTicket) {
+        }
+
+
+        if (e.getSource() == btnNewTicket) {
             changeToCreate();
-            assignees = new ArrayList<>();
+            assignees.clear();
             ownerBox.addItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
@@ -855,56 +951,107 @@ public class TicketView extends JComponent implements ActionListener {
                     updateAssigneesTextCreate();
                 }
             });
-        } if (e.getSource() == btnEditTicket) {
+            myTicketsView = false;
+        }
+
+
+        if (e.getSource() == btnEditTicket) {
             id = getIdFromTable();
-            try {
-                setEditTicket(id);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            setEditPanelDetails();
-            changeToEdit();
-            assignees = new ArrayList<>();
-            ownerBoxEdit.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    owner = ownerBoxEdit.getSelectedItem().toString();
+            if(controller.editGuard(id)){
+                try {
+                    setEditTicket(id);
+                    setEditPanelDetails();
+                    changeToEdit();
+                    assignees.clear();
+                    setAssigneesTextEdit(id);
                     updateAssigneesTextEdit();
+                    ownerBoxEdit.addItemListener(new ItemListener() {
+                        @Override
+                        public void itemStateChanged(ItemEvent e) {
+                            owner = ownerBoxEdit.getSelectedItem().toString();
+                            updateAssigneesTextEdit();
+                        }
+                    });
+                    myTicketsView = false;
+                } catch (IndexOutOfBoundsException ex) {
+                    controller.showMessage("Select a ticket");
+                } catch (Exception exception){
+                    exception.printStackTrace();
                 }
-            });
-        } if (e.getSource() == btnEditReturn || e.getSource() == btnCreateReturn) {
-            changeToTicketView();
-            setDefaultValuesInFields();
-        } if (e.getSource() == btnCreateTicket) {
-            createTicket();
-            setTicketPanelDetails();
-            setDefaultValuesInFields();
-            changeToTicketView();
-        } if (e.getSource() == btnSaveChanges) {
-            saveTicketChanges(id);
-            setTicketPanelDetails();
-            changeToTicketView();
-        } if (e.getSource() == btnAddCollaborator) {
-            setAssigneesCreate();
-            updateAssigneesTextCreate();
-        }if (e.getSource() == btnAddCollaboratorEdit) {
-            setAssigneesEdit();
-            updateAssigneesTextEdit();
-        } if (e.getSource() == btnCloseTicket) {
-            //SET CLOSING DATE // UPDATE STATUS -> CLOSED
-        } if (e.getSource() == btnAddComment){
-            String check = commentText.getText().trim(); //read contents of text area into 'data'
-            if(check.equals("")) {
-                controller.showMessage("Comment cannot be null");
-            } else{
-                id = getIdFromTable();
-                controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
-                String[] comments = controller.getTicketComments(id);
-                setCommentsList(comments);
-                commentText.setText("");
+            }else{
+                controller.showMessage("You don't have authorization to edit this ticket");
             }
         }
 
 
+        if (e.getSource() == btnEditReturn || e.getSource() == btnCreateReturn) {
+            changeToTicketView();
+            setDefaultValuesInFields();
+            myTicketsView = false;
+        }
+
+
+        if (e.getSource() == btnCreateTicket) {
+            createTicket();
+            setTicketPanelDetails();
+            setDefaultValuesInFields();
+            changeToTicketView();
+            table.clearSelection();
+            setCommentsList(new String[0]);
+            myTicketsView = false;
+        }
+
+
+        if (e.getSource() == btnSaveChanges) {
+            saveTicketChanges(id);
+            setTicketPanelDetails();
+            changeToTicketView();
+            table.clearSelection();
+            setCommentsList(new String[0]);
+            myTicketsView = false;
+        }
+
+        if (e.getSource() == btnAddCollaborator) {
+            setAssigneesCreate();
+            updateAssigneesTextCreate();
+        }
+
+        if (e.getSource() == btnAddCollaboratorEdit) {
+            setAssigneesEdit();
+            updateAssigneesTextEdit();
+        }
+
+        if(e.getSource() == btnRemoveCollaboratorEdit) {
+            removeCollaboratorFromOldTicket(collaboratorsBoxEdit.getSelectedItem().toString(), id);
+            updateAssigneesTextEdit();
+        }
+
+        if(e.getSource() == btnRemoveCollaborator){
+            removeCollaborator(collaboratorsBox.getSelectedItem().toString());
+            updateAssigneesTextCreate();
+        }
+
+        if (e.getSource() == btnCloseTicket) {
+            myTicketsView = false;
+            controller.closeTicket(id);
+            setTicketPanelDetails();
+            changeToTicketView();
+            table.clearSelection();
+            setCommentsList(new String[0]);
+        }
+
+        if (e.getSource() == btnAddComment) {
+            String check = commentText.getText().trim(); //read contents of text area into 'data'
+            if (check.equals("")) {
+                controller.showMessage("Comment cannot be null");
+            } else {
+                id = getIdFromTable();
+                controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
+                comments = controller.getTicketComments(id);
+                String[] list = comments.toArray(new String[comments.size()]);
+                setCommentsList(list);
+                commentText.setText("");
+            }
+        }
     }
 }

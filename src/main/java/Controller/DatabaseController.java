@@ -125,13 +125,13 @@ public class DatabaseController {
      */
     public void updateTicket(Ticket ticket) throws SQLException {
         Connection con = getDBConnection();
+        Statement stmt = con.createStatement();
         String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category =" + fixSQLString(ticket.getCategory()) +
                 ", status =" + fixSQLString(ticket.getStatus()) + ", files =" + fixSQLString(ticket.getFile()) + ", time =" + ticket.getTime() +
                 ", dateopen =" + fixSQLDate(ticket.getStartdate()) + ", dateclose =" + fixSQLDate(ticket.getEnddate()) +
-                ", topic = " + fixSQLString(ticket.getTopic()) + ", owner =" + fixSQLString(ticket.getOwner().getEmail()) +
+                ", topic = " + fixSQLString(ticket.getTopic()) + ", owner = " + fixSQLString(ticket.getOwner().getEmail()) +
                 ", description = " + fixSQLString(ticket.getDescription()) +
                 " WHERE id = " + ticket.getId();
-        Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         stmt.close();
         con.close();
@@ -155,7 +155,7 @@ public class DatabaseController {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
         int id = t.getId();
-        for (User u : assignees){
+        for(User u : assignees){
             String QUERY = "INSERT INTO ticketuser (id, email) VALUES (" + id + ", " + fixSQLString(u.getEmail()) + ")";
             stmt.executeUpdate(QUERY);
         }
@@ -193,16 +193,17 @@ public class DatabaseController {
             ticket.setOwner(u);
             ticket.setDescription(description);
             controller.addTicketToManager(ticket);
-            if (ticket.getEnddate() == null || ticket.getOwner() == null) {
+            if (ticket.getEnddate() == null || ticket.getOwner().getEmail().equals("none@email.com")) {
                 ticket.setStatus("Open");
             }
-            if (ticket.getEnddate() != null) {
+            if (ticket.getEnddate() != null){
                 ticket.setStatus("Closed");
             }
-            if (ticket.getEnddate() == null || ticket.getOwner() != null) {
+            if (ticket.getEnddate() == null && (!ticket.getOwner().getEmail().equals("none@email.com"))) {
                 ticket.setStatus("In progress");
             }
             setComments(ticket);
+            setAgents(ticket);
         }
         stmt.close();
         con.close();
@@ -225,18 +226,33 @@ public class DatabaseController {
         con.close();
     }
 
-    public void updateDescriptionInDatabase(Ticket ticket) throws SQLException {
+    public void setAgents(Ticket ticket) throws SQLException {
         Connection con = getDBConnection();
         int id = ticket.getId();
-        String QUERY = "UPDATE \"ticketInfo\"\n" +
-                "SET \"description\" = '" + ticket.getDescription() + "',\n" +
-                "\t\"user\" = '" + ticket.getOwner().getEmail() +
-                "where \"ticketid\" = " + id + "';";
+        String QUERY = "select \"email\"  from \"ticketuser\"\n" +
+                "where \"id\" = '" + id + "'";
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(QUERY);
+        while (rs.next()) {
+            String email = rs.getString("email");
+            controller.addAgentFromDB(email, ticket);
+        }
+        controller.setStatus(ticket);
+        stmt.close();
+        con.close();
+    }
+
+    public void removeAgent(Ticket ticket, User u) throws SQLException {
+        Connection con = getDBConnection();
+        int id = ticket.getId();
+        String QUERY = "delete from \"ticketuser\"\n" +
+                "where \"id\" = '" + id + "' and \"email\" = " + fixSQLString(u.getEmail()) + ";";
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         stmt.close();
         con.close();
     }
+
 
     /**
      * @param str or null

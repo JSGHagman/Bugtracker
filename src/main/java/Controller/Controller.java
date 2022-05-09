@@ -1,14 +1,18 @@
 package Controller;
+
 import Model.*;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
+import View.MainView.UserAdmin.UserAdminView;
 
 import javax.swing.*;
 import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Controller {
     private UserManager userManager;
@@ -29,7 +33,7 @@ public class Controller {
         //openMainWindow();
     }
 
-    public void startThreads(){
+    public void startThreads() {
         getAllUsersFromDatabase();
     }
 
@@ -45,6 +49,7 @@ public class Controller {
 
     /**
      * Method is used for creating a user, adds the to the database and the UserManager object.
+     *
      * @param event
      * @throws SQLException
      * @author Jakob Hagman
@@ -92,7 +97,7 @@ public class Controller {
      * @author Jakob Hagman
      */
 
-    public void onSignInBtnClick(){
+    public void onSignInBtnClick() {
         if (isFieldFilledLogIn()) {
             if (tryLogin()) {
                 openMainWindow();
@@ -104,8 +109,8 @@ public class Controller {
     }
 
     /**
-     switch  to Profile view
-     loads username,  to profileWindow
+     * switch  to Profile view
+     * loads username,  to profileWindow
      */
     public void switchToProfile() {
 
@@ -115,7 +120,7 @@ public class Controller {
     /**
      * switch scene to ticket view
      */
-    public void switchToTicket(){
+    public void switchToTicket() {
         view.ticketView();
     }
 
@@ -130,20 +135,20 @@ public class Controller {
     /**
      * Will be used to switch to settings
      */
-    public void switchToSettings(){
+    public void switchToSettings() {
     }
 
     /**
      * Will be used to switch to statistics
      */
-    public void switchToStatistics(){
+    public void switchToStatistics() {
 
     }
 
     /**
      * This method opens the main window
      */
-    public void openMainWindow(){
+    public void openMainWindow() {
         view = new MainFrame(this);
     }
 
@@ -187,7 +192,7 @@ public class Controller {
         }
     }
 
-    public void deleteUser(String email){
+    public void deleteUser(String email) {
         if (!signedInUser.getEmail().equals(email)) {
             for (User u : userManager.getAllUsers()) {
                 if (u.getEmail().equals(email)) {
@@ -202,8 +207,7 @@ public class Controller {
                     }
                 }
             }
-        }
-        else {
+        } else {
             showMessage("Can't delete current logged in user");
         }
         switchToUserAdmin();
@@ -211,6 +215,7 @@ public class Controller {
 
     /**
      * Adds a user to the list of users in UserManager
+     *
      * @param u
      * @author Jakob Hagman
      */
@@ -219,7 +224,8 @@ public class Controller {
     }
 
     /**
-     *  Attempts to login
+     * Attempts to login
+     *
      * @return true if login is successful.
      * @author Jakob Hagman
      */
@@ -240,7 +246,6 @@ public class Controller {
     /**
      * Attempts to sign up
      * takes the values in the sign up textfields and the selcted role
-     *
      * @author Jakob Hagman
      */
     public void trySignUp() {
@@ -273,14 +278,18 @@ public class Controller {
      * @author Patrik Brandell
      * Creates new ticket with current user, creates DB entry and adds id to ticket object
      */
-    public void newTicket(String topic, String description, int priority, String type, String owner, ArrayList <String> assignees) throws Exception {
+    public void newTicket(String topic, String description, int priority, String type, String owner, ArrayList<String> assignees) throws Exception {
         User u = userManager.getUserFromString(owner);
         int id = dbController.newTicket();
         ticket = new Ticket(id, u, topic, description);
         new AssigneesThread(ticket, assignees);
         ticket.setPriority(priority);
         ticket.setCategory(type);
-        ticket.setStatus("In progress");
+        if(owner == "none@email.com"){
+            ticket.setStatus("Open");
+        }else{
+            ticket.setStatus("In progress");
+        }
         ticketManager.addTicketToList(ticket);
         dbController.updateTicket(ticket);
     }
@@ -289,32 +298,54 @@ public class Controller {
         ticketManager.addTicketToList(ticket);
     }
 
-    public void updateTicket(int id, String topic, String description, int priority, String owner, String type) throws Exception {
+    public void updateTicket(int id, String topic, String description, int priority, String owner, String type, ArrayList<String> assignees) throws Exception {
         Ticket ticketToUpdate = ticketManager.getTicket(id);
         ticketToUpdate.setTopic(topic);
         ticketToUpdate.setDescription(description);
         ticketToUpdate.setPriority(priority);
         ticketToUpdate.setCategory(type);
+        new AssigneesThread(ticketToUpdate, assignees);
         User user = userManager.getUserFromString(owner);
         ticketToUpdate.setOwner(user);
         dbController.updateTicket(ticketToUpdate);
     }
 
-    /**
-     * Get tickets with current user assigned
-     */
-    public void getMyTickets() {
-        if (user != null) {
-            ArrayList myTickets = new ArrayList(ticketManager.getMyTickets(user.getEmail()));
+    public void closeTicket(int id) {
+        Ticket ticketToClose = ticketManager.getTicket(id);
+        ticketToClose.setEnddate(new Date());
+        ticketToClose.setStatus("Closed");
+        try{
+            dbController.updateTicket(ticketToClose);
+        } catch(SQLException ex){
+        }
+    }
+
+    public void removeAgent(String user, int id){
+        ticket = ticketManager.getTicket(id);
+        User u = userManager.getUserFromString(user);
+        ticket.removeAgent(u);
+        try{
+            dbController.removeAgent(ticket, u);
+        }catch(SQLException exc){
+            exc.printStackTrace();
         }
     }
 
     /**
+     * Get tickets with current user assigned
+     */
+    public ArrayList <Ticket> getMyTickets() {
+        user = getSignedInUser();
+        return ticketManager.getMyTickets(user.getEmail());
+    }
+
+    /**
      * Gets all tickets from the TicketManager Object
+     *
      * @return
      */
-    public ArrayList getAllTicketsFromManager(){
-        ArrayList <Ticket> ticketList = new ArrayList<>();
+    public ArrayList getAllTicketsFromManager() {
+        ArrayList<Ticket> ticketList = new ArrayList<>();
         ticketList = ticketManager.getAllTickets();
         return ticketList;
     }
@@ -329,16 +360,17 @@ public class Controller {
     /**
      * @return User - the user that is currently signed in.
      */
-    public User getSignedInUser(){
+    public User getSignedInUser() {
         return signedInUser;
     }
 
     /**
      * Gets all users from UserManager Object
+     *
      * @return
      */
-    public ArrayList getAllUsersFromManager(){
-        ArrayList <User> userList = new ArrayList<>();
+    public ArrayList getAllUsersFromManager() {
+        ArrayList<User> userList = new ArrayList<>();
         userList = userManager.getAllUsers();
         return userList;
     }
@@ -360,13 +392,14 @@ public class Controller {
         getAllUsers.start();
     }
 
-    public User getUserFromString(String user){
+    public User getUserFromString(String user) {
         User u = userManager.getUserFromString(user);
         return u;
     }
 
     /**
      * Method is used for checking if email is a correct email.
+     *
      * @param String email
      * @return boolean true if all requirements for an email is met.
      * @author Jakob Hagman
@@ -396,7 +429,7 @@ public class Controller {
      */
     private boolean isFieldFilledLogIn() {
         boolean isFilled = true;
-        if (logInView.getEmailTextField().getText().isEmpty() || logInView.getPasswordField().getText().isEmpty()){
+        if (logInView.getEmailTextField().getText().isEmpty() || logInView.getPasswordField().getText().isEmpty()) {
             isFilled = false;
             errorMessage = "Missing e-mail or password";
             showMessage(errorMessage);
@@ -415,19 +448,19 @@ public class Controller {
         if (logInView.getFirstNameTextField().getText().isEmpty()
                 || logInView.getLastNameTextField().getText().isEmpty()
                 || logInView.getEmailTextField().getText().isEmpty()
-                || logInView.getPasswordField().getText().isEmpty()){
+                || logInView.getPasswordField().getText().isEmpty()) {
             isFilled = false;
         }
         return isFilled;
     }
 
-    public void addTicketToManager(Ticket t){
+    public void addTicketToManager(Ticket t) {
         ticketManager.addTicketToList(t);
     }
 
     public void populatePeopleBox(JComboBox box) {
-        ArrayList <User> userList = getAllUsersFromManager();
-        for(User u : userList){
+        ArrayList<User> userList = getAllUsersFromManager();
+        for (User u : userList) {
             box.addItem(u.toString());
         }
     }
@@ -437,28 +470,66 @@ public class Controller {
         return editTicket;
     }
 
-    public String showTicketSummary(int id){
+    public String showTicketSummary(int id) {
         Ticket ticketToShow = ticketManager.getTicket(id);
-        return String.format("ID: %s\nTOPIC: %s\nDESCRIPTION: %s\nTYPE: %s\nPRIORITY: %s\nSTATUS: %s\nOWNER: %s\nDATE OPEN: %s\n",
+        String assigneesString = ticketToShow.getAgentsAsStrings().stream().map(Object::toString)
+                .collect(Collectors.joining(", "));
+        String enddate = "";
+
+        if (ticketToShow.getEnddate() != null) {
+            enddate = ticketToShow.getEnddate().toString();
+        }
+
+        return String.format("ID: %s\nTOPIC: %s\nDESCRIPTION: %s\nTYPE: %s\nPRIORITY: %s\nSTATUS: %s\nOWNER: %s\nASSIGNEES: %s\nDATE OPEN: %s\nDATE CLOSE: %s\n",
                 ticketToShow.getId(), ticketToShow.getTopic(), ticketToShow.getDescription(), ticketToShow.getCategory(),
-                ticketToShow.getPriorityAsString(), ticketToShow.getStatus(), ticketToShow.getOwner(), ticketToShow.getStartdate());
+                ticketToShow.getPriorityAsString(), ticketToShow.getStatus(), ticketToShow.getOwner(), assigneesString, ticketToShow.getStartdate(), enddate);
     }
 
-    public String[] getTicketComments(int id){
+    public ArrayList getTicketComments(int id) {
         Ticket ticketToShow = ticketManager.getTicket(id);
-        String[] list = ticketToShow.getCommentsAsStringList();
-        return list;
+        return ticketToShow.getComments();
     }
 
-    public void addComment(String comment, String email, Ticket ticket){
+    public ArrayList<String> getAgentsOnTicket(int id) {
+        Ticket t = ticketManager.getTicket(id);
+        return t.getAgentsAsStrings();
+    }
+
+    public void addAgentFromDB(String email, Ticket t) {
+        User u = userManager.getUserFromString(email);
+        t.addAgent(u);
+    }
+
+    public boolean editGuard(int id){
+        boolean ok = false;
+        ticket = ticketManager.getTicket(id);
+        if(signedInUser.getRole() == "Admin" || ticket.getOwner() == signedInUser || ticket.getOwner().getEmail().equals("none@email.com")){
+            ok = true;
+        }if(!ok) {
+            for (User u : ticket.getAgent()) {
+                if (u.equals(signedInUser)) {
+                    ok = true;
+                }
+            }
+        }
+        return ok;
+    }
+
+    public void setStatus(Ticket t){
+        if(t.getAgent().isEmpty() && t.getEnddate() != null){
+            t.setStatus("Open");
+        }
+    }
+
+    public void addComment(String comment, String email, Ticket ticket) {
         User u = userManager.getUserFromString(email);
         String commentToAdd = String.format("%s: %s", u.toString(), comment);
         ticket.addComment(commentToAdd);
     }
 
-    public void addCommentToTicket(String comment, String email, int id){
+    public void addCommentToTicket(String comment, String email, int id) {
         Ticket ticketToUpdate = ticketManager.getTicket(id);
-        String commentToAdd = String.format("%s: %s", email, comment);
+        String commentToAdd = String.format("%s: %s", getSignedInUser().toString(), comment);
         ticketToUpdate.addComment(commentToAdd);
         try {
             dbController.newTicketComment(comment, email, id);
@@ -500,28 +571,39 @@ public class Controller {
         }
     }
 
-
-    private class AssigneesThread extends Thread{
+    private class AssigneesThread extends Thread {
         private Ticket ticket;
-        private ArrayList <String> assignees;
+        private ArrayList<String> assignees;
+        private ArrayList<User> agents, assigneesToAdd;
 
-        public AssigneesThread(Ticket t, ArrayList<String> assignees){
+        public AssigneesThread(Ticket t, ArrayList<String> assignees) {
             this.ticket = t;
             this.assignees = assignees;
+            agents = t.getAgent();
+            assigneesToAdd = new ArrayList<>();
             start();
         }
 
         @Override
         public void run() {
-            for(String s : assignees){
-                User u = getUserFromString(s);
-                ticket.addAgent(u);
-                try {
-                    dbController.addAgentToTicket(ticket.getAgent(),ticket);
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            boolean found = false;
+            for (String s : assignees) {
+                User assignee = getUserFromString(s);
+                found = false;
+                for (User u : agents) {
+                    if (u.equals(assignee)) {
+                        found = true;
+                    }
+                } if (!found) {
+                    ticket.addAgent(assignee);
+                    assigneesToAdd.add(assignee);
                 }
+            } try {
+                dbController.addAgentToTicket(assigneesToAdd, ticket);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+
         }
     }
 

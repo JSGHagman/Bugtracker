@@ -1,5 +1,6 @@
 package Model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -179,6 +180,14 @@ public class Ticket {
             priority = "Low";
         }
         return priority;
+    }
+
+    public ArrayList <String> getAgentsAsStrings(){
+        ArrayList <String> agentStrings = new ArrayList<>();
+        for(User u : agent){
+            agentStrings.add(u.toString());
+        }
+        return agentStrings;
     }
 
     public String[] getCommentsAsStringList(){
