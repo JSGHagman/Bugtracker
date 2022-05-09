@@ -1,6 +1,7 @@
 package View.MainView.ProfileView;
 
 import Controller.Controller;
+import Model.UserManager;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
@@ -10,11 +11,11 @@ import java.awt.event.*;
 public class ProfileView implements ActionListener {
 
     private JPanel mainContentPanel, infoPanel, changePanel, buttonPanel, currentPanelOnDisplay, imagePanel, topInfoPanel, middleInfoPanel, loweInfoPanel, roleInfoPanel;
-    private JPanel imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
+    private JPanel changeBtnPanel, imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
     private JTextField fName, lName, password, eMail;
-    private JLabel randomeText, firstnameLabel, lastnameLabel, emailLabel, roleLabel, infoFirstname, infolastname,infoEmail;
+    private JLabel roleInfoLabel, firstnameLabel, lastnameLabel, emailLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
     private JTextArea infoBox;
-    private JButton btnChangeInfo, btnShowInfo;
+    private JButton btnChangeInfo, btnShowInfo, btnChange;
     private ImageIcon profilePicture;
     private JTextPane infoArea;
 
@@ -49,6 +50,12 @@ public class ProfileView implements ActionListener {
         btnChangeInfo.setForeground(Color.white);
         addActionListener(btnChangeInfo);
         btnChangeInfo.setFont(new Font("Dialog", Font.BOLD, 16));
+
+        btnChange = new JButton("Edit changes");
+        btnChange.setBackground(menuColor);
+        btnChange.setForeground(Color.white);
+        addActionListener(btnChange);
+        btnChange.setFont(new Font("Dialog", Font.BOLD, 16));
     }
 
     public void createMainPanels(){
@@ -56,8 +63,8 @@ public class ProfileView implements ActionListener {
         buttonPanel.setBounds(mainContentPanel.getX() + 10, 10, mainContentPanel.getWidth()/2, mainContentPanel.getHeight()/10 );
         buttonPanel.setLayout(new GridLayout(1,2,10,10));
 
-        buttonPanel.add(btnChangeInfo);
         buttonPanel.add(btnShowInfo);
+        buttonPanel.add(btnChangeInfo);
 
         infoPanel = new JPanel();
         infoPanel.setLayout(null);
@@ -68,7 +75,7 @@ public class ProfileView implements ActionListener {
         changePanel = new JPanel();
         changePanel.setLayout(null);
         changePanel.setBounds(mainContentPanel.getX() + 10, mainContentPanel.getY() + buttonPanel.getHeight() + 12, mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - mainContentPanel.getHeight()/6);
-        changePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+        changePanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
         setChangePanelDetails();
 
         currentPanelOnDisplay = infoPanel;
@@ -112,7 +119,31 @@ public class ProfileView implements ActionListener {
         infoEmail.setText("Text of Email");
         infoEmail.setFont(new Font("Dialog", Font.BOLD, 16));
         infoEmail.setBorder(BorderFactory.createLineBorder(menuColor, 3));
+
+        infoInputFirstname = new JLabel();
+        //infoInputFirstname.setText(controller.getSignedInUser().getFirstName());
+        infoInputFirstname.setText("firstname from inut");
+        infoInputFirstname.setForeground(menuColor);
+        infoInputFirstname.setFont(new Font("Dialog", Font.BOLD, 20));
+
+        infoInputLastname = new JLabel();
+        //infoInputLastname.setText(controller.getSignedInUser().getLastName());
+        infoInputLastname.setText("lastname from input");
+        infoInputLastname.setForeground(menuColor);
+        infoInputLastname.setFont(new Font("Dialog", Font.BOLD, 20));
+
+        infoInputEmail = new JLabel();
+        //String userEmail = controller.getSignedInUser().getEmail();
+        infoInputEmail.setText("userEmail");
+        infoInputEmail.setForeground(menuColor);
+        infoInputEmail.setFont(new Font("Dialog", Font.BOLD, 20));
+
+        roleInfoLabel = new JLabel();
+        roleInfoLabel.setText("Role of user");
+        roleInfoLabel.setForeground(menuColor);
+        roleInfoLabel.setFont(new Font("Dialog", Font.BOLD, 20));
     }
+
 
     public void creatInputField(){
         fName = new JTextField();
@@ -137,12 +168,12 @@ public class ProfileView implements ActionListener {
         infoBox = new JTextArea();
         infoBox.setText("Write your infomation here");
         infoBox.setFont(new Font("Dialog", Font.PLAIN, 16));
-        infoBox.setSize(50, 220);
+        infoBox.setSize(50, 100);
 
         infoArea = new JTextPane();
         infoArea.setFont(new Font("Dialog", Font.BOLD, 16));
         infoArea.setText("Userinformation about every\n user to get\n the right user\n for tickets\n\n\n\n\n");
-        infoArea.setSize(10, 100);
+        infoArea.setSize(50, 100);
         infoArea.setEditable(false);
     }
 
@@ -155,29 +186,26 @@ public class ProfileView implements ActionListener {
         topInfoPanel = new JPanel();
         topInfoPanel.setBounds(imagePanel.getX(), imagePanel.getY()+imagePanel.getHeight() + 10, infoPanel.getWidth()/3, infoPanel.getHeight()*2/8);
         topInfoPanel.setLayout(new GridLayout(4, 1));
-        topInfoPanel.setBorder(BorderFactory.createLineBorder(Color.green, 3));
 
-        topInfoPanel.add(firstnameLabel);
+        topInfoPanel.add(infoInputFirstname);
         topInfoPanel.add(infoFirstname);
-        topInfoPanel.add(lastnameLabel);
+        topInfoPanel.add(infoInputLastname);
         topInfoPanel.add(infolastname);
 
         middleInfoPanel = new JPanel();
-        middleInfoPanel.setBounds(topInfoPanel.getX(), topInfoPanel.getY() + topInfoPanel.getHeight() +5 , infoPanel.getWidth()/3, (infoPanel.getHeight() - imagePanel.getHeight())/4);
+        middleInfoPanel.setBounds(topInfoPanel.getX(), topInfoPanel.getY() + topInfoPanel.getHeight() +5 , infoPanel.getWidth()/3, (infoPanel.getHeight() - imagePanel.getHeight())/5);
         middleInfoPanel.setLayout(new GridLayout(2, 1));
-        middleInfoPanel.setBorder(BorderFactory.createLineBorder(Color.orange, 3));
-        middleInfoPanel.add(emailLabel);
+        middleInfoPanel.add(infoInputEmail);
         middleInfoPanel.add(infoEmail);
 
         loweInfoPanel = new JPanel();
-        loweInfoPanel.setBounds(imagePanel.getX(), middleInfoPanel.getY() + middleInfoPanel.getHeight() + 5, infoPanel.getWidth()/3, infoBox.getHeight());
+        loweInfoPanel.setBounds(imagePanel.getX(), middleInfoPanel.getY() + middleInfoPanel.getHeight() + 5, infoPanel.getWidth()/3, infoArea.getHeight() * 7/3);
         loweInfoPanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
-        loweInfoPanel.add(infoBox);
+        loweInfoPanel.add(infoArea);
 
         roleInfoPanel = new JPanel();
         roleInfoPanel.setBounds(infoPanel.getWidth()*2/3,infoPanel.getY() - 80, infoPanel.getWidth()*2/7, infoPanel.getHeight()/7);
-        roleInfoPanel.setBorder(BorderFactory.createLineBorder(Color.magenta, 3));
-        roleInfoPanel.add(roleLabel);
+        roleInfoPanel.add(roleInfoLabel);
 
         infoPanel.add(imagePanel);
         infoPanel.add(topInfoPanel);
@@ -194,7 +222,6 @@ public class ProfileView implements ActionListener {
         imageChangePanel.setBackground(menuColor);
 
         topChangePanel = new JPanel();
-        topChangePanel.setBounds(changePanel.getX() - changePanel.getX()*4/5, infoPanel.getY()+5 + imageChangePanel.getHeight(), infoPanel.getWidth()/3, (infoPanel.getHeight() - imageChangePanel.getHeight())/3);
         topChangePanel.setBounds(imageChangePanel.getX(), imageChangePanel.getY()+imageChangePanel.getHeight() + 10, changePanel.getWidth()/3, changePanel.getHeight()/3);
         topChangePanel.setLayout(new GridLayout(4, 2));
 
@@ -210,7 +237,7 @@ public class ProfileView implements ActionListener {
         middleChangePanel.add(eMail);
 
         lowerChangePanel = new JPanel();
-        lowerChangePanel.setBounds(imageChangePanel.getX(), middleChangePanel.getY() + middleChangePanel.getHeight() + 5, changePanel.getWidth()/3, infoBox.getHeight());
+        lowerChangePanel.setBounds(imageChangePanel.getX(), middleChangePanel.getY() + middleChangePanel.getHeight() + 5, changePanel.getWidth()/3, infoBox.getHeight()*6/3);
         lowerChangePanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
         lowerChangePanel.add(infoBox);
 
@@ -218,11 +245,17 @@ public class ProfileView implements ActionListener {
         roleChangePanel.setBounds(changePanel.getWidth()*2/3,changePanel.getY() - 80, changePanel.getWidth()*2/7, changePanel.getHeight()/7);
         roleChangePanel.add(roleLabel);
 
+        changeBtnPanel = new JPanel();
+        changeBtnPanel.setBounds(changePanel.getWidth() * 2/3, changePanel.getY() + (changePanel.getHeight()* 5/7), changePanel.getWidth()/ 4, changePanel.getHeight()/8);
+        changeBtnPanel.add(btnChange);
+
+
         changePanel.add(imageChangePanel);
         changePanel.add(topChangePanel);
         changePanel.add(middleChangePanel);
         changePanel.add(lowerChangePanel);
         changePanel.add(roleChangePanel);
+        changePanel.add(changeBtnPanel);
         currentPanelOnDisplay = changePanel;
 
     }
@@ -265,6 +298,8 @@ public class ProfileView implements ActionListener {
         }
         if (e.getSource().equals(btnShowInfo)){
             changetoInfoView();
+        }
+        if (e.getSource().equals(btnChange)){
 
         }
     }
