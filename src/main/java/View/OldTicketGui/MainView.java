@@ -3,7 +3,7 @@
  * Used for some JavaFX stuff I guess idk.
  */
 
-package View;
+package View.OldTicketGui;
 
 import javafx.application.Application;
 import javafx.scene.Group;

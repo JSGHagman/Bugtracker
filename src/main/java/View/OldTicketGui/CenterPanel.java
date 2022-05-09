@@ -4,7 +4,7 @@
  * @author Jakob Hagman
  */
 
-package View;
+package View.OldTicketGui;
 
 import Controller.Controller;
 

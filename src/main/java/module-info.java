@@ -8,4 +8,6 @@ module com.example.bugtracker {
     exports Controller;
     exports View;
     opens View to javafx.fxml;
+    exports View.OldTicketGui;
+    opens View.OldTicketGui to javafx.fxml;
 }

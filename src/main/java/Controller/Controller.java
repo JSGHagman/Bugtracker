@@ -1,33 +1,16 @@
 package Controller;
-
 import Model.*;
-import View.MainFrame;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import View.LogInView.LogInGUI;
+import View.MainView.MainFrame.MainFrame;
 
-import java.io.IOException;
+import javax.swing.*;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Controller {
-    private Scene scene;
-    private Stage newStage, sigOut;
-    private Parent lroot, root2, troot, sroot, seroot, mroot, pRoot, uRoot;
     private UserManager userManager;
     private User user, signedInUser;
     private TicketManager ticketManager;
@@ -35,35 +18,28 @@ public class Controller {
     private Ticket ticket;
     private String userName, email, firstName, lastName, role, password, errorMessage;
     private MainFrame view;
-    @FXML
-    private Button btnSignUp, btnSignIn;
-    @FXML
-    private PasswordField pfPassword, pfPasswordSignIn;
-    @FXML
-    private TextField tfEmail, tfFirstname, tfLastname, tfEmailSignIn;
-    @FXML
-    private Label pEmailText, pUsernameText, errorMessageLabel;
-    @FXML
-    private RadioButton userBtn, adminBtn, agentBtn;
+    private LogInGUI logInView;
 
     public Controller() {
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
-        getAllUsers();
+        startThreads();
+        logInView = new LogInGUI(this);
+        //openMainWindow();
     }
 
-    @FXML
-    //Creates SignUp view
-    public void onSignOutBtnClick(ActionEvent event) throws IOException {
-        lroot = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Main Menu");
-        scene = new Scene(lroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();
+    public void startThreads(){
+        getAllUsersFromDatabase();
+    }
+
+
+    /**
+     * Creates sign up view when you log out
+     */
+    public void onSignOutBtnClick() {
+        view.dispose();
+        logInView = new LogInGUI(this);
     }
 
 
@@ -73,8 +49,7 @@ public class Controller {
      * @throws SQLException
      * @author Jakob Hagman
      */
-    @FXML
-    public void onSignUpBtnClick(ActionEvent event) {
+    public void onSignUpBtnClick() {
         if (isFieldFilledSignUp()) {
             trySignUp();
         } else {
@@ -87,10 +62,10 @@ public class Controller {
      * Resets the textfields after a user is created
      */
     private void resetFields() {
-        tfFirstname.clear();
-        tfLastname.clear();
-        tfEmail.clear();
-        pfPassword.clear();
+        logInView.getEmailTextField().setText("Enter e-mail here");
+        logInView.getFirstNameTextField().setText("Enter last name here");
+        logInView.getLastNameTextField().setText("Enter first name here");
+        logInView.getPasswordField().setText("password");
     }
 
     /**
@@ -98,11 +73,7 @@ public class Controller {
      * @author Jakob Hagman
      */
     public void showMessage(String str) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("MESSAGE");
-        alert.setHeaderText(null);
-        alert.setContentText(str);
-        alert.show();
+        JOptionPane.showMessageDialog(null, str);
     }
 
     /**
@@ -111,14 +82,7 @@ public class Controller {
      * @return string Role
      */
     public String getSelectedRole() {
-        if (adminBtn.isSelected()) {
-            role = "Admin";
-        }
-        if (agentBtn.isSelected()) {
-            role = "Agent";
-        } else {
-            role = "User";
-        }
+        role = logInView.getRoleBox().getSelectedItem().toString();
         return role;
     }
 
@@ -127,124 +91,146 @@ public class Controller {
      *
      * @author Jakob Hagman
      */
-    @FXML
-    public void onSignInBtnClick(ActionEvent event) throws IOException {
-        if (isFieldFilledLogin()) {
+
+    public void onSignInBtnClick(){
+        if (isFieldFilledLogIn()) {
             if (tryLogin()) {
-                openMainWindow(event);
+                openMainWindow();
+                logInView.getFrame().dispose();
+            } else {
+                openMainWindow();
             }
         }
     }
 
-    @FXML
     /**
-     switch scene to Profile view
+     switch  to Profile view
      loads username,  to profileWindow
      */
-    public void switchToProfile(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Profile.fxml"));
-        pRoot = loader.load();
-        Controller scene1Controller = loader.getController();
-        // scene1Controller.pUsernameText.setText("Username: Användarnamn ska komma in här");
-        //scene1Controller.pEmailText.setText("Email: Email ska komma in här");
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Profile");
-        scene = new Scene(pRoot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();
+    public void switchToProfile() {
+
     }
 
-    @FXML
-    //switch scene to ticket view
-    public void switchToTicket(ActionEvent event) throws IOException {
-        troot = FXMLLoader.load(getClass().getResource("Ticket.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Tickets");
-        scene = new Scene(troot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();
+
+    /**
+     * switch scene to ticket view
+     */
+    public void switchToTicket(){
+        view.ticketView();
     }
 
-    @FXML
-    public void switchToMainmenu(ActionEvent event) throws IOException {
-        lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker MainMenu");
-        scene = new Scene(lroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();
+    /**
+     * Will be used to switch to main menu
+     */
+    public void switchToMainMenu() {
+
     }
 
-    @FXML
-    //switch to Settings view
-    public void switchToSettings(ActionEvent event) throws IOException {
-        seroot = FXMLLoader.load(getClass().getResource("Settings.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Settings");
-        scene = new Scene(seroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();
+
+    /**
+     * Will be used to switch to settings
+     */
+    public void switchToSettings(){
     }
 
-    //switch scene to Statistics view
-    public void switchStatistics(ActionEvent event) throws IOException {
-        sroot = FXMLLoader.load(getClass().getResource("Statistics.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Statistics");
-        scene = new Scene(sroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();
+    /**
+     * Will be used to switch to statistics
+     */
+    public void switchToStatistics(){
+
     }
 
     /**
      * This method opens the main window
-     *
-     * @throws IOException
      */
-    public void openMainWindow(ActionEvent event) throws IOException {
-        // Switch scene to StartView from SignUp View
-        lroot = FXMLLoader.load(getClass().getResource("StartView.fxml"));
-        newStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        newStage.setTitle("Bugtracker Main Menu");
-        scene = new Scene(lroot);
-        Image icon = new Image("https://cdn.discordapp.com/attachments/952875366005997628/960798092582588446/bugTrackerIcon.png");
-        newStage.getIcons().add(icon);
-        newStage.setScene(scene);
-        newStage.show();
+    public void openMainWindow(){
+        view = new MainFrame(this);
+    }
+
+    public void switchToUserAdmin() {
+        ArrayList<String> list = new ArrayList<>();
+        for (User u : userManager.getAllUsers()) {
+            list.add(u.getFirstName());
+            list.add(u.getLastName());
+            list.add(u.getEmail());
+            list.add(u.getRole());
+        }
+        view.userAdminView(list);
+    }
+
+
+    public void selectUserinList(int index) {
+        User markedUser = userManager.getUserAtIndex(index);
+        view.setUsertxtUserAdmin(markedUser.getFirstName(), markedUser.getLastName(), markedUser.getEmail(), markedUser.getPassword(), markedUser.getRole());
+
+    }
+
+    public void updateUserDB(String firstName, String lastName, String email, String password, String role) {
+        User changedUser = new User(firstName, lastName, email, password, role);
+
+        try {
+            dbController.updateUser(changedUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserManager(User user) {
+        for (User u : userManager.getAllUsers()) {
+            if (user.getEmail().equals(u.getEmail())) {
+                u.setFirstName(user.getFirstName());
+                u.setLastName(user.getLastName());
+                u.setPassword(user.getPassword());
+                u.setRole(user.getRole());
+            }
+            switchToUserAdmin();
+        }
+    }
+
+    public void deleteUser(String email){
+        if (!signedInUser.getEmail().equals(email)) {
+            for (User u : userManager.getAllUsers()) {
+                if (u.getEmail().equals(email)) {
+                    if (userManager.deleteUser(u)) {
+                        try {
+                            dbController.deleteUser(u);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("error");
+                    }
+                }
+            }
+        }
+        else {
+            showMessage("Can't delete current logged in user");
+        }
+        switchToUserAdmin();
     }
 
     /**
-     * Adds a user to the list of users in UserManager.
-     *
+     * Adds a user to the list of users in UserManager
      * @param u
+     * @author Jakob Hagman
      */
     public void newUser(User u) {
         userManager.addToUsers(u);
     }
 
     /**
+     *  Attempts to login
      * @return true if login is successful.
      * @author Jakob Hagman
-     * Attempts to login
      */
     public boolean tryLogin() {
         boolean success = false;
-        String loginMail = tfEmailSignIn.getText();
-        String password = pfPasswordSignIn.getText();
+        String loginMail = logInView.getEmailTextField().getText();
+        String password = logInView.getPasswordField().getText();
         success = userManager.checkPassword(loginMail, password);
         if (!success) {
             errorMessage = "Wrong e-mail or password!";
-            errorMessageLabel.setText(errorMessage);
+            showMessage(errorMessage);
         }
         //System.out.println(success);
         signedInUser = userManager.getSignedInUser();
@@ -258,10 +244,10 @@ public class Controller {
      * @author Jakob Hagman
      */
     public void trySignUp() {
-        firstName = tfFirstname.getText();
-        lastName = tfLastname.getText();
-        email = tfEmail.getText();
-        password = pfPassword.getText();
+        firstName = logInView.getFirstNameTextField().getText();
+        lastName = logInView.getLastNameTextField().getText();
+        email = logInView.getEmailTextField().getText();
+        password = logInView.getPasswordField().getText();
         role = getSelectedRole();
         if (userManager.checkIfUserExists(email)) {
             showMessage("A user with this e-mail already exists, try another one. ");
@@ -273,6 +259,7 @@ public class Controller {
             userManager.addToUsers(user);
             showMessage("New user created successfully, now sign in");
             resetFields();
+            logInView.setLogInPanel();
             try {
                 dbController.addNormalUser(user);
             } catch (SQLException e) {
@@ -286,19 +273,31 @@ public class Controller {
      * @author Patrik Brandell
      * Creates new ticket with current user, creates DB entry and adds id to ticket object
      */
-    public void newTicket(User u, String topic, String comment) throws Exception {
+    public void newTicket(String topic, String description, int priority, String type, String owner, ArrayList <String> assignees) throws Exception {
+        User u = userManager.getUserFromString(owner);
         int id = dbController.newTicket();
-        ticket = new Ticket(id, u, topic, comment);
+        ticket = new Ticket(id, u, topic, description);
+        new AssigneesThread(ticket, assignees);
+        ticket.setPriority(priority);
+        ticket.setCategory(type);
+        ticket.setStatus("In progress");
         ticketManager.addTicketToList(ticket);
         dbController.updateTicket(ticket);
     }
 
+    public void newTicketfromDB(Ticket ticket) {
+        ticketManager.addTicketToList(ticket);
+    }
 
-    public void updateTicket() throws Exception {
-        if (ticket == null) {
-            //newTicket();
-        }
-        dbController.updateTicket(ticket);
+    public void updateTicket(int id, String topic, String description, int priority, String owner, String type) throws Exception {
+        Ticket ticketToUpdate = ticketManager.getTicket(id);
+        ticketToUpdate.setTopic(topic);
+        ticketToUpdate.setDescription(description);
+        ticketToUpdate.setPriority(priority);
+        ticketToUpdate.setCategory(type);
+        User user = userManager.getUserFromString(owner);
+        ticketToUpdate.setOwner(user);
+        dbController.updateTicket(ticketToUpdate);
     }
 
     /**
@@ -311,10 +310,37 @@ public class Controller {
     }
 
     /**
+     * Gets all tickets from the TicketManager Object
+     * @return
+     */
+    public ArrayList getAllTicketsFromManager(){
+        ArrayList <Ticket> ticketList = new ArrayList<>();
+        ticketList = ticketManager.getAllTickets();
+        return ticketList;
+    }
+
+    /**
      * Get unassigned tickets based on null agent or zero size array
      */
     public void getUnassignedTickets() {
         ArrayList unassignedTickets = new ArrayList(ticketManager.getUnassignedTickets());
+    }
+
+    /**
+     * @return User - the user that is currently signed in.
+     */
+    public User getSignedInUser(){
+        return signedInUser;
+    }
+
+    /**
+     * Gets all users from UserManager Object
+     * @return
+     */
+    public ArrayList getAllUsersFromManager(){
+        ArrayList <User> userList = new ArrayList<>();
+        userList = userManager.getAllUsers();
+        return userList;
     }
 
     /**
@@ -329,9 +355,14 @@ public class Controller {
      * @author Jakob Hagman
      * Creates object of private class and starts its thread.
      */
-    public void getAllUsers() {
+    public void getAllUsersFromDatabase() {
         GetAllUsers getAllUsers = new GetAllUsers();
         getAllUsers.start();
+    }
+
+    public User getUserFromString(String user){
+        User u = userManager.getUserFromString(user);
+        return u;
     }
 
     /**
@@ -363,13 +394,13 @@ public class Controller {
     /**
      * @return IsFilled == false when email or password input is Empty
      */
-    private boolean isFieldFilledLogin() {
+    private boolean isFieldFilledLogIn() {
         boolean isFilled = true;
-        if (tfEmailSignIn.getText().isEmpty() || pfPasswordSignIn.getText().isEmpty()) {
+        if (logInView.getEmailTextField().getText().isEmpty() || logInView.getPasswordField().getText().isEmpty()){
             isFilled = false;
             errorMessage = "Missing e-mail or password";
+            showMessage(errorMessage);
         }
-        errorMessageLabel.setText(errorMessage);
         return isFilled;
     }
 
@@ -381,20 +412,59 @@ public class Controller {
      */
     private boolean isFieldFilledSignUp() {
         boolean isFilled = true;
-        if (tfFirstname.getText().isEmpty()
-                || tfLastname.getText().isEmpty()
-                || tfEmail.getText().isEmpty()
-                || pfPassword.getText().isEmpty()) {
+        if (logInView.getFirstNameTextField().getText().isEmpty()
+                || logInView.getLastNameTextField().getText().isEmpty()
+                || logInView.getEmailTextField().getText().isEmpty()
+                || logInView.getPasswordField().getText().isEmpty()){
             isFilled = false;
         }
         return isFilled;
     }
 
-    /**
-     * Opens the makeshift gui for creating a ticket
-     */
-    public void newTicketGUI() {
-        view = new MainFrame(this);
+    public void addTicketToManager(Ticket t){
+        ticketManager.addTicketToList(t);
+    }
+
+    public void populatePeopleBox(JComboBox box) {
+        ArrayList <User> userList = getAllUsersFromManager();
+        for(User u : userList){
+            box.addItem(u.toString());
+        }
+    }
+
+    public Ticket getTicketInfo(int id) {
+        Ticket editTicket = ticketManager.getTicket(id);
+        return editTicket;
+    }
+
+    public String showTicketSummary(int id){
+        Ticket ticketToShow = ticketManager.getTicket(id);
+        return String.format("ID: %s\nTOPIC: %s\nDESCRIPTION: %s\nTYPE: %s\nPRIORITY: %s\nSTATUS: %s\nOWNER: %s\nDATE OPEN: %s\n",
+                ticketToShow.getId(), ticketToShow.getTopic(), ticketToShow.getDescription(), ticketToShow.getCategory(),
+                ticketToShow.getPriorityAsString(), ticketToShow.getStatus(), ticketToShow.getOwner(), ticketToShow.getStartdate());
+    }
+
+    public String[] getTicketComments(int id){
+        Ticket ticketToShow = ticketManager.getTicket(id);
+        String[] list = ticketToShow.getCommentsAsStringList();
+        return list;
+    }
+
+    public void addComment(String comment, String email, Ticket ticket){
+        User u = userManager.getUserFromString(email);
+        String commentToAdd = String.format("%s: %s", u.toString(), comment);
+        ticket.addComment(commentToAdd);
+    }
+
+    public void addCommentToTicket(String comment, String email, int id){
+        Ticket ticketToUpdate = ticketManager.getTicket(id);
+        String commentToAdd = String.format("%s: %s", email, comment);
+        ticketToUpdate.addComment(commentToAdd);
+        try {
+            dbController.newTicketComment(comment, email, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -403,15 +473,10 @@ public class Controller {
      */
     private class GetAllTickets extends Thread {
         public void run() {
-            ArrayList<Ticket> list = new ArrayList<>();
             try {
-                list = dbController.getAllTickets();
+                dbController.getAllTickets();
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            for (Ticket t : list) {
-                ticketManager.addTicketToList(t);
-                //System.out.println(t.getId());
             }
         }
     }
@@ -430,8 +495,34 @@ public class Controller {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            getAllTickets();
+        }
+    }
+
+
+    private class AssigneesThread extends Thread{
+        private Ticket ticket;
+        private ArrayList <String> assignees;
+
+        public AssigneesThread(Ticket t, ArrayList<String> assignees){
+            this.ticket = t;
+            this.assignees = assignees;
+            start();
+        }
+
+        @Override
+        public void run() {
+            for(String s : assignees){
+                User u = getUserFromString(s);
+                ticket.addAgent(u);
+                try {
+                    dbController.addAgentToTicket(ticket.getAgent(),ticket);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
 }
-

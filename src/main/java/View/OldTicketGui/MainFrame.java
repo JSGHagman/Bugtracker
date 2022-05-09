@@ -3,14 +3,14 @@
  * @author Jakob Hagman
  */
 
-package View;
+package View.OldTicketGui;
 
 import Controller.Controller;
 import Model.TicketManager;
 import Model.User;
 import Model.UserManager;
+
 import javax.swing.*;
-import java.sql.SQLException;
 
 public class MainFrame extends JFrame {
     private int width = 600;

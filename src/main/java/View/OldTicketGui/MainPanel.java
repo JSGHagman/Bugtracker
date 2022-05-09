@@ -4,13 +4,13 @@
  * @author Jakob Hagman
  *
  */
-package View;
+package View.OldTicketGui;
 import Controller.Controller;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.sql.SQLException;
 
 public class MainPanel extends JPanel {
     private int width;
