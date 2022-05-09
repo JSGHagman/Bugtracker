@@ -4,6 +4,7 @@ import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -20,13 +21,16 @@ public class Controller {
     private LogInGUI logInView;
 
     public Controller() {
-        System.out.println("Constructor called");
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
-        getAllUsersFromDatabase();
+        startThreads();
         logInView = new LogInGUI(this);
         //openMainWindow();
+    }
+
+    public void startThreads(){
+        getAllUsersFromDatabase();
     }
 
 
@@ -93,6 +97,8 @@ public class Controller {
             if (tryLogin()) {
                 openMainWindow();
                 logInView.getFrame().dispose();
+            } else {
+                openMainWindow();
             }
         }
     }
@@ -110,7 +116,7 @@ public class Controller {
      * switch scene to ticket view
      */
     public void switchToTicket(){
-
+        view.ticketView();
     }
 
     /**
@@ -139,6 +145,68 @@ public class Controller {
      */
     public void openMainWindow(){
         view = new MainFrame(this);
+    }
+
+    public void switchToUserAdmin() {
+        ArrayList<String> list = new ArrayList<>();
+        for (User u : userManager.getAllUsers()) {
+            list.add(u.getFirstName());
+            list.add(u.getLastName());
+            list.add(u.getEmail());
+            list.add(u.getRole());
+        }
+        view.userAdminView(list);
+    }
+
+
+    public void selectUserinList(int index) {
+        User markedUser = userManager.getUserAtIndex(index);
+        view.setUsertxtUserAdmin(markedUser.getFirstName(), markedUser.getLastName(), markedUser.getEmail(), markedUser.getPassword(), markedUser.getRole());
+
+    }
+
+    public void updateUserDB(String firstName, String lastName, String email, String password, String role) {
+        User changedUser = new User(firstName, lastName, email, password, role);
+
+        try {
+            dbController.updateUser(changedUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserManager(User user) {
+        for (User u : userManager.getAllUsers()) {
+            if (user.getEmail().equals(u.getEmail())) {
+                u.setFirstName(user.getFirstName());
+                u.setLastName(user.getLastName());
+                u.setPassword(user.getPassword());
+                u.setRole(user.getRole());
+            }
+            switchToUserAdmin();
+        }
+    }
+
+    public void deleteUser(String email){
+        if (!signedInUser.getEmail().equals(email)) {
+            for (User u : userManager.getAllUsers()) {
+                if (u.getEmail().equals(email)) {
+                    if (userManager.deleteUser(u)) {
+                        try {
+                            dbController.deleteUser(u);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("error");
+                    }
+                }
+            }
+        }
+        else {
+            showMessage("Can't delete current logged in user");
+        }
+        switchToUserAdmin();
     }
 
     /**
@@ -205,19 +273,31 @@ public class Controller {
      * @author Patrik Brandell
      * Creates new ticket with current user, creates DB entry and adds id to ticket object
      */
-    public void newTicket(User u, String topic, String comment) throws Exception {
+    public void newTicket(String topic, String description, int priority, String type, String owner, ArrayList <String> assignees) throws Exception {
+        User u = userManager.getUserFromString(owner);
         int id = dbController.newTicket();
-        ticket = new Ticket(id, u, topic, comment);
+        ticket = new Ticket(id, u, topic, description);
+        new AssigneesThread(ticket, assignees);
+        ticket.setPriority(priority);
+        ticket.setCategory(type);
+        ticket.setStatus("In progress");
         ticketManager.addTicketToList(ticket);
         dbController.updateTicket(ticket);
     }
 
+    public void newTicketfromDB(Ticket ticket) {
+        ticketManager.addTicketToList(ticket);
+    }
 
-    public void updateTicket() throws Exception {
-        if (ticket == null) {
-            //newTicket();
-        }
-        dbController.updateTicket(ticket);
+    public void updateTicket(int id, String topic, String description, int priority, String owner, String type) throws Exception {
+        Ticket ticketToUpdate = ticketManager.getTicket(id);
+        ticketToUpdate.setTopic(topic);
+        ticketToUpdate.setDescription(description);
+        ticketToUpdate.setPriority(priority);
+        ticketToUpdate.setCategory(type);
+        User user = userManager.getUserFromString(owner);
+        ticketToUpdate.setOwner(user);
+        dbController.updateTicket(ticketToUpdate);
     }
 
     /**
@@ -227,6 +307,16 @@ public class Controller {
         if (user != null) {
             ArrayList myTickets = new ArrayList(ticketManager.getMyTickets(user.getEmail()));
         }
+    }
+
+    /**
+     * Gets all tickets from the TicketManager Object
+     * @return
+     */
+    public ArrayList getAllTicketsFromManager(){
+        ArrayList <Ticket> ticketList = new ArrayList<>();
+        ticketList = ticketManager.getAllTickets();
+        return ticketList;
     }
 
     /**
@@ -244,6 +334,16 @@ public class Controller {
     }
 
     /**
+     * Gets all users from UserManager Object
+     * @return
+     */
+    public ArrayList getAllUsersFromManager(){
+        ArrayList <User> userList = new ArrayList<>();
+        userList = userManager.getAllUsers();
+        return userList;
+    }
+
+    /**
      * Create private GetallTickets object and start thread
      */
     public void getAllTickets() {
@@ -258,6 +358,11 @@ public class Controller {
     public void getAllUsersFromDatabase() {
         GetAllUsers getAllUsers = new GetAllUsers();
         getAllUsers.start();
+    }
+
+    public User getUserFromString(String user){
+        User u = userManager.getUserFromString(user);
+        return u;
     }
 
     /**
@@ -316,21 +421,62 @@ public class Controller {
         return isFilled;
     }
 
+    public void addTicketToManager(Ticket t){
+        ticketManager.addTicketToList(t);
+    }
+
+    public void populatePeopleBox(JComboBox box) {
+        ArrayList <User> userList = getAllUsersFromManager();
+        for(User u : userList){
+            box.addItem(u.toString());
+        }
+    }
+
+    public Ticket getTicketInfo(int id) {
+        Ticket editTicket = ticketManager.getTicket(id);
+        return editTicket;
+    }
+
+    public String showTicketSummary(int id){
+        Ticket ticketToShow = ticketManager.getTicket(id);
+        return String.format("ID: %s\nTOPIC: %s\nDESCRIPTION: %s\nTYPE: %s\nPRIORITY: %s\nSTATUS: %s\nOWNER: %s\nDATE OPEN: %s\n",
+                ticketToShow.getId(), ticketToShow.getTopic(), ticketToShow.getDescription(), ticketToShow.getCategory(),
+                ticketToShow.getPriorityAsString(), ticketToShow.getStatus(), ticketToShow.getOwner(), ticketToShow.getStartdate());
+    }
+
+    public String[] getTicketComments(int id){
+        Ticket ticketToShow = ticketManager.getTicket(id);
+        String[] list = ticketToShow.getCommentsAsStringList();
+        return list;
+    }
+
+    public void addComment(String comment, String email, Ticket ticket){
+        User u = userManager.getUserFromString(email);
+        String commentToAdd = String.format("%s: %s", u.toString(), comment);
+        ticket.addComment(commentToAdd);
+    }
+
+    public void addCommentToTicket(String comment, String email, int id){
+        Ticket ticketToUpdate = ticketManager.getTicket(id);
+        String commentToAdd = String.format("%s: %s", email, comment);
+        ticketToUpdate.addComment(commentToAdd);
+        try {
+            dbController.newTicketComment(comment, email, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * @Author Patrik Brandell
      * Separate thread to get all tickets from DB and add to TicketManager
      */
     private class GetAllTickets extends Thread {
         public void run() {
-            ArrayList<Ticket> list = new ArrayList<>();
             try {
-                list = dbController.getAllTickets();
+                dbController.getAllTickets();
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            for (Ticket t : list) {
-                ticketManager.addTicketToList(t);
-                //System.out.println(t.getId());
             }
         }
     }
@@ -348,6 +494,33 @@ public class Controller {
                 dbController.getAllUsers();
             } catch (SQLException e) {
                 e.printStackTrace();
+            }
+
+            getAllTickets();
+        }
+    }
+
+
+    private class AssigneesThread extends Thread{
+        private Ticket ticket;
+        private ArrayList <String> assignees;
+
+        public AssigneesThread(Ticket t, ArrayList<String> assignees){
+            this.ticket = t;
+            this.assignees = assignees;
+            start();
+        }
+
+        @Override
+        public void run() {
+            for(String s : assignees){
+                User u = getUserFromString(s);
+                ticket.addAgent(u);
+                try {
+                    dbController.addAgentToTicket(ticket.getAgent(),ticket);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
