@@ -1,16 +1,16 @@
 package Controller;
+
 import Model.Ticket;
 import Model.User;
 
-import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.*;
 import java.util.Date;
+
 public class DatabaseController {
     private final String url = "jdbc:postgresql://pgserver.mau.se:5432/bugtracker";
     private final String user = "am4032";
@@ -44,6 +44,30 @@ public class DatabaseController {
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         con.close();
+    }
+
+    public void updateUser(User user) throws SQLException {
+        Connection con = getDBConnection();
+        String QUERY = "UPDATE userid " +
+                "SET firstname = " + fixSQLString(user.getFirstName()) +
+                ", lastname = " + fixSQLString(user.getLastName()) +
+                ", password = " + fixSQLString(user.getPassword()) +
+                ", role = " + fixSQLString(user.getRole()) +
+                "WHERE email = " + fixSQLString(user.getEmail());
+
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
+        con.close();
+        controller.updateUserManager(user);
+    }
+
+    public void deleteUser(User user) throws SQLException {
+        Connection con = getDBConnection();
+        String QUERY = "DELETE FROM userid WHERE email = " + fixSQLString(user.getEmail());
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
+        con.close();
+        controller.updateUserManager(user);
     }
 
     /**
@@ -91,7 +115,6 @@ public class DatabaseController {
         }
         stmt.close();
         con.close();
-
         return id;
     }
 
@@ -105,13 +128,13 @@ public class DatabaseController {
         String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category =" + fixSQLString(ticket.getCategory()) +
                 ", status =" + fixSQLString(ticket.getStatus()) + ", files =" + fixSQLString(ticket.getFile()) + ", time =" + ticket.getTime() +
                 ", dateopen =" + fixSQLDate(ticket.getStartdate()) + ", dateclose =" + fixSQLDate(ticket.getEnddate()) +
-                ", topic = " + fixSQLString(ticket.getTopic()) + " WHERE id = " + ticket.getId();
-
+                ", topic = " + fixSQLString(ticket.getTopic()) + ", owner =" + fixSQLString(ticket.getOwner().getEmail()) +
+                ", description = " + fixSQLString(ticket.getDescription()) +
+                " WHERE id = " + ticket.getId();
         Statement stmt = con.createStatement();
         stmt.executeUpdate(QUERY);
         stmt.close();
         con.close();
-        updateTicketComments(ticket);
     }
 
     /**
@@ -119,26 +142,37 @@ public class DatabaseController {
      * @throws SQLException writes comments in table ticketcomments with a new id. Can connect to ticket through ticketId
      * @author Patrik Brandell
      */
-    public void updateTicketComments(Ticket ticket) throws SQLException {
+    public void newTicketComment(String comment, String email, int id) throws SQLException {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
-        for (String str : ticket.getComment()) {
-            String QUERY = "INSERT INTO ticketcomments (id, ticketid, comment) VALUES (default," + ticket.getId() + ", " + fixSQLString(str) + ")";
+        String QUERY = "INSERT INTO ticketcomments (ticketid, comment, id, email) VALUES (" + id + ", " + fixSQLString(comment) + ", default, " + fixSQLString(email) + ")";
+        stmt.executeUpdate(QUERY);
+        stmt.close();
+        con.close();
+    }
+
+    public void addAgentToTicket(ArrayList<User> assignees, Ticket t) throws SQLException {
+        Connection con = getDBConnection();
+        Statement stmt = con.createStatement();
+        int id = t.getId();
+        for (User u : assignees){
+            String QUERY = "INSERT INTO ticketuser (id, email) VALUES (" + id + ", " + fixSQLString(u.getEmail()) + ")";
             stmt.executeUpdate(QUERY);
         }
         stmt.close();
         con.close();
     }
 
+
     /**
      * @return ArrayList of all current tickets in db
      * @throws Exception
      * @author Patrik Brandell
      */
-    public ArrayList getAllTickets() throws Exception {
+    public void getAllTickets() throws Exception {
         ArrayList list = new ArrayList<Ticket>();
         Connection con = getDBConnection();
-        String QUERY = String.format("SELECT * FROM ticket");
+        String QUERY = String.format("SELECT * FROM ticket ORDER BY dateopen DESC");
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(QUERY);
 
@@ -151,13 +185,57 @@ public class DatabaseController {
             String time = rs.getString("time");
             Date startdate = rs.getDate("dateopen");
             Date enddate = rs.getDate("dateclose");
-            ticket = new Ticket(id, category, status, priority, startdate, enddate, file);
-            list.add(ticket);
-
+            String topic = rs.getString("topic");
+            String user = rs.getString("owner");
+            String description = rs.getString("description");
+            User u = controller.getUserFromString(user);
+            ticket = new Ticket(id, category, status, priority, startdate, enddate, file, topic);
+            ticket.setOwner(u);
+            ticket.setDescription(description);
+            controller.addTicketToManager(ticket);
+            if (ticket.getEnddate() == null || ticket.getOwner() == null) {
+                ticket.setStatus("Open");
+            }
+            if (ticket.getEnddate() != null) {
+                ticket.setStatus("Closed");
+            }
+            if (ticket.getEnddate() == null || ticket.getOwner() != null) {
+                ticket.setStatus("In progress");
+            }
+            setComments(ticket);
         }
         stmt.close();
         con.close();
-        return list;
+    }
+
+    public void setComments(Ticket ticket) throws SQLException {
+        Connection con = getDBConnection();
+        int id = ticket.getId();
+        String QUERY = "select \"comment\", \"email\"  from \"ticketcomments\"\n" +
+                "where \"ticketid\" = '" + id + "'";
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(QUERY);
+        while (rs.next()) {
+            String commentString = rs.getString("comment");
+            String email = rs.getString("email");
+            controller.addComment(commentString, email, ticket);
+        }
+        ticket.setCommentsList();
+        stmt.close();
+        con.close();
+    }
+
+    public void updateDescriptionInDatabase(Ticket ticket) throws SQLException {
+        Connection con = getDBConnection();
+        int id = ticket.getId();
+        String QUERY = "UPDATE \"ticketInfo\"\n" +
+                "SET \"description\" = '" + ticket.getDescription() + "',\n" +
+                "\t\"user\" = '" + ticket.getOwner().getEmail() +
+                "where \"ticketid\" = " + id + "';";
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
+        stmt.close();
+        con.close();
     }
 
     /**

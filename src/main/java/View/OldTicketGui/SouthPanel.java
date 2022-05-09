@@ -108,7 +108,7 @@ public class SouthPanel extends JPanel implements ActionListener {
             String topic = this.topic.getText();
             String comment = this.comment.getText();
             try {
-                controller.newTicket(u, topic, comment);
+             //   controller.newTicket(u, topic, comment);
                 setTickets(ticketManager.getAllTickets());
                 this.topic.setText("");
                 this.comment.setText("");
