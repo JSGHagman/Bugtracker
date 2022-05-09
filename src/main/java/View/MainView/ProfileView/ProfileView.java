@@ -86,7 +86,7 @@ public class ProfileView implements ActionListener {
 
     public void createLabel(){
         roleLabel = new JLabel();
-        roleLabel.setText("Role of user");
+        roleLabel.setText(controller.getSignedInUser().getRole());
         roleLabel.setForeground(menuColor);
         roleLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
@@ -106,40 +106,37 @@ public class ProfileView implements ActionListener {
         emailLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
         infoFirstname = new JLabel();
-        infoFirstname.setText("Text of Firstname");
+        infoFirstname.setText(controller.getSignedInUser().getFirstName());
         infoFirstname.setFont(new Font("Dialog", Font.BOLD, 20));
         infoFirstname.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         infolastname = new JLabel();
-        infolastname.setText("Text of lastname");
+        infolastname.setText(controller.getSignedInUser().getLastName());
         infolastname.setFont(new Font("Dialog", Font.BOLD, 20));
         infolastname.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         infoEmail = new JLabel();
-        infoEmail.setText("Text of Email");
+        infoEmail.setText(controller.getSignedInUser().getEmail());
         infoEmail.setFont(new Font("Dialog", Font.BOLD, 16));
         infoEmail.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         infoInputFirstname = new JLabel();
-        //infoInputFirstname.setText(controller.getSignedInUser().getFirstName());
-        infoInputFirstname.setText("firstname from inut");
+        infoInputFirstname.setText("Firstname");
         infoInputFirstname.setForeground(menuColor);
         infoInputFirstname.setFont(new Font("Dialog", Font.BOLD, 20));
 
         infoInputLastname = new JLabel();
-        //infoInputLastname.setText(controller.getSignedInUser().getLastName());
-        infoInputLastname.setText("lastname from input");
+        infoInputLastname.setText("Lastname");
         infoInputLastname.setForeground(menuColor);
         infoInputLastname.setFont(new Font("Dialog", Font.BOLD, 20));
 
         infoInputEmail = new JLabel();
-        //String userEmail = controller.getSignedInUser().getEmail();
-        infoInputEmail.setText("userEmail");
+        infoInputEmail.setText("Email");
         infoInputEmail.setForeground(menuColor);
         infoInputEmail.setFont(new Font("Dialog", Font.BOLD, 20));
 
         roleInfoLabel = new JLabel();
-        roleInfoLabel.setText("Role of user");
+        roleInfoLabel.setText(controller.getSignedInUser().getRole());
         roleInfoLabel.setForeground(menuColor);
         roleInfoLabel.setFont(new Font("Dialog", Font.BOLD, 20));
     }
@@ -276,7 +273,24 @@ public class ProfileView implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = infoPanel;
     }
-
+    public void changeInfo(){
+        String newFirstname = fName.getText();
+        String newLastname = lName.getText();
+        String newEmail = eMail.getText();
+        if (newFirstname != "Förnamn:"){
+            controller.getSignedInUser().setFirstName(newFirstname);
+            infoFirstname.setText(newFirstname);
+        }
+        if(newLastname != "Lastname:"){
+            controller.getSignedInUser().setLastName(newLastname);
+            infolastname.setText(newLastname);
+        }
+        if (newEmail != "Email:"){
+            controller.getSignedInUser().setEmail(newEmail);
+            infoEmail.setText(newEmail);
+        }
+        System.out.println(infoFirstname);
+    }
 
     public void CreateProfileView(){
         createLabel();
@@ -300,6 +314,7 @@ public class ProfileView implements ActionListener {
             changetoInfoView();
         }
         if (e.getSource().equals(btnChange)){
+            changeInfo();
 
         }
     }

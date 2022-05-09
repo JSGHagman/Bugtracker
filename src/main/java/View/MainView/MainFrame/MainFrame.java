@@ -19,6 +19,7 @@ import Controller.Controller;
 import View.MainView.Menu.MenuViewAdmin;
 import View.MainView.Menu.MenuViewAgent;
 import View.MainView.Menu.MenuViewUser;
+import View.MainView.ProfileView.ProfileView;
 import View.MainView.Tickets.TicketView;
 import View.MainView.UserAdmin.UserAdminView;
 
@@ -54,7 +55,8 @@ public class MainFrame extends JFrame {
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        ticketView = new TicketView(controller, this);
+        //ticketView = new TicketView(controller, this);
+        ProfileView profileView = new ProfileView(controller, this);
 
 
         switch (controller.getSignedInUser().getRole()) {
