@@ -18,7 +18,7 @@ public class ProfileView implements ActionListener {
     private JPanel mainContentPanel, infoPanel, changePanel, buttonPanel, currentPanelOnDisplay, imagePanel, topInfoPanel, middleInfoPanel, loweInfoPanel, roleInfoPanel;
     private JPanel changeBtnPanel, imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
     private JTextField fName, lName, passwordField, eMail;
-    private JLabel roleInfoLabel, firstnameLabel, lastnameLabel, emailLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
+    private JLabel roleInfoLabel, firstnameLabel, lastnameLabel, passwordLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
     private JTextArea infoBox;
     private JButton btnChangeInfo, btnShowInfo, btnChange;
     private JTextPane infoArea;
@@ -103,10 +103,10 @@ public class ProfileView implements ActionListener {
         lastnameLabel.setForeground(menuColor);
         lastnameLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
-        emailLabel = new JLabel();
-        emailLabel.setText("Email:");
-        emailLabel.setForeground(menuColor);
-        emailLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        passwordLabel = new JLabel();
+        passwordLabel.setText("Password:");
+        passwordLabel.setForeground(menuColor);
+        passwordLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
         infoFirstname = new JLabel();
         infoFirstname.setText(controller.getSignedInUser().getFirstName());
@@ -157,11 +157,11 @@ public class ProfileView implements ActionListener {
         lName.setFont(new Font("Dialog", Font.PLAIN, 16));
         lName.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
-        eMail = new JTextField();
-        eMail.setText(controller.getSignedInUser().getEmail());
-        eMail.setForeground(menuColor);
-        eMail.setFont(new Font("Dialog", Font.PLAIN, 16));
-        eMail.setBorder(BorderFactory.createLineBorder(menuColor, 3));
+        passwordField = new JTextField();
+        passwordField.setText("* * * * * *");
+        passwordField.setForeground(menuColor);
+        passwordField.setFont(new Font("Dialog", Font.PLAIN, 16));
+        passwordField.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         infoBox = new JTextArea();
         infoBox.setText("Write your infomation here");
@@ -234,8 +234,8 @@ public class ProfileView implements ActionListener {
         middleChangePanel = new JPanel();
         middleChangePanel.setBounds(topChangePanel.getX(), changePanel.getY()+5 + imageChangePanel.getHeight() + topChangePanel.getHeight() - (mainContentPanel.getHeight() / 10), changePanel.getWidth()/3, (changePanel.getHeight() - imageChangePanel.getHeight())/6);
         middleChangePanel.setLayout(new GridLayout(2, 1));
-        middleChangePanel.add(emailLabel);
-        middleChangePanel.add(eMail);
+        middleChangePanel.add(passwordLabel);
+        middleChangePanel.add(passwordField);
 
         lowerChangePanel = new JPanel();
         lowerChangePanel.setBounds(imageChangePanel.getX(), middleChangePanel.getY() + middleChangePanel.getHeight() + 5, changePanel.getWidth()/3, infoBox.getHeight());
@@ -281,20 +281,19 @@ public class ProfileView implements ActionListener {
     public void changeInfo(){
         String firstName = fName.getText();
         String lastName = lName.getText();
-        String email = eMail.getText();
-        String password = controller.getSignedInUser().getPassword();
-        String role = controller.getSignedInUser().getRole();
+        String passwordChangeText = controller.getSignedInUser().getPassword();
+        String email = infoEmail.getText();
 
-        if (firstName != controller.getSignedInUser().getFirstName() && lastName != controller.getSignedInUser().getLastName() && email != controller.getSignedInUser().getEmail()){
-            firstName = fName.getText();
-            lastName = lName.getText();
-            email = eMail.getText();
-
-            infoFirstname.setText(firstName);
-            infolastname.setText(lastName);
-            infoEmail.setText(email);
+        if (passwordChangeText.contains(controller.getSignedInUser().getPassword())){
+            passwordChangeText = controller.getSignedInUser().getPassword();
         }
 
+        lastName = lName.getText();
+        infolastname.setText(lastName);
+        firstName = fName.getText();
+        infoFirstname.setText(firstName);
+        passwordChangeText = passwordField.getText();
+        controller.updateUserDB(firstName, lastName, email, passwordChangeText, controller.getSignedInUser().getRole() );
     }
 
     public void CreateProfileView(){

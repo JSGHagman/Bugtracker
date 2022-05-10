@@ -103,7 +103,7 @@ public class Controller {
                 openMainWindow();
                 logInView.getFrame().dispose();
             } else {
-                openMainWindow();
+                //openMainWindow();
             }
         }
     }
@@ -188,7 +188,7 @@ public class Controller {
                 u.setPassword(user.getPassword());
                 u.setRole(user.getRole());
             }
-            switchToUserAdmin();
+            //switchToUserAdmin();
         }
     }
 
