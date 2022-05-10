@@ -22,6 +22,7 @@ public class ProfileView implements ActionListener {
     private JTextArea infoBox;
     private JButton btnChangeInfo, btnShowInfo, btnChange;
     private JTextPane infoArea;
+    private JScrollPane infoScroll;
 
     //GENERAL
     private Controller controller;
@@ -171,8 +172,12 @@ public class ProfileView implements ActionListener {
         infoArea = new JTextPane();
         infoArea.setFont(new Font("Dialog", Font.BOLD, 16));
         infoArea.setText("Userinformation about every\n user to get\n the right user\n for tickets\n\n\n\n\n");
-        infoArea.setSize((mainContentPanel.getHeight()/8) / 2, mainContentPanel.getHeight()/8);
         infoArea.setEditable(false);
+
+        infoScroll = new JScrollPane();
+        infoScroll.setSize((mainContentPanel.getHeight()/8) / 2, mainContentPanel.getHeight()/8);
+        infoScroll.add(infoArea);
+
     }
 
     public void setInfoPanelDetails() {
@@ -185,7 +190,6 @@ public class ProfileView implements ActionListener {
         topInfoPanel = new JPanel();
         topInfoPanel.setBounds(imagePanel.getX(), imagePanel.getY()+imagePanel.getHeight() + 10, infoPanel.getWidth()/3, infoPanel.getHeight()/3);
         topInfoPanel.setLayout(new GridLayout(4, 1));
-
 
         topInfoPanel.add(infoInputFirstname);
         topInfoPanel.add(infoFirstname);
@@ -200,7 +204,7 @@ public class ProfileView implements ActionListener {
 
         loweInfoPanel = new JPanel();
         loweInfoPanel.setBounds(imagePanel.getX(), middleInfoPanel.getY() + middleInfoPanel.getHeight() + 5, infoPanel.getWidth()/3, infoBox.getHeight());
-        loweInfoPanel.add(infoArea);
+        loweInfoPanel.add(infoScroll);
         loweInfoPanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         roleInfoPanel = new JPanel();
