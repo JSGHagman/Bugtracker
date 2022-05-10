@@ -1045,12 +1045,16 @@ public class TicketView extends JComponent implements ActionListener {
             if (check.equals("")) {
                 controller.showMessage("Comment cannot be null");
             } else {
-                id = getIdFromTable();
-                controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
-                comments = controller.getTicketComments(id);
-                String[] list = comments.toArray(new String[comments.size()]);
-                setCommentsList(list);
-                commentText.setText("");
+                try{
+                    id = getIdFromTable();
+                    controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
+                    comments = controller.getTicketComments(id);
+                    String[] list = comments.toArray(new String[comments.size()]);
+                    setCommentsList(list);
+                    commentText.setText("");
+                } catch (IndexOutOfBoundsException exc){
+                    controller.showMessage("Select a ticket first.");
+                }
             }
         }
     }
