@@ -307,6 +307,11 @@ public class Controller {
         new AssigneesThread(ticketToUpdate, assignees);
         User user = userManager.getUserFromString(owner);
         ticketToUpdate.setOwner(user);
+        if(owner == "none@email.com"){
+            ticket.setStatus("Open");
+        }else{
+            ticket.setStatus("In progress");
+        }
         dbController.updateTicket(ticketToUpdate);
     }
 
