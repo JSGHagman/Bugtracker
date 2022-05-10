@@ -23,6 +23,8 @@ public class ProfileView implements ActionListener {
     private JButton btnChangeInfo, btnShowInfo, btnChange;
     private JTextPane infoArea;
 
+    private String email;
+
     //GENERAL
     private Controller controller;
     private MainFrame mainFrame;
@@ -282,23 +284,18 @@ public class ProfileView implements ActionListener {
         String firstName = fName.getText();
         String lastName = lName.getText();
         String passwordChangeText = controller.getSignedInUser().getPassword();
-        String password;
+        email = infoEmail.getText();
 
-        if (firstName != controller.getSignedInUser().getFirstName()){
-            firstName = fName.getText();
-            controller.changeUserInfo();
-
-            infoFirstname.setText(firstName);
-            infolastname.setText(lastName);
+        if (passwordChangeText.contains(controller.getSignedInUser().getPassword())){
+            passwordChangeText = controller.getSignedInUser().getPassword();
         }
 
-        if (lastName != controller.getSignedInUser().getLastName()){
-        }
-
-        if (passwordChangeText != controller.getSignedInUser().getPassword()){
-
-        }
-
+        lastName = lName.getText();
+        infolastname.setText(lastName);
+        firstName = fName.getText();
+        infoFirstname.setText(firstName);
+        passwordChangeText = passwordLabel.getText();
+        controller.updateUserDB(firstName, lastName, email, passwordChangeText, controller.getSignedInUser().getRole() );
     }
 
     public void CreateProfileView(){
@@ -328,17 +325,6 @@ public class ProfileView implements ActionListener {
         }
     }
 
-    public String getFirstnameLabel() {
-        return String.valueOf(firstnameLabel);
-    }
-
-    public String getLastnameLabel() {
-        return String.valueOf(lastnameLabel);
-    }
-
-    public String getPasswordLabel() {
-        return String.valueOf(passwordLabel);
-    }
 }
 
 

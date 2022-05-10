@@ -181,13 +181,6 @@ public class Controller {
             e.printStackTrace();
         }
     }
-    public void changeUserInfo(){
-        String newFirstname = profileView.getFirstnameLabel();
-        String newLastname = profileView.getLastnameLabel();
-
-
-    }
-
     public void updateUserManager(User user) {
         for (User u : userManager.getAllUsers()) {
             if (user.getEmail().equals(u.getEmail())) {
@@ -196,7 +189,7 @@ public class Controller {
                 u.setPassword(user.getPassword());
                 u.setRole(user.getRole());
             }
-            switchToUserAdmin();
+            //switchToUserAdmin();
         }
     }
 
