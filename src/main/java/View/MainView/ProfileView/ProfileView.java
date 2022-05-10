@@ -34,7 +34,6 @@ public class ProfileView implements ActionListener {
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.mainContentPanel = mainFrame.getContentPanel();
-        CreateProfileView();
     }
     /*public void setProfilePicture() throws IOException {
         BufferedImage myPicture = ImageIO. read(new File("Images/bugTrackerIcon.png"));

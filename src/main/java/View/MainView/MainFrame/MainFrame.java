@@ -37,6 +37,7 @@ public class MainFrame extends JFrame {
     private MenuViewAgent menuViewAgent;
     private MenuViewUser menuViewUser;
     private UserAdminView userAdminView;
+    private ProfileView profileView;
 
     public MainFrame(Controller controller){
         this.controller = controller;
@@ -55,8 +56,8 @@ public class MainFrame extends JFrame {
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //ticketView = new TicketView(controller, this);
-        ProfileView profileView = new ProfileView(controller, this);
+        ticketView = new TicketView(controller, this);
+        profileView = new ProfileView(controller, this);
 
 
         switch (controller.getSignedInUser().getRole()) {
@@ -75,8 +76,6 @@ public class MainFrame extends JFrame {
         }
 
     }
-
-
 
     public void setUpPanels(){
         menuPanel = new JPanel();
@@ -105,7 +104,17 @@ public class MainFrame extends JFrame {
     }
 
     public void ticketView () {
+        contentPanel.removeAll();
         ticketView.initializeTicketView();
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+
+    public void profileView(){
+        contentPanel.removeAll();
+        profileView.CreateProfileView();
+        mainFrame.revalidate();
+        mainFrame.repaint();
     }
 
     public void setUsertxtUserAdmin(String firstName, String lastName, String email, String password, String role) {

@@ -74,7 +74,7 @@ public class MenuViewUser extends JComponent implements ActionListener {
         }
 
         if (e.getSource() == btnSettings) {
-            controller.switchToSettings();
+            controller.switchToProfile();
         }
 
         if (e.getSource() == btnLogout) {

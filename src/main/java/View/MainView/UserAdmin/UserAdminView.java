@@ -232,7 +232,6 @@ public class UserAdminView extends JComponent implements ActionListener {
                 data[(i / 4)][3] = users.get(i + 3);
             }
         }
-
     }
 
 
@@ -295,8 +294,6 @@ public class UserAdminView extends JComponent implements ActionListener {
             setRole("User");
             setTxtFirstName("");
             setTxtLastName("");
-
-
         }
 
         if (e.getSource() == btnSave) {

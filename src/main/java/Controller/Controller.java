@@ -113,7 +113,7 @@ public class Controller {
      * loads username,  to profileWindow
      */
     public void switchToProfile() {
-
+        view.profileView();
     }
 
 
