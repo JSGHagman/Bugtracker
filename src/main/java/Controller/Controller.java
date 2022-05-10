@@ -3,6 +3,7 @@ package Controller;
 import Model.*;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
+import View.MainView.ProfileView.ProfileView;
 import View.MainView.UserAdmin.UserAdminView;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ public class Controller {
     private String userName, email, firstName, lastName, role, password, errorMessage;
     private MainFrame view;
     private LogInGUI logInView;
+    private ProfileView profileView;
 
     public Controller() {
         userManager = UserManager.getInstance();
@@ -178,6 +180,12 @@ public class Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public void changeUserInfo(){
+        String newFirstname = profileView.getFirstnameLabel();
+        String newLastname = profileView.getLastnameLabel();
+
+
     }
 
     public void updateUserManager(User user) {
