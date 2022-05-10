@@ -7,20 +7,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-public class Main extends Application {
+//extends Application
+public class Main {
 
     public static void main(String[] args) {
         Controller controller = new Controller();
-        launch(args);
+  //      launch(args);
     }
 
+    /*
     /**
      * This method creates and shows the frame for creating a user.
      * It retrieves the fxml file from "resources" through the getResource-method.
      * @param stage
      * @throws Exception
-     */
+     *//*
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
@@ -31,4 +32,5 @@ public class Main extends Application {
         stage.setResizable(true);
         stage.show();
     }
+    */
 }
