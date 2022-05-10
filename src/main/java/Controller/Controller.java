@@ -102,8 +102,6 @@ public class Controller {
             if (tryLogin()) {
                 openMainWindow();
                 logInView.getFrame().dispose();
-            } else {
-                openMainWindow();
             }
         }
     }
