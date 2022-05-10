@@ -35,7 +35,7 @@ public class Statistics {
 
     public void sortbyUser(User u) {
         for (Ticket t : allTickets) {
-            if (t.getUser().equals(u)) {
+            if (t.getOwner().equals(u)) {
                 sortedList.add(t);
             }
         }
