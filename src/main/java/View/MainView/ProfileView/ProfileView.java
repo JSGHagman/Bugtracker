@@ -64,7 +64,7 @@ public class ProfileView implements ActionListener {
 
     public void createMainPanels(){
         buttonPanel = new JPanel();
-        buttonPanel.setBounds(mainContentPanel.getX() + 10, 10, mainContentPanel.getWidth()/2, mainContentPanel.getHeight()/10 );
+        buttonPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, 10, mainContentPanel.getWidth()/2, mainContentPanel.getHeight()/10 );
         buttonPanel.setLayout(new GridLayout(1,2,10,10));
 
         buttonPanel.add(btnShowInfo);
@@ -72,13 +72,13 @@ public class ProfileView implements ActionListener {
 
         infoPanel = new JPanel();
         infoPanel.setLayout(null);
-        infoPanel.setBounds(mainContentPanel.getX() + 10, mainContentPanel.getY() + buttonPanel.getHeight() + 12, mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - mainContentPanel.getHeight()/6);
+        infoPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10 , mainContentPanel.getY() + buttonPanel.getHeight() + 12, mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - mainContentPanel.getHeight()/6);
         infoPanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
         setInfoPanelDetails();
 
         changePanel = new JPanel();
         changePanel.setLayout(null);
-        changePanel.setBounds(mainContentPanel.getX() + 10, mainContentPanel.getY() + buttonPanel.getHeight() + 12, mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - mainContentPanel.getHeight()/6);
+        changePanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, mainContentPanel.getY() + buttonPanel.getHeight() + 12, mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - mainContentPanel.getHeight()/6);
         changePanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
         setChangePanelDetails();
 
