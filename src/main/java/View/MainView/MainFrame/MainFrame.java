@@ -22,6 +22,7 @@ import View.MainView.Menu.MenuViewUser;
 import View.MainView.ProfileView.ProfileView;
 import View.MainView.Tickets.TicketView;
 import View.MainView.UserAdmin.UserAdminView;
+import View.StaticsView.StatisticView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +39,7 @@ public class MainFrame extends JFrame {
     private MenuViewUser menuViewUser;
     private UserAdminView userAdminView;
     private ProfileView profileView;
+    private StatisticView statisticView;
 
     public MainFrame(Controller controller){
         this.controller = controller;
@@ -123,6 +125,10 @@ public class MainFrame extends JFrame {
         userAdminView.setTxtEmail(email);
         userAdminView.setPasswordtxt(password);
         userAdminView.setRole(role);
+    }
+
+    public void statisticsView() {
+        statisticView = new StatisticView(this, controller);
     }
 
 

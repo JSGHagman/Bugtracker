@@ -19,7 +19,7 @@ public class StatisticView extends JComponent {
     private CategoryDataset dataset;
     private MainFrame mainFrame;
     private Controller controller;
-    private JPanel mainContentPanel, contentPanel;
+    private JPanel mainContentPanel;
 
     public StatisticView(MainFrame mainFrame, Controller controller) {
         this.mainFrame = mainFrame;
@@ -28,16 +28,19 @@ public class StatisticView extends JComponent {
         dataset = createDataset();
         JFreeChart chart = createChart(dataset);
         chartPanel = new ChartPanel(chart);
-        contentPanel = new JPanel();
 
-       // chartPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
-        contentPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
 
-        contentPanel.add(chartPanel);
+        chartPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
+
+
+
         mainContentPanel.removeAll();
-        mainContentPanel.add(contentPanel);
+
+        mainContentPanel.add(chartPanel);
         mainContentPanel.revalidate();
         mainContentPanel.repaint();
+        this.mainFrame.getFrame().revalidate();
+        this.mainFrame.getFrame().repaint();
 
    //     pack();
      //   setTitle("Bar chart");
