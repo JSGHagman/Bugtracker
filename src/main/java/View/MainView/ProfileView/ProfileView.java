@@ -22,7 +22,7 @@ public class ProfileView implements ActionListener {
     private JTextArea infoBox;
     private JButton btnChangeInfo, btnShowInfo, btnChange;
     private JTextPane infoArea;
-    private JScrollPane infoScroll;
+    private JScrollPane infoScroll, changeScroll;
 
     //GENERAL
     private Controller controller;
@@ -165,7 +165,6 @@ public class ProfileView implements ActionListener {
         passwordField.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         infoBox = new JTextArea();
-        infoBox.setText("Write your infomation here");
         infoBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         infoBox.setSize((mainContentPanel.getHeight()/8) / 2, mainContentPanel.getHeight()/8);
 
@@ -177,6 +176,10 @@ public class ProfileView implements ActionListener {
         infoScroll = new JScrollPane();
         infoScroll.setSize((mainContentPanel.getHeight()/8) / 2, mainContentPanel.getHeight()/8);
         infoScroll.add(infoArea);
+
+        changeScroll = new JScrollPane();
+        changeScroll.add(infoBox);
+
 
     }
 
@@ -203,7 +206,7 @@ public class ProfileView implements ActionListener {
         middleInfoPanel.add(infoEmail);
 
         loweInfoPanel = new JPanel();
-        loweInfoPanel.setBounds(imagePanel.getX(), middleInfoPanel.getY() + middleInfoPanel.getHeight() + 5, infoPanel.getWidth()/3, infoBox.getHeight());
+        loweInfoPanel.setBounds(imagePanel.getX(), middleInfoPanel.getY() + middleInfoPanel.getHeight() + 5, infoPanel.getWidth()/3,  mainContentPanel.getHeight()/8);
         loweInfoPanel.add(infoScroll);
         loweInfoPanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
@@ -242,9 +245,9 @@ public class ProfileView implements ActionListener {
         middleChangePanel.add(passwordField);
 
         lowerChangePanel = new JPanel();
-        lowerChangePanel.setBounds(imageChangePanel.getX(), middleChangePanel.getY() + middleChangePanel.getHeight() + 5, changePanel.getWidth()/3, infoBox.getHeight());
+        lowerChangePanel.setBounds(imageChangePanel.getX(), middleChangePanel.getY() + middleChangePanel.getHeight() + 5, changePanel.getWidth()/3, mainContentPanel.getHeight()/8);
         lowerChangePanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
-        lowerChangePanel.add(infoBox);
+        lowerChangePanel.add(changeScroll);
 
         roleChangePanel = new JPanel();
         roleChangePanel.setBounds(changePanel.getWidth()*2/3,changePanel.getY() - (mainContentPanel.getHeight()/10), changePanel.getWidth()*2/7, changePanel.getHeight()/7);
