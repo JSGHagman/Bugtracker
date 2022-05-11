@@ -17,9 +17,10 @@ public class ProfileView implements ActionListener {
 
     private JPanel mainContentPanel, infoPanel, changePanel, buttonPanel, currentPanelOnDisplay, imagePanel, topInfoPanel, middleInfoPanel, loweInfoPanel, roleInfoPanel;
     private JPanel changeBtnPanel, imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
-    private JTextField fName, lName, passwordField, eMail;
+    private JTextField fName, lName, eMail;
     private JLabel roleInfoLabel, firstnameLabel, lastnameLabel, passwordLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
     private JTextArea infoBox;
+    private JPasswordField passwordField;
     private JButton btnChangeInfo, btnShowInfo, btnChange;
     private JTextPane infoArea;
     private JScrollPane infoScroll, changeScroll;
@@ -158,29 +159,28 @@ public class ProfileView implements ActionListener {
         lName.setFont(new Font("Dialog", Font.PLAIN, 16));
         lName.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
-        passwordField = new JTextField();
-        passwordField.setText("* * * * * *");
+        passwordField = new JPasswordField();
         passwordField.setForeground(menuColor);
+        passwordField.setText("Ser detta");
         passwordField.setFont(new Font("Dialog", Font.PLAIN, 16));
         passwordField.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         infoBox = new JTextArea();
         infoBox.setFont(new Font("Dialog", Font.PLAIN, 16));
-        infoBox.setSize((mainContentPanel.getHeight()/8) / 2, mainContentPanel.getHeight()/8);
+        infoBox.setText(" \n  \n ");
+        infoBox.setEditable(true);
 
         infoArea = new JTextPane();
         infoArea.setFont(new Font("Dialog", Font.BOLD, 16));
-        infoArea.setText("Userinformation about every\n user to get\n the right user\n for tickets\n\n\n\n\n");
+        infoArea.setText(infoBox.getText());
         infoArea.setEditable(false);
+        infoArea.setBorder(BorderFactory.createLineBorder(Color.magenta, 3));
 
         infoScroll = new JScrollPane();
-        infoScroll.setSize((mainContentPanel.getHeight()/8) / 2, mainContentPanel.getHeight()/8);
         infoScroll.add(infoArea);
 
         changeScroll = new JScrollPane();
         changeScroll.add(infoBox);
-
-
     }
 
     public void setInfoPanelDetails() {
@@ -247,6 +247,7 @@ public class ProfileView implements ActionListener {
         lowerChangePanel = new JPanel();
         lowerChangePanel.setBounds(imageChangePanel.getX(), middleChangePanel.getY() + middleChangePanel.getHeight() + 5, changePanel.getWidth()/3, mainContentPanel.getHeight()/8);
         lowerChangePanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
+        lowerChangePanel.setLayout(new GridLayout(1, 1));
         lowerChangePanel.add(changeScroll);
 
         roleChangePanel = new JPanel();
@@ -291,15 +292,19 @@ public class ProfileView implements ActionListener {
         String passwordChangeText = controller.getSignedInUser().getPassword();
         String email = infoEmail.getText();
 
-        if (passwordChangeText.contains(controller.getSignedInUser().getPassword())){
+
+        if(passwordField.equals("* * * * * *")){
             passwordChangeText = controller.getSignedInUser().getPassword();
+
+        }
+        else {
+            passwordChangeText = passwordField.getText();
         }
 
         lastName = lName.getText();
         infolastname.setText(lastName);
         firstName = fName.getText();
         infoFirstname.setText(firstName);
-        passwordChangeText = passwordField.getText();
         controller.updateUserDB(firstName, lastName, email, passwordChangeText, controller.getSignedInUser().getRole() );
     }
 
@@ -326,7 +331,6 @@ public class ProfileView implements ActionListener {
         }
         if (e.getSource().equals(btnChange)){
             changeInfo();
-
         }
     }
 
