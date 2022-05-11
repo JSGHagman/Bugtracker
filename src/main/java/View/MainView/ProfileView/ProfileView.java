@@ -1,20 +1,16 @@
 package View.MainView.ProfileView;
 
 import Controller.Controller;
-import Model.UserManager;
 import View.MainView.MainFrame.MainFrame;
-import javafx.scene.image.Image;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.FileReader;
 
 public class ProfileView implements ActionListener {
 
+    //Swing Objects
     private JPanel mainContentPanel, infoPanel, changePanel, buttonPanel, currentPanelOnDisplay, imagePanel, topInfoPanel, middleInfoPanel, loweInfoPanel, roleInfoPanel;
     private JPanel changeBtnPanel, imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
     private JTextField fName, lName, eMail;
@@ -31,6 +27,14 @@ public class ProfileView implements ActionListener {
     private Color menuColor = new Color(65, 105, 225);
     private Color hoverColor = new Color(65, 145, 225);
     private Object image;
+
+    //String
+    String firstName = "";
+    String lastName = "";
+    String passwordChangeText = "";
+    String email = "";
+
+
 
     public ProfileView(Controller controller, MainFrame mainFrame) {
         this.controller = controller;
@@ -148,39 +152,40 @@ public class ProfileView implements ActionListener {
 
     public void creatInputField(){
         fName = new JTextField();
-        fName.setText(controller.getSignedInUser().getFirstName());
+        fName.setText("");
         fName.setForeground(menuColor);
         fName.setFont(new Font("Dialog", Font.PLAIN, 16));
         fName.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         lName = new JTextField();
-        lName.setText(controller.getSignedInUser().getLastName());
+        lName.setText("");
         lName.setForeground(menuColor);
         lName.setFont(new Font("Dialog", Font.PLAIN, 16));
         lName.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         passwordField = new JPasswordField();
         passwordField.setForeground(menuColor);
-        passwordField.setText("Ser detta");
+        passwordField.setText("");
         passwordField.setFont(new Font("Dialog", Font.PLAIN, 16));
         passwordField.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
         infoBox = new JTextArea();
-        infoBox.setFont(new Font("Dialog", Font.PLAIN, 16));
-        infoBox.setText(" \n  \n ");
-        infoBox.setEditable(true);
+        infoBox.setFont(new Font("Dialog", Font.PLAIN,  10));
+        infoBox.setText("Personal \n skills");
 
         infoArea = new JTextPane();
-        infoArea.setFont(new Font("Dialog", Font.BOLD, 16));
+        infoArea.setFont(new Font("Dialog", Font.BOLD, 10));
         infoArea.setText(infoBox.getText());
         infoArea.setEditable(false);
         infoArea.setBorder(BorderFactory.createLineBorder(Color.magenta, 3));
 
-        infoScroll = new JScrollPane();
-        infoScroll.add(infoArea);
+        infoScroll = new JScrollPane(infoArea);
+        infoScroll.setBorder(BorderFactory.createLineBorder(Color.magenta, 3));
+        infoScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        changeScroll = new JScrollPane();
-        changeScroll.add(infoBox);
+        changeScroll = new JScrollPane(infoBox);
+        changeScroll.setBorder(BorderFactory.createLineBorder(Color.yellow, 3));
+        changeScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
     }
 
     public void setInfoPanelDetails() {
@@ -207,6 +212,7 @@ public class ProfileView implements ActionListener {
 
         loweInfoPanel = new JPanel();
         loweInfoPanel.setBounds(imagePanel.getX(), middleInfoPanel.getY() + middleInfoPanel.getHeight() + 5, infoPanel.getWidth()/3,  mainContentPanel.getHeight()/8);
+        loweInfoPanel.setLayout(new GridLayout(1, 1));
         loweInfoPanel.add(infoScroll);
         loweInfoPanel.setBorder(BorderFactory.createLineBorder(menuColor, 3));
 
@@ -287,25 +293,31 @@ public class ProfileView implements ActionListener {
     }
 
     public void changeInfo(){
-        String firstName = fName.getText();
-        String lastName = lName.getText();
-        String passwordChangeText = controller.getSignedInUser().getPassword();
-        String email = infoEmail.getText();
+        if(fName.getText().isEmpty()){
+            firstName = controller.getSignedInUser().getFirstName();
+        }
+        else if (!fName.getText().isEmpty()){
+            firstName = fName.getText();
+        }
 
-
-        if(passwordField.equals("* * * * * *")){
+        if (lName.getText().isEmpty()){
+            lastName = controller.getSignedInUser().getLastName();
+        }
+        else if (!lName.getText().isEmpty()){
+            lastName = lName.getText();
+            System.out.println(lastName);
+        }
+        if(passwordField.getPassword().length == 0){
             passwordChangeText = controller.getSignedInUser().getPassword();
 
         }
-        else {
+        else if (passwordField.getPassword().length > 0){
             passwordChangeText = passwordField.getText();
         }
-
-        lastName = lName.getText();
         infolastname.setText(lastName);
-        firstName = fName.getText();
         infoFirstname.setText(firstName);
-        controller.updateUserDB(firstName, lastName, email, passwordChangeText, controller.getSignedInUser().getRole() );
+        infoArea.setText(infoBox.getText());
+        controller.updateUserDB(firstName, lastName, email, passwordChangeText, controller.getSignedInUser().getRole());
     }
 
     public void CreateProfileView(){
