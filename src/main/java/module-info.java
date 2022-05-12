@@ -4,6 +4,11 @@ module com.example.bugtracker {
     requires java.sql;
     requires java.desktop;
     requires org.jfree.jfreechart;
+    requires google.api.services.drive.v3.rev197;
+    requires com.google.api.client.auth;
+    requires google.api.client;
+    requires com.google.api.client;
+    requires com.google.api.client.json.gson;
 
     opens Controller to javafx.fxml;
     exports Controller;

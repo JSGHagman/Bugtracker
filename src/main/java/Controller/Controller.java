@@ -30,6 +30,7 @@ public class Controller {
         dbController = new DatabaseController(this);
         startThreads();
         logInView = new LogInGUI(this);
+        AttachedFiles files = new AttachedFiles();
         //openMainWindow();
     }
 
