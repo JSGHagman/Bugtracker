@@ -284,12 +284,10 @@ public class ProfileView implements ActionListener {
         String email = eMail.getText();
         String password = controller.getSignedInUser().getPassword();
         String role = controller.getSignedInUser().getRole();
-
         if (firstName != controller.getSignedInUser().getFirstName() && lastName != controller.getSignedInUser().getLastName() && email != controller.getSignedInUser().getEmail()){
             firstName = fName.getText();
             lastName = lName.getText();
             email = eMail.getText();
-
             infoFirstname.setText(firstName);
             infolastname.setText(lastName);
             infoEmail.setText(email);
@@ -303,6 +301,7 @@ public class ProfileView implements ActionListener {
         createButton();
         createMainPanels();
     }
+
     /**
      * Adds actionlistener to the buttons.
      * */
@@ -320,7 +319,6 @@ public class ProfileView implements ActionListener {
         }
         if (e.getSource().equals(btnChange)){
             changeInfo();
-
         }
     }
 
