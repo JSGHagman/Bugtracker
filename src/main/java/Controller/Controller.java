@@ -506,7 +506,7 @@ public class Controller {
     public boolean editGuard(int id){
         boolean ok = false;
         ticket = ticketManager.getTicket(id);
-        if(signedInUser.getRole() == "Admin" || ticket.getOwner() == signedInUser || ticket.getOwner().getEmail().equals("none@email.com")){
+        if(signedInUser.getRole().equals("Admin") || ticket.getOwner() == signedInUser || ticket.getOwner().getEmail().equals("none@email.com")){
             ok = true;
         }if(!ok) {
             for (User u : ticket.getAgent()) {

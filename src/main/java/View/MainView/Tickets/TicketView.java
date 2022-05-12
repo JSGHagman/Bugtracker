@@ -791,7 +791,7 @@ public class TicketView extends JComponent implements ActionListener {
         }
     }
 
-    private void setEditTicket(int id) throws Exception {
+    private void setEditTicket(int id) throws IndexOutOfBoundsException {
         Ticket t = controller.getTicketInfo(id);
         if(controller.getSignedInUser().getRole().equals("Admin")){
             controller.populatePeopleBox(ownerBoxEdit);
@@ -956,9 +956,15 @@ public class TicketView extends JComponent implements ActionListener {
 
 
         if (e.getSource() == btnEditTicket) {
-            id = getIdFromTable();
-            if(controller.editGuard(id)){
-                try {
+            boolean ok = false;
+            try {
+                id = getIdFromTable();
+                ok = true;
+            } catch (IndexOutOfBoundsException ex) {
+                controller.showMessage("Select a ticket");
+            }
+            if (ok){
+                if(controller.editGuard(id)){
                     setEditTicket(id);
                     setEditPanelDetails();
                     changeToEdit();
@@ -973,13 +979,9 @@ public class TicketView extends JComponent implements ActionListener {
                         }
                     });
                     myTicketsView = false;
-                } catch (IndexOutOfBoundsException ex) {
-                    controller.showMessage("Select a ticket");
-                } catch (Exception exception){
-                    exception.printStackTrace();
+                }else{
+                    controller.showMessage("You don't have authorization to edit this ticket");
                 }
-            }else{
-                controller.showMessage("You don't have authorization to edit this ticket");
             }
         }
 

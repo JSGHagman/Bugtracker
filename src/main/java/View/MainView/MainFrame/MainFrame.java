@@ -1,19 +1,4 @@
-/**
- * Observera att layout för panelerna är null, och i min mening bör de vara null
- * för mer precis kontroll om vart panelerna placeras använd setBounds();
- * Tips är att ha en unik färg på panelerna när man försöker placera ut den så man ser vart den hamnar.
- * layout på panelerna som placeras ovanpå grundpanelerna behöver inte vara null, det är vad som passar för dess ändamål.
- * Menypanelen bör styras här ifrån men beroende på vilket val man väljer i menyn målas töms contentpanelen och
- * målas om med en instans av klasser i de andra paketen.
- * När man instansierar dessa bör man skicka med MainFrame Objektet och Controller Objektet som parametrar i konstruktorerna.
- * Får tillgång till contentpanelen eller menypanelen från getters i MainFrame Objektet
- * Att göra:
- * Placera ut knappar i menyn
- * Börja med view för att tickets
- * Börja med view för profile
- * Börja med view för Settings
- *
- */
+
 package View.MainView.MainFrame;
 import Controller.Controller;
 import View.MainView.Menu.MenuViewAdmin;
@@ -22,7 +7,7 @@ import View.MainView.Menu.MenuViewUser;
 import View.MainView.ProfileView.ProfileView;
 import View.MainView.Tickets.TicketView;
 import View.MainView.UserAdmin.UserAdminView;
-import View.StaticsView.StatisticView;
+import View.MainView.StaticsView.StatisticView;
 
 import javax.swing.*;
 import java.awt.*;

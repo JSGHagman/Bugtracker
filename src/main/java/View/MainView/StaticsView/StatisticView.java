@@ -1,4 +1,4 @@
-package View.StaticsView;
+package View.MainView.StaticsView;
 
 import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
@@ -10,8 +10,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.EventQueue;
 
 public class StatisticView extends JComponent {
 
@@ -49,8 +47,8 @@ public class StatisticView extends JComponent {
    //     setLocationRelativeTo(null);
 
     }
-    private CategoryDataset createDataset() {
 
+    private CategoryDataset createDataset() {
         var dataset = new DefaultCategoryDataset();
         dataset.setValue(46, "Gold medals", "USA");
         dataset.setValue(38, "Gold medals", "China");
@@ -58,9 +56,7 @@ public class StatisticView extends JComponent {
         dataset.setValue(22, "Gold medals", "Russia");
         dataset.setValue(13, "Gold medals", "South Korea");
         dataset.setValue(11, "Gold medals", "Germany");
-
         return dataset;
-
     }
 
     private JFreeChart createChart(CategoryDataset dataset) {
