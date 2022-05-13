@@ -1,4 +1,3 @@
-
 /**
  * @todo Under ticket list:
  * Visa ticket id och all info.
@@ -18,6 +17,9 @@
  * <p>
  * Class used for different views of tickets
  * @author Jakob Hagman
+ * <p>
+ * Class used for different views of tickets
+ * @author Jakob Hagman
  */
 
 /**
@@ -28,15 +30,20 @@
 package View.MainView.Tickets;
 
 import Controller.Controller;
+import Model.AttachedFiles;
 import Model.Ticket;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -59,7 +66,7 @@ public class TicketView extends JComponent implements ActionListener {
     private String owner;
     private boolean myTicketsView = false;
     //FOR OTHER VIEWS
-    private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator;
+    private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator, btnAttachFile;
     private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
     private JTextField topicField;
     private JTextArea descriptionText, comment, assigneesText;
@@ -75,6 +82,8 @@ public class TicketView extends JComponent implements ActionListener {
     private JScrollPane descriptionScrollEdit;
     private JComboBox priorityBoxEdit, categoryBoxEdit, ownerBoxEdit, collaboratorsBoxEdit;
     private int id;
+    private JFileChooser fileChooser;
+    private File attachedFile;
 
     /**
      * Constructor, creates all components needed and sets the home view for tickets through initilaizeTicketView();
@@ -130,6 +139,8 @@ public class TicketView extends JComponent implements ActionListener {
         setButtonDesign(btnCloseTicket);
         btnAddComment = new JButton("Add comment");
         setButtonDesign(btnAddComment);
+        btnAttachFile = new JButton("Attach file");
+        setButtonDesign(btnAttachFile);
     }
 
     /**
@@ -399,8 +410,9 @@ public class TicketView extends JComponent implements ActionListener {
         innerPeoplePanelEdit.add(collaboratorsBoxEdit);
 
         JPanel innerCollaboratorButtonsPanelEdit = new JPanel();
-        innerCollaboratorButtonsPanelEdit.setLayout(new GridLayout(1, 2, 10, 10));
+        innerCollaboratorButtonsPanelEdit.setLayout(new GridLayout(1, 3, 10, 10));
         innerCollaboratorButtonsPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerPeoplePanelEdit.getY() + innerPeoplePanelEdit.getHeight() + 5, innerPeoplePanelEdit.getWidth(), innerPeoplePanelEdit.getHeight() / 4);
+        innerCollaboratorButtonsPanelEdit.add(btnAttachFile);
         innerCollaboratorButtonsPanelEdit.add(btnAddCollaboratorEdit);
         innerCollaboratorButtonsPanelEdit.add(btnRemoveCollaboratorEdit);
 
@@ -471,8 +483,9 @@ public class TicketView extends JComponent implements ActionListener {
         innerPeoplePanel.add(collaboratorsBox);
 
         JPanel innerCollaboratorButtonsPanel = new JPanel();
-        innerCollaboratorButtonsPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        innerCollaboratorButtonsPanel.setLayout(new GridLayout(1, 3, 10, 10));
         innerCollaboratorButtonsPanel.setBounds(innerPeoplePanel.getX(), innerPeoplePanel.getY() + innerPeoplePanel.getHeight() + 5, innerPeoplePanel.getWidth(), innerPeoplePanel.getHeight() / 4);
+        innerCollaboratorButtonsPanel.add(btnAttachFile);
         innerCollaboratorButtonsPanel.add(btnAddCollaborator);
         innerCollaboratorButtonsPanel.add(btnRemoveCollaborator);
 
@@ -688,7 +701,8 @@ public class TicketView extends JComponent implements ActionListener {
                 }
                 data[i][6] = list.get(i).getStartdate();
             }
-        } if (myTicketsView) {
+        }
+        if (myTicketsView) {
             data = null;
             columnNames = new String[]{"ID", "Type", "Topic", "Priority", "Status", "Owner", "Date"};
             ArrayList<Model.Ticket> list = controller.getMyTickets();
@@ -780,7 +794,7 @@ public class TicketView extends JComponent implements ActionListener {
         }
         String type = (String) categoryBox.getSelectedItem();
         String owner = (String) ownerBox.getSelectedItem();
-        if(ownerBox.getSelectedItem().equals("None")){
+        if (ownerBox.getSelectedItem().equals("None")) {
             owner = "none@email.com";
         }
 
@@ -793,11 +807,11 @@ public class TicketView extends JComponent implements ActionListener {
 
     private void setEditTicket(int id) throws IndexOutOfBoundsException {
         Ticket t = controller.getTicketInfo(id);
-        if(controller.getSignedInUser().getRole().equals("Admin")){
+        if (controller.getSignedInUser().getRole().equals("Admin")) {
             controller.populatePeopleBox(ownerBoxEdit);
         }
 
-        if(((DefaultComboBoxModel)ownerBoxEdit.getModel()).getIndexOf(t.getOwner()) < 0) {
+        if (((DefaultComboBoxModel) ownerBoxEdit.getModel()).getIndexOf(t.getOwner()) < 0) {
             ownerBoxEdit.addItem(t.getOwner());
         }
         int priority = t.getPriority();
@@ -888,30 +902,40 @@ public class TicketView extends JComponent implements ActionListener {
 
     private void removeCollaborator(String user) {
         boolean found = false;
-        for(String s : assignees){
-            if(s.equals(user)){
+        for (String s : assignees) {
+            if (s.equals(user)) {
                 assignees.remove(user);
                 found = true;
                 break;
             }
         }
-        if(!found){
+        if (!found) {
             controller.showMessage("Cannot remove unassigned user");
         }
     }
 
-    private void removeCollaboratorFromOldTicket(String user, int id){
+    private void removeCollaboratorFromOldTicket(String user, int id) {
         boolean found = false;
-        for(String s : assignees){
-            if(s.equals(user)){
+        for (String s : assignees) {
+            if (s.equals(user)) {
                 assignees.remove(user);
                 controller.removeAgent(user, id);
                 found = true;
                 break;
             }
         }
-        if(!found){
+        if (!found) {
             controller.showMessage("Cannot remove unassigned user");
+        }
+    }
+
+    public void chooseFile() {
+        fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            attachedFile = fileChooser.getSelectedFile();
+
         }
     }
 
@@ -963,8 +987,8 @@ public class TicketView extends JComponent implements ActionListener {
             } catch (IndexOutOfBoundsException ex) {
                 controller.showMessage("Select a ticket");
             }
-            if (ok){
-                if(controller.editGuard(id)){
+            if (ok) {
+                if (controller.editGuard(id)) {
                     setEditTicket(id);
                     setEditPanelDetails();
                     changeToEdit();
@@ -979,7 +1003,7 @@ public class TicketView extends JComponent implements ActionListener {
                         }
                     });
                     myTicketsView = false;
-                }else{
+                } else {
                     controller.showMessage("You don't have authorization to edit this ticket");
                 }
             }
@@ -1001,6 +1025,15 @@ public class TicketView extends JComponent implements ActionListener {
             table.clearSelection();
             setCommentsList(new String[0]);
             myTicketsView = false;
+            if (attachedFile != null) {
+                try {
+                    controller.addAttachedFile(id, attachedFile);
+                } catch (GeneralSecurityException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
 
 
@@ -1011,6 +1044,15 @@ public class TicketView extends JComponent implements ActionListener {
             table.clearSelection();
             setCommentsList(new String[0]);
             myTicketsView = false;
+            if (attachedFile != null) {
+                try {
+                    controller.addAttachedFile(id, attachedFile);
+                } catch (GeneralSecurityException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
 
         if (e.getSource() == btnAddCollaborator) {
@@ -1023,12 +1065,12 @@ public class TicketView extends JComponent implements ActionListener {
             updateAssigneesTextEdit();
         }
 
-        if(e.getSource() == btnRemoveCollaboratorEdit) {
+        if (e.getSource() == btnRemoveCollaboratorEdit) {
             removeCollaboratorFromOldTicket(collaboratorsBoxEdit.getSelectedItem().toString(), id);
             updateAssigneesTextEdit();
         }
 
-        if(e.getSource() == btnRemoveCollaborator){
+        if (e.getSource() == btnRemoveCollaborator) {
             removeCollaborator(collaboratorsBox.getSelectedItem().toString());
             updateAssigneesTextCreate();
         }
@@ -1047,17 +1089,20 @@ public class TicketView extends JComponent implements ActionListener {
             if (check.equals("")) {
                 controller.showMessage("Comment cannot be null");
             } else {
-                try{
+                try {
                     id = getIdFromTable();
                     controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
                     comments = controller.getTicketComments(id);
                     String[] list = comments.toArray(new String[comments.size()]);
                     setCommentsList(list);
                     commentText.setText("");
-                } catch (IndexOutOfBoundsException exc){
+                } catch (IndexOutOfBoundsException exc) {
                     controller.showMessage("Select a ticket first.");
                 }
             }
+        }
+        if (e.getSource() == btnAttachFile) {
+            chooseFile();
         }
     }
 }

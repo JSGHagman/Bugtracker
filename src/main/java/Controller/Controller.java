@@ -6,6 +6,9 @@ import View.MainView.MainFrame.MainFrame;
 import View.MainView.UserAdmin.UserAdminView;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class Controller {
     private String userName, email, firstName, lastName, role, password, errorMessage;
     private MainFrame view;
     private LogInGUI logInView;
+    private AttachedFiles attachedFiles;
 
     public Controller() {
         userManager = UserManager.getInstance();
@@ -30,7 +34,7 @@ public class Controller {
         dbController = new DatabaseController(this);
         startThreads();
         logInView = new LogInGUI(this);
-        AttachedFiles files = new AttachedFiles();
+        attachedFiles = new AttachedFiles();
         //openMainWindow();
     }
 
@@ -293,6 +297,7 @@ public class Controller {
         dbController.updateTicket(ticket);
     }
 
+
     public void newTicketfromDB(Ticket ticket) {
         ticketManager.addTicketToList(ticket);
     }
@@ -517,6 +522,19 @@ public class Controller {
             }
         }
         return ok;
+    }
+
+    public void addAttachedFile(int id, File file) throws GeneralSecurityException, IOException {
+        String strId = String.valueOf(id);
+        String folderID = attachedFiles.checkIfExist( attachedFiles.getDriveService(),strId);
+        if (folderID == null) {
+           folderID = attachedFiles.createDriveFolder(attachedFiles.getDriveService(), strId);
+            attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
+        }
+        else {
+
+            attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
+        }
     }
 
     public void setStatus(Ticket t){

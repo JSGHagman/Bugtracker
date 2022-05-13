@@ -9,6 +9,7 @@ module com.example.bugtracker {
     requires google.api.client;
     requires com.google.api.client;
     requires com.google.api.client.json.gson;
+    requires org.apache.commons.io;
 
     opens Controller to javafx.fxml;
     exports Controller;
