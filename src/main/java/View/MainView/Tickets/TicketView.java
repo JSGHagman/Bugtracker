@@ -44,6 +44,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -66,7 +67,7 @@ public class TicketView extends JComponent implements ActionListener {
     private String owner;
     private boolean myTicketsView = false;
     //FOR OTHER VIEWS
-    private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator, btnAttachFile;
+    private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator, btnAttachFileCreate;
     private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
     private JTextField topicField;
     private JTextArea descriptionText, comment, assigneesText;
@@ -74,7 +75,7 @@ public class TicketView extends JComponent implements ActionListener {
     private JScrollPane descriptionScroll;
     private JComboBox priorityBox, categoryBox, ownerBox, collaboratorsBox;
     //FOR EDIT VIEW
-    private JButton btnEditReturn, btnSaveChanges, btnAddCollaboratorEdit, btnRemoveCollaboratorEdit, btnCloseTicket;
+    private JButton btnEditReturn, btnSaveChanges, btnAddCollaboratorEdit, btnRemoveCollaboratorEdit, btnCloseTicket, btnAttachFileEdit;
     private JPanel mainContentPanelEdit, mainCreatePanelEdit, mainTicketsPanelEdit, mainEditPanelEdit, mainCommentPanelEdit, mainButtonsPanelEdit, currentPanelOnDisplayEdit;
     private JTextField topicFieldEdit;
     private JTextArea descriptionTextEdit, commentEdit, assigneesTextEdit;
@@ -87,6 +88,7 @@ public class TicketView extends JComponent implements ActionListener {
 
     /**
      * Constructor, creates all components needed and sets the home view for tickets through initilaizeTicketView();
+     *
      * @param controller
      * @param mainFrame
      */
@@ -139,12 +141,15 @@ public class TicketView extends JComponent implements ActionListener {
         setButtonDesign(btnCloseTicket);
         btnAddComment = new JButton("Add comment");
         setButtonDesign(btnAddComment);
-        btnAttachFile = new JButton("Attach file");
-        setButtonDesign(btnAttachFile);
+        btnAttachFileEdit = new JButton("Attach file");
+        setButtonDesign(btnAttachFileEdit);
+        btnAttachFileCreate = new JButton("Attach file");
+        setButtonDesign(btnAttachFileCreate);
     }
 
     /**
      * This method sets some design of buttons and adds an actionlistener and mouselistener to every button
+     *
      * @param btn
      */
     private void setButtonDesign(JButton btn) {
@@ -412,7 +417,7 @@ public class TicketView extends JComponent implements ActionListener {
         JPanel innerCollaboratorButtonsPanelEdit = new JPanel();
         innerCollaboratorButtonsPanelEdit.setLayout(new GridLayout(1, 3, 10, 10));
         innerCollaboratorButtonsPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerPeoplePanelEdit.getY() + innerPeoplePanelEdit.getHeight() + 5, innerPeoplePanelEdit.getWidth(), innerPeoplePanelEdit.getHeight() / 4);
-        innerCollaboratorButtonsPanelEdit.add(btnAttachFile);
+        innerCollaboratorButtonsPanelEdit.add(btnAttachFileEdit);
         innerCollaboratorButtonsPanelEdit.add(btnAddCollaboratorEdit);
         innerCollaboratorButtonsPanelEdit.add(btnRemoveCollaboratorEdit);
 
@@ -485,7 +490,7 @@ public class TicketView extends JComponent implements ActionListener {
         JPanel innerCollaboratorButtonsPanel = new JPanel();
         innerCollaboratorButtonsPanel.setLayout(new GridLayout(1, 3, 10, 10));
         innerCollaboratorButtonsPanel.setBounds(innerPeoplePanel.getX(), innerPeoplePanel.getY() + innerPeoplePanel.getHeight() + 5, innerPeoplePanel.getWidth(), innerPeoplePanel.getHeight() / 4);
-        innerCollaboratorButtonsPanel.add(btnAttachFile);
+        innerCollaboratorButtonsPanel.add(btnAttachFileCreate);
         innerCollaboratorButtonsPanel.add(btnAddCollaborator);
         innerCollaboratorButtonsPanel.add(btnRemoveCollaborator);
 
@@ -941,6 +946,7 @@ public class TicketView extends JComponent implements ActionListener {
 
     /**
      * Not sure if this is used tbh
+     *
      * @param g
      */
     @Override
@@ -1032,77 +1038,84 @@ public class TicketView extends JComponent implements ActionListener {
                     ex.printStackTrace();
                 } catch (IOException ex) {
                     ex.printStackTrace();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
                 }
             }
-        }
 
 
-        if (e.getSource() == btnSaveChanges) {
-            saveTicketChanges(id);
-            setTicketPanelDetails();
-            changeToTicketView();
-            table.clearSelection();
-            setCommentsList(new String[0]);
-            myTicketsView = false;
-            if (attachedFile != null) {
-                try {
-                    controller.addAttachedFile(id, attachedFile);
-                } catch (GeneralSecurityException ex) {
-                    ex.printStackTrace();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            if (e.getSource() == btnSaveChanges) {
+                saveTicketChanges(id);
+                setTicketPanelDetails();
+                changeToTicketView();
+                table.clearSelection();
+                setCommentsList(new String[0]);
+                myTicketsView = false;
+                if (attachedFile != null) {
+                    try {
+                        controller.addAttachedFile(id, attachedFile);
+                    } catch (GeneralSecurityException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                 }
             }
-        }
 
-        if (e.getSource() == btnAddCollaborator) {
-            setAssigneesCreate();
-            updateAssigneesTextCreate();
-        }
+            if (e.getSource() == btnAddCollaborator) {
+                setAssigneesCreate();
+                updateAssigneesTextCreate();
+            }
 
-        if (e.getSource() == btnAddCollaboratorEdit) {
-            setAssigneesEdit();
-            updateAssigneesTextEdit();
-        }
+            if (e.getSource() == btnAddCollaboratorEdit) {
+                setAssigneesEdit();
+                updateAssigneesTextEdit();
+            }
 
-        if (e.getSource() == btnRemoveCollaboratorEdit) {
-            removeCollaboratorFromOldTicket(collaboratorsBoxEdit.getSelectedItem().toString(), id);
-            updateAssigneesTextEdit();
-        }
+            if (e.getSource() == btnRemoveCollaboratorEdit) {
+                removeCollaboratorFromOldTicket(collaboratorsBoxEdit.getSelectedItem().toString(), id);
+                updateAssigneesTextEdit();
+            }
 
-        if (e.getSource() == btnRemoveCollaborator) {
-            removeCollaborator(collaboratorsBox.getSelectedItem().toString());
-            updateAssigneesTextCreate();
-        }
+            if (e.getSource() == btnRemoveCollaborator) {
+                removeCollaborator(collaboratorsBox.getSelectedItem().toString());
+                updateAssigneesTextCreate();
+            }
 
-        if (e.getSource() == btnCloseTicket) {
-            myTicketsView = false;
-            controller.closeTicket(id);
-            setTicketPanelDetails();
-            changeToTicketView();
-            table.clearSelection();
-            setCommentsList(new String[0]);
-        }
+            if (e.getSource() == btnCloseTicket) {
+                myTicketsView = false;
+                controller.closeTicket(id);
+                setTicketPanelDetails();
+                changeToTicketView();
+                table.clearSelection();
+                setCommentsList(new String[0]);
+            }
 
-        if (e.getSource() == btnAddComment) {
-            String check = commentText.getText().trim(); //read contents of text area into 'data'
-            if (check.equals("")) {
-                controller.showMessage("Comment cannot be null");
-            } else {
-                try {
-                    id = getIdFromTable();
-                    controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
-                    comments = controller.getTicketComments(id);
-                    String[] list = comments.toArray(new String[comments.size()]);
-                    setCommentsList(list);
-                    commentText.setText("");
-                } catch (IndexOutOfBoundsException exc) {
-                    controller.showMessage("Select a ticket first.");
+            if (e.getSource() == btnAddComment) {
+                String check = commentText.getText().trim(); //read contents of text area into 'data'
+                if (check.equals("")) {
+                    controller.showMessage("Comment cannot be null");
+                } else {
+                    try {
+                        id = getIdFromTable();
+                        controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
+                        comments = controller.getTicketComments(id);
+                        String[] list = comments.toArray(new String[comments.size()]);
+                        setCommentsList(list);
+                        commentText.setText("");
+                    } catch (IndexOutOfBoundsException exc) {
+                        controller.showMessage("Select a ticket first.");
+                    }
                 }
             }
-        }
-        if (e.getSource() == btnAttachFile) {
-            chooseFile();
+            if (e.getSource() == btnAttachFileEdit) {
+                chooseFile();
+            }
+            if (e.getSource() == btnAttachFileCreate) {
+                chooseFile();
+            }
         }
     }
 }

@@ -524,15 +524,16 @@ public class Controller {
         return ok;
     }
 
-    public void addAttachedFile(int id, File file) throws GeneralSecurityException, IOException {
+    public void addAttachedFile(int id, File file) throws GeneralSecurityException, IOException, SQLException {
         String strId = String.valueOf(id);
-        String folderID = attachedFiles.checkIfExist( attachedFiles.getDriveService(),strId);
+        String folderID = ticketManager.getTicket(id).getFile();
         if (folderID == null) {
            folderID = attachedFiles.createDriveFolder(attachedFiles.getDriveService(), strId);
             attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
+            ticketManager.getTicket(id).setFile(folderID);
+            dbController.updateTicket(ticketManager.getTicket(id));
         }
         else {
-
             attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
         }
     }

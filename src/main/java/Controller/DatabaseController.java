@@ -151,6 +151,8 @@ public class DatabaseController {
         con.close();
     }
 
+
+
     public void addAgentToTicket(ArrayList<User> assignees, Ticket t) throws SQLException {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
