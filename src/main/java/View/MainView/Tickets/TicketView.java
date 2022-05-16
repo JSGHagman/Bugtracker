@@ -957,6 +957,13 @@ public class TicketView extends JComponent implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnAttachFileEdit) {
+            chooseFile();
+        }
+        if (e.getSource() == btnAttachFileCreate) {
+            chooseFile();
+        }
+
         if (e.getSource() == btnMyTickets) {
             myTicketsView = true;
             setTicketPanelDetails();
@@ -1022,7 +1029,25 @@ public class TicketView extends JComponent implements ActionListener {
             myTicketsView = false;
         }
 
-
+        if (e.getSource() == btnSaveChanges) {
+            saveTicketChanges(id);
+            setTicketPanelDetails();
+            changeToTicketView();
+            table.clearSelection();
+            setCommentsList(new String[0]);
+            myTicketsView = false;
+            if (attachedFile != null) {
+                try {
+                    controller.addAttachedFile(id, attachedFile);
+                } catch (GeneralSecurityException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
         if (e.getSource() == btnCreateTicket) {
             createTicket();
             setTicketPanelDetails();
@@ -1044,25 +1069,7 @@ public class TicketView extends JComponent implements ActionListener {
             }
 
 
-            if (e.getSource() == btnSaveChanges) {
-                saveTicketChanges(id);
-                setTicketPanelDetails();
-                changeToTicketView();
-                table.clearSelection();
-                setCommentsList(new String[0]);
-                myTicketsView = false;
-                if (attachedFile != null) {
-                    try {
-                        controller.addAttachedFile(id, attachedFile);
-                    } catch (GeneralSecurityException ex) {
-                        ex.printStackTrace();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-                }
-            }
+
 
             if (e.getSource() == btnAddCollaborator) {
                 setAssigneesCreate();
@@ -1110,12 +1117,7 @@ public class TicketView extends JComponent implements ActionListener {
                     }
                 }
             }
-            if (e.getSource() == btnAttachFileEdit) {
-                chooseFile();
-            }
-            if (e.getSource() == btnAttachFileCreate) {
-                chooseFile();
-            }
+
         }
     }
 }
