@@ -538,6 +538,17 @@ public class Controller {
         }
     }
 
+    public ArrayList<String> getAttachedFiles(int id) throws GeneralSecurityException, IOException {
+        String strId = String.valueOf(id);
+        ArrayList filenames = new ArrayList<String>();
+        String folderID = attachedFiles.checkIfExist(attachedFiles.getDriveService(), strId);
+        if (folderID != null) {
+            filenames = attachedFiles.seeAttachedFiles(attachedFiles.getDriveService(), folderID);
+        }
+
+        return filenames;
+    }
+
     public void setStatus(Ticket t){
         if(t.getAgent().isEmpty() && t.getEnddate() != null){
             t.setStatus("Open");
