@@ -44,6 +44,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -66,6 +67,9 @@ public class TicketView extends JComponent implements ActionListener {
     private ArrayList<String> assignees, comments;
     private String owner;
     private boolean myTicketsView = false;
+    private JFileChooser fileChooser;
+    private File attachedFile;
+    private ArrayList<String> attachedFiles;
     //FOR OTHER VIEWS
     private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator, btnAttachFileCreate;
     private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
@@ -83,8 +87,7 @@ public class TicketView extends JComponent implements ActionListener {
     private JScrollPane descriptionScrollEdit;
     private JComboBox priorityBoxEdit, categoryBoxEdit, ownerBoxEdit, collaboratorsBoxEdit;
     private int id;
-    private JFileChooser fileChooser;
-    private File attachedFile;
+
 
     /**
      * Constructor, creates all components needed and sets the home view for tickets through initilaizeTicketView();
@@ -944,6 +947,10 @@ public class TicketView extends JComponent implements ActionListener {
         }
     }
 
+    private void setAttachedFiles(ArrayList<String> str) {
+        this.attachedFiles = str;
+    }
+
     /**
      * Not sure if this is used tbh
      *
@@ -1001,6 +1008,13 @@ public class TicketView extends JComponent implements ActionListener {
                 controller.showMessage("Select a ticket");
             }
             if (ok) {
+                try {
+                    setAttachedFiles(controller.getAttachedFiles(id));
+                } catch (GeneralSecurityException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 if (controller.editGuard(id)) {
                     setEditTicket(id);
                     setEditPanelDetails();

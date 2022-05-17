@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -55,12 +56,12 @@ public class AttachedFiles {
                 .setServiceAccountId(serviceAccountEmail)
                 .setServiceAccountScopes(Tickets)
                 .setServiceAccountPrivateKeyFromP12File(
-
                         new java.io.File(pathToServiceAccountKeyFile))
                 .build();
         Drive service = new Drive.Builder(httpTransport, JSON_FACTORY, null)
                 .setApplicationName("FileListAccessProject")
                 .setHttpRequestInitializer(credential).build();
+
 
         return service;
     }
@@ -137,22 +138,33 @@ public class AttachedFiles {
     }
 
     public ArrayList<String> seeAttachedFiles(Drive service, String id) throws IOException {
-        ArrayList<String> returnlist = new ArrayList();
-        FileList result = service.files().list()
-                .setPageSize(10)
-                .setFields("nextPageToken, files(id, name)")
-                .setDriveId(id)
-                .execute();
-        List<File> files = result.getFiles();
-        if (files == null || files.isEmpty()) {
-            System.out.println("No files found.");
-        } else {
-            System.out.println("Files:");
-            for (File file : files) {
-                returnlist.add(file.getName());
-                System.out.printf("%s (%s)\n", file.getName(), file.getId());
+        try {
+            ArrayList<String> returnlist = new ArrayList();
+            FileList result = service.files().list()
+                    .setCorpora("drive")
+                    .setPageSize(10)
+                    .setFields("nextPageToken, files(id, name)")
+                    .setSupportsAllDrives(true)
+                    .setIncludeItemsFromAllDrives(true)
+                    .setDriveId(id)
+                    .execute();
+
+            List<File> files = result.getFiles();
+            if (files == null || files.isEmpty()) {
+                System.out.println("No files found.");
+            } else {
+                System.out.println("Files:");
+                for (File file : files) {
+                    returnlist.add(file.getName());
+                    System.out.printf("%s (%s)\n", file.getName(), file.getId());
+                }
             }
+            return returnlist;
         }
-        return returnlist;
+        catch (GoogleJsonResponseException e) {
+            System.out.println("no attached files");
+            return null;
+        }
+
     }
 }
