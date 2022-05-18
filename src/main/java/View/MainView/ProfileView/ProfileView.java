@@ -3,20 +3,24 @@ import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.text.Format;
+import java.util.Arrays;
 
-public class ProfileView implements ActionListener {
+public class ProfileView extends Component implements ActionListener {
 
     //Swing Objects
     private JPanel mainContentPanel, infoPanel, changePanel, buttonPanel, currentPanelOnDisplay, imagePanel, topInfoPanel, middleInfoPanel, loweInfoPanel, roleInfoPanel;
     private JPanel changeBtnPanel, imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
     private JTextField fName, lName, eMail;
-    private JLabel confirmPasswordLabel , roleInfoLabel, firstnameLabel, lastnameLabel, passwordLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
+    private JLabel chosenPictureLabel, confirmPasswordLabel , roleInfoLabel, firstnameLabel, lastnameLabel, passwordLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
     private JTextArea infoBox;
+    private JFileChooser fileChooser;
     private JPasswordField passwordField, tfConfirmPassword;
-    private JButton btnChangeInfo, btnShowInfo, btnChange, btnCancel;
+    private JButton btnChangeInfo, btnShowInfo, btnChange, btnCancel, btnChangePicture;
     private JTextPane infoArea;
     private JScrollPane infoScroll, changeScroll;
 
@@ -25,7 +29,8 @@ public class ProfileView implements ActionListener {
     private MainFrame mainFrame;
     private Color menuColor = new Color(65, 105, 225);
     private Color hoverColor = new Color(65, 145, 225);
-    private Object image;
+    private File selectedFile;
+    private Icon icon;
 
 
     public ProfileView(Controller controller, MainFrame mainFrame) {
@@ -35,6 +40,13 @@ public class ProfileView implements ActionListener {
     }
     
     public void createButton(){
+        btnChangePicture = new JButton("Choose picture");
+        btnChangePicture.setBackground(menuColor);
+        btnChangePicture.setForeground(Color.white);
+        addActionListener(btnChangePicture);
+        btnChangePicture.setFont(new Font("Dialog", Font.BOLD, 16));
+
+
         btnCancel = new JButton("Cancel");
         btnCancel.setBackground(menuColor);
         btnCancel.setForeground(Color.white);
@@ -131,11 +143,18 @@ public class ProfileView implements ActionListener {
         roleInfoLabel.setText(controller.getSignedInUser().getRole());
         roleInfoLabel.setForeground(menuColor);
         roleInfoLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+
+        chosenPictureLabel = new JLabel();
+        chosenPictureLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 
     public void creatInputField(){
+        fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("images", "png", "jpg"));
+        fileChooser.setAcceptAllFileFilterUsed(true);
+
         tfConfirmPassword = new JPasswordField();
-        tfConfirmPassword.setText("");
         tfConfirmPassword.setFont(new Font("Dialog", Font.PLAIN, 12));
         tfConfirmPassword.setBorder(BorderFactory.createLineBorder(menuColor, 1));
 
@@ -153,7 +172,6 @@ public class ProfileView implements ActionListener {
 
         passwordField = new JPasswordField();
         passwordField.setForeground(menuColor);
-        passwordField.setText("");
         passwordField.setFont(new Font("Dialog", Font.PLAIN, 12));
         passwordField.setBorder(BorderFactory.createLineBorder(menuColor, 1));
 
@@ -222,7 +240,9 @@ public class ProfileView implements ActionListener {
         //set details for infoPanel
         imageChangePanel = new JPanel();
         imageChangePanel.setBounds(changePanel.getX() - changePanel.getX()*5/6, changePanel.getY() - changePanel.getY()*4/5, changePanel.getWidth()/4, changePanel.getHeight()/6);
-        imageChangePanel.setBackground(menuColor);
+        imageChangePanel.setLayout(new GridLayout(2, 1));
+        imageChangePanel.add(chosenPictureLabel);
+        imageChangePanel.add(btnChangePicture);
 
         topChangePanel = new JPanel();
         topChangePanel.setBounds(imageChangePanel.getX(), imageChangePanel.getY()+imageChangePanel.getHeight() + 10, changePanel.getWidth()/3, changePanel.getHeight()/3);
@@ -249,6 +269,7 @@ public class ProfileView implements ActionListener {
 
         roleChangePanel = new JPanel();
         roleChangePanel.setBounds(changePanel.getWidth()*2/3,changePanel.getY() - (mainContentPanel.getHeight()/6), changePanel.getWidth()*2/7, changePanel.getHeight()/7);
+        roleLabel.setBorder(BorderFactory.createLineBorder(menuColor));
         roleChangePanel.add(roleLabel);
 
         changeBtnPanel = new JPanel();
@@ -306,13 +327,10 @@ public class ProfileView implements ActionListener {
         if(passwordField.getPassword().length == 0){
             passwordChangeText = controller.getSignedInUser().getPassword();
         }
-        if ((passwordField.getPassword().length > 0) && (passwordField.getPassword() == tfConfirmPassword.getPassword())){
-            passwordChangeText = String.valueOf(changedPassword);
+        if ((passwordField.getPassword().length > 0) && ((Arrays.equals(passwordField.getPassword(), tfConfirmPassword.getPassword())))){
+            passwordChangeText = new String(changedPassword);
             controller.showMessage("Profileinfo is changed!");
         }
-        System.out.println(passwordField.getPassword());
-        System.out.println(passwordChangeText);
-        System.out.println(tfConfirmPassword.getPassword());
 
         infolastname.setText(lastName);
         infoFirstname.setText(firstName);
@@ -335,6 +353,26 @@ public class ProfileView implements ActionListener {
         createButton();
         createMainPanels();
     }
+
+    public Icon getIcon(File f, int width, int height){
+        Icon icon=null;
+
+        icon=createImageIcon(f.getPath(),null, width, height);
+
+        return icon;
+    }
+    private ImageIcon createImageIcon(String path,String description, int width, int height) {
+        if (path != null) {
+            ImageIcon icon=new ImageIcon(path);
+            Image img = icon.getImage() ;
+            Image newimg = img.getScaledInstance( width, height,  java.awt.Image.SCALE_SMOOTH ) ;
+            return new ImageIcon(newimg);
+        } else {
+            System.err.println("Couldn't find file: " + path);
+            return null;
+        }
+    }
+
     /**
      * Adds actionlistener to the buttons.
      * */
@@ -355,6 +393,15 @@ public class ProfileView implements ActionListener {
         if (e.getSource().equals(btnCancel)){
             setTextFieldNull();
             changetoInfoView();
+        }
+        if(e.getSource().equals(btnChangePicture)){
+            int r = fileChooser.showOpenDialog(this);
+
+            if (r == JFileChooser.APPROVE_OPTION) {
+                selectedFile = fileChooser.getSelectedFile();
+                icon = getIcon(selectedFile, 100, 100);
+                chosenPictureLabel.setIcon(icon);
+            }
 
         }
     }

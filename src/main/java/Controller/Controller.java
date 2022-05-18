@@ -191,7 +191,6 @@ public class Controller {
                 u.setPassword(user.getPassword());
                 u.setRole(user.getRole());
             }
-            switchToUserAdmin();
         }
     }
 
