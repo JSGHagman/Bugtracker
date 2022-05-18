@@ -1,10 +1,10 @@
 package View.TestLogIn;
 
 import Controller.Controller;
+
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
@@ -242,5 +242,4 @@ public class testLogin extends JDialog implements ActionListener {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
-
 }

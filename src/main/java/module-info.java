@@ -4,6 +4,7 @@ module com.example.bugtracker {
     requires java.sql;
     requires java.desktop;
     requires org.jfree.jfreechart;
+  //  requires forms.rt;
 
     opens Controller to javafx.fxml;
     exports Controller;
