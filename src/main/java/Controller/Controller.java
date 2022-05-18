@@ -165,7 +165,6 @@ public class Controller {
     public void selectUserinList(int index) {
         User markedUser = userManager.getUserAtIndex(index);
         view.setUsertxtUserAdmin(markedUser.getFirstName(), markedUser.getLastName(), markedUser.getEmail(), markedUser.getPassword(), markedUser.getRole());
-
     }
 
     public void updateUserDB(String firstName, String lastName, String email, String password, String role) {
@@ -186,7 +185,7 @@ public class Controller {
                 u.setPassword(user.getPassword());
                 u.setRole(user.getRole());
             }
-            //switchToUserAdmin();
+            switchToUserAdmin();
         }
     }
 
