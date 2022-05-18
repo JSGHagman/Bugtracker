@@ -1,5 +1,4 @@
 package View.MainView.ProfileView;
-//dagens timmar (10:30-12)
 import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
 
