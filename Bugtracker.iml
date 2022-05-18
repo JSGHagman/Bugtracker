@@ -12,8 +12,8 @@
     </content>
     <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="javafx-sdk-18" level="project" />
-    <orderEntry type="module-library">
+    <orderEntry type="library" exported="" name="javafx-sdk-18" level="project" />
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="jar://$USER_HOME$/Downloads/postgresql-42.3.3.jar!/" />
@@ -22,7 +22,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../temp/postgresql-42.3.3.jar!/" />
@@ -31,13 +31,14 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" exported="" name="forms_rt" level="project" />
     <orderEntry type="library" name="Maven: org.jfree:jfreechart:1.5.3" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:18" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:18" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:mac:18" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:18" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:win:18" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:mac:18" level="project" />
     <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.3.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.checkerframework:checker-qual:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.checkerframework:checker-qual:3.5.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.2.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-commons:1.8.2" level="project" />
@@ -45,8 +46,24 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.8.2" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:18" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:18" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:mac:18" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:18" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:18" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:mac:18" level="project" />
+    <orderEntry type="library" name="Maven: com.intellij:forms_rt:7.0.3" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-commons:3.0" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-tree:3.0" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm:3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.jgoodies:forms:1.1-preview" level="project" />
+    <orderEntry type="library" name="Maven: jdom:jdom:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.android.tools.external.com-intellij:intellij-core:27.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.trove4j:trove4j:20160824" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-core:5.3.19" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.3.19" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:31.1-jre" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.11.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.3" level="project" />
   </component>
 </module>

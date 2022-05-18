@@ -7,7 +7,7 @@ module com.example.bugtracker {
 
     opens Controller to javafx.fxml;
     exports Controller;
-    exports View.LogInView;
+    exports View.TestLogIn;
     exports View.OldTicketGui;
     opens View.OldTicketGui to javafx.fxml;
     exports View.MainView.MainFrame;

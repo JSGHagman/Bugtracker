@@ -1,7 +1,7 @@
 package View.MainView.Menu;
 
 import Controller.Controller;
-import View.LogInView.LogInGUI;
+import View.TestLogIn.*;
 import View.MainView.MainFrame.MainFrame;
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +90,7 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
 
         if (e.getSource() == btnLogout) {
             mainFrame.getFrame().dispose();
-            LogInGUI loginView = new LogInGUI(controller);
+            testLogin loginView = new testLogin(controller);
 
         }
     }

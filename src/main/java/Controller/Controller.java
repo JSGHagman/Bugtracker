@@ -1,12 +1,10 @@
 package Controller;
 
 import Model.*;
-import View.LogInView.LogInGUI;
+import View.TestLogIn.testLogin;
 import View.MainView.MainFrame.MainFrame;
-import View.MainView.UserAdmin.UserAdminView;
 
 import javax.swing.*;
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,14 +20,14 @@ public class Controller {
     private Ticket ticket;
     private String userName, email, firstName, lastName, role, password, errorMessage;
     private MainFrame view;
-    private LogInGUI logInView;
+    private testLogin logInView;
 
     public Controller() {
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
         startThreads();
-        logInView = new LogInGUI(this);
+        logInView = new testLogin(this);
         //openMainWindow();
     }
 
@@ -43,7 +41,7 @@ public class Controller {
      */
     public void onSignOutBtnClick() {
         view.dispose();
-        logInView = new LogInGUI(this);
+        logInView = new testLogin(this);
     }
 
 
@@ -62,16 +60,6 @@ public class Controller {
         }
     }
 
-    /**
-     * @author Jakob Hagman
-     * Resets the textfields after a user is created
-     */
-    private void resetFields() {
-        logInView.getEmailTextField().setText("Enter e-mail here");
-        logInView.getFirstNameTextField().setText("Enter last name here");
-        logInView.getLastNameTextField().setText("Enter first name here");
-        logInView.getPasswordField().setText("password");
-    }
 
     /**
      * @param str - The message to be displayed.
@@ -101,7 +89,7 @@ public class Controller {
         if (isFieldFilledLogIn()) {
             if (tryLogin()) {
                 openMainWindow();
-                logInView.getFrame().dispose();
+                logInView.getMainPanel();
             }
         }
     }
@@ -229,8 +217,8 @@ public class Controller {
      */
     public boolean tryLogin() {
         boolean success = false;
-        String loginMail = logInView.getEmailTextField().getText();
-        String password = logInView.getPasswordField().getText();
+        String loginMail = logInView.geteMailSignIn().getText();
+        String password = logInView.getPasswordSignIn().getText();
         success = userManager.checkPassword(loginMail, password);
         if (!success) {
             errorMessage = "Wrong e-mail or password!";
@@ -247,10 +235,10 @@ public class Controller {
      * @author Jakob Hagman
      */
     public void trySignUp() {
-        firstName = logInView.getFirstNameTextField().getText();
-        lastName = logInView.getLastNameTextField().getText();
-        email = logInView.getEmailTextField().getText();
-        password = logInView.getPasswordField().getText();
+        firstName = logInView.getFirstName().getText();
+        lastName = logInView.getLastName().getText();
+        email = logInView.geteMailSignUp().getText();
+        password = logInView.getPasswordSignUp().getText();
         role = getSelectedRole();
         if (userManager.checkIfUserExists(email)) {
             showMessage("A user with this e-mail already exists, try another one. ");
@@ -261,8 +249,8 @@ public class Controller {
             user = new User(firstName, lastName, email, password, role);
             userManager.addToUsers(user);
             showMessage("New user created successfully, now sign in");
-            resetFields();
-            logInView.setLogInPanel();
+
+           // logInView.setLogInPanel();
             try {
                 dbController.addNormalUser(user);
             } catch (SQLException e) {
@@ -432,7 +420,7 @@ public class Controller {
      */
     private boolean isFieldFilledLogIn() {
         boolean isFilled = true;
-        if (logInView.getEmailTextField().getText().isEmpty() || logInView.getPasswordField().getText().isEmpty()) {
+        if (logInView.geteMailSignIn().getText().isEmpty() || logInView.getPasswordSignIn().getText().isEmpty()) {
             isFilled = false;
             errorMessage = "Missing e-mail or password";
             showMessage(errorMessage);
@@ -448,10 +436,10 @@ public class Controller {
      */
     private boolean isFieldFilledSignUp() {
         boolean isFilled = true;
-        if (logInView.getFirstNameTextField().getText().isEmpty()
-                || logInView.getLastNameTextField().getText().isEmpty()
-                || logInView.getEmailTextField().getText().isEmpty()
-                || logInView.getPasswordField().getText().isEmpty()) {
+        if (logInView.getFirstName().getText().isEmpty()
+                || logInView.getLastName().getText().isEmpty()
+                || logInView.geteMailSignUp().getText().isEmpty()
+                || logInView.getPasswordSignUp().getText().isEmpty()) {
             isFilled = false;
         }
         return isFilled;
