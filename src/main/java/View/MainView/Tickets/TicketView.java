@@ -1,29 +1,5 @@
 /**
- * @todo Under ticket list:
- * Visa ticket id och all info.
- * Kunna lägga till kommentar.
- * Kunna displaya alla kommentarer kring en ticket, i en jscrollpane med vem som skrivit kommentaren och kommentaren själv.
- * Kunna sätta Ägare (Endast möjligt att sätta sig själv om man är agent, kan sätta vem som helst om man ör admin, kan inte sätta alls om man bara är user)
- * uppdatera lable för assignees
- * Fixa all funktionalitet.
- * <p>
- * <p>
- * <p>
- * Class used for different views of tickets
- * @author Jakob Hagman
- * <p>
- * Class used for different views of tickets
- * @author Jakob Hagman
- * <p>
- * Class used for different views of tickets
- * @author Jakob Hagman
- * <p>
- * Class used for different views of tickets
- * @author Jakob Hagman
- */
-
-/**
- * Class used for different views of tickets
+ * Class used for different views of tickets, the main functionality of the program.
  * @author Jakob Hagman
  */
 
@@ -277,6 +253,10 @@ public class TicketView extends JComponent implements ActionListener {
         setDefaultValuesInFields();
     }
 
+
+    /**
+     * This method creates all the labels for the edit panel
+     */
     private void createLabelsEdit() {
         topicLabelEdit = new JLabel("Change Topic");
         topicLabelEdit.setForeground(menuColor);
@@ -311,6 +291,10 @@ public class TicketView extends JComponent implements ActionListener {
         assigneesListLabelEdit.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
     }
 
+
+    /**
+     * This method creates all the inputfields for the editpanel
+     */
     private void createInputFieldsEdit() {
         //FOR EDIT VIEW
         topicFieldEdit = new JTextField();
@@ -532,6 +516,9 @@ public class TicketView extends JComponent implements ActionListener {
     }
 
 
+    /**
+     * This method sets all details and places all the components in the ticketpanel
+     */
     private void setTicketPanelDetails() {
         mainTicketsPanel.removeAll();
         JPanel innerSearchPanel = new JPanel();
@@ -629,6 +616,11 @@ public class TicketView extends JComponent implements ActionListener {
         mainTicketsPanel.setBorder((BorderFactory.createMatteBorder(3, 0, 3, 0, menuColor)));
     }
 
+    /**
+     * This method takes the id from the selected ticket in the table
+     * It then places all the info from that ticket in the summarypanel
+     * @param id
+     */
     private void setSummaryInView(int id) {
         String summary = controller.showTicketSummary(id);
         summaryText.setText(summary);
@@ -647,10 +639,17 @@ public class TicketView extends JComponent implements ActionListener {
         }
     }
 
+    /**
+     * This method sets the list with the tickets
+     * @param list
+     */
     private void setCommentsList(String[] list) {
         commentsList.setListData(list);
     }
 
+    /**
+     * This method initializes the sorting used in the seacrhfield
+     */
     private void setSorter() {
         sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
@@ -680,6 +679,11 @@ public class TicketView extends JComponent implements ActionListener {
         });
     }
 
+    /**
+     * This method creates the table contents all places all tickets in the table
+     * There are two different tables that will be created based on which view is present, one for all tickets
+     * and one for the tickets associated with the signed in user
+     */
     public void setTicketList() {
         if (!myTicketsView) {
             data = null;
@@ -786,6 +790,10 @@ public class TicketView extends JComponent implements ActionListener {
         currentPanelOnDisplay = mainEditPanel;
     }
 
+    /**
+     * This method is used for creating a ticket.
+     * It takes all the values from the inputfields and passes them all to a method in the controller class
+     */
     private void createTicket() {
         String topic = topicField.getText();
         String description = descriptionText.getText();
@@ -813,6 +821,12 @@ public class TicketView extends JComponent implements ActionListener {
         }
     }
 
+    /**
+     * This method is called when edit ticket is pressed.
+     * It sets the values in the fields based on what ticket is selected.
+     * @param id
+     * @throws IndexOutOfBoundsException
+     */
     private void setEditTicket(int id) throws IndexOutOfBoundsException {
         Ticket t = controller.getTicketInfo(id);
         if (controller.getSignedInUser().getRole().equals("Admin")) {
@@ -831,6 +845,11 @@ public class TicketView extends JComponent implements ActionListener {
         owner = ownerBoxEdit.getSelectedItem().toString();
     }
 
+    /**
+     * Method is called when save changes button is pressed.
+     * It takes all values in the fields passes them to method in the controller which saves all the new info.
+     * @param id
+     */
     private void saveTicketChanges(int id) {
         String topic = topicFieldEdit.getText();
         String description = descriptionTextEdit.getText();
@@ -862,6 +881,11 @@ public class TicketView extends JComponent implements ActionListener {
         btn.addActionListener(this);
     }
 
+
+    /**
+     * This method is called when some of the buttons are pressed
+     * It's purpose is the return the values in boxes to default
+     */
     private void setDefaultValuesInFields() {
         topicField.setText(" Enter topic");
         descriptionText.setText(" Describe the issue");
@@ -870,36 +894,68 @@ public class TicketView extends JComponent implements ActionListener {
         ownerBox.setSelectedItem("None");
     }
 
+    /**
+     * This method is used to set a temporary list of assignees when you create a ticket
+     * The list will then be passed to the controller through the create ticket method
+     */
     public void setAssigneesCreate() {
         assignees.add(collaboratorsBox.getSelectedItem().toString());
     }
 
+    /**
+     * This method is used to set a temporary list of assignees when you save changes of ticket
+     * The list will then be passed to the controller through the save changes method
+     */
     public void setAssigneesEdit() {
         assignees.add(collaboratorsBoxEdit.getSelectedItem().toString());
     }
 
+    /**
+     * This method updates the the lable which displays the information about the owner/assignees
+     */
     private void updateAssigneesTextCreate() {
+        if (owner == null) {
+            owner = "None";
+        }
         String assigneesString = String.format("Owner: %s\nAssignees: %s",
                 owner, createAssigneesString(assignees));
         assigneesText.setText(assigneesString);
     }
 
+    /**
+     * This method updates the the lable which displays the information about the owner/assignees
+     */
     private void updateAssigneesTextEdit() {
         String assigneesString = String.format("Owner: %s\nAssignees: %s",
                 owner, createAssigneesString(assignees));
         assigneesTextEdit.setText(assigneesString);
     }
 
+    /**
+     * This method is called when edit button is pressed
+     * It takes the id and gets all assignees on that ticket from the controller
+     * @param id
+     */
     private void setAssigneesTextEdit(int id) {
         assignees = controller.getAgentsOnTicket(id);
     }
 
+    /**
+     * This method takes the list of assignees and formats every string in the list as one string
+     * Which will be used whenever all assignees is displayed
+     * @param assignees
+     * @return
+     */
     private String createAssigneesString(ArrayList<String> assignees) {
         String listString = assignees.stream().map(Object::toString)
                 .collect(Collectors.joining(", "));
         return listString;
     }
 
+    /**
+     * This gets the id of the ticket which has been selected in the list.
+     * @return
+     */
     private int getIdFromTable() {
         int selectionRow = table.getSelectedRow();
         int idColumn = 0;
@@ -908,6 +964,12 @@ public class TicketView extends JComponent implements ActionListener {
         return id;
     }
 
+    /**
+     * This method is used whenever the remove collaborator button has been pressed
+     * It removes the user selected in the box if that user is in the assignees list
+     * otherwise it will throw an errormessage
+     * @param user
+     */
     private void removeCollaborator(String user) {
         boolean found = false;
         for (String s : assignees) {
@@ -922,6 +984,12 @@ public class TicketView extends JComponent implements ActionListener {
         }
     }
 
+    /**
+     * This method is used whenever the remove collaborator button has been pressed
+     * It removes the user selected in the box if that user is in the assignees list
+     * otherwise it will throw an errormessage
+     * @param user
+     */
     private void removeCollaboratorFromOldTicket(String user, int id) {
         boolean found = false;
         for (String s : assignees) {
@@ -937,6 +1005,9 @@ public class TicketView extends JComponent implements ActionListener {
         }
     }
 
+    /**
+     * Used whenever attachfile is pressed
+     */
     public void chooseFile() {
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -947,6 +1018,9 @@ public class TicketView extends JComponent implements ActionListener {
         }
     }
 
+    /**
+     * This method sets all attachedfiles
+     */
     private void setAttachedFiles(ArrayList<String> str) {
         this.attachedFiles = str;
     }
@@ -962,6 +1036,10 @@ public class TicketView extends JComponent implements ActionListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
+    /**
+     * This method specifies what will be called whenever a button is pressed
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnAttachFileEdit) {
@@ -1081,8 +1159,6 @@ public class TicketView extends JComponent implements ActionListener {
                     throwables.printStackTrace();
                 }
             }
-
-
 
 
             if (e.getSource() == btnAddCollaborator) {
