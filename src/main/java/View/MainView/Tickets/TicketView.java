@@ -1087,7 +1087,8 @@ public class TicketView extends JComponent implements ActionListener {
             }
             if (ok) {
                 try {
-                    setAttachedFiles(controller.getAttachedFiles(id));
+                    setAttachedFiles(controller.getAttachedFiles(id));// sätt detta i seteditpanel
+                    controller.getFilesFromID(id);
                 } catch (GeneralSecurityException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -1159,7 +1160,6 @@ public class TicketView extends JComponent implements ActionListener {
                     throwables.printStackTrace();
                 }
             }
-
 
             if (e.getSource() == btnAddCollaborator) {
                 setAssigneesCreate();

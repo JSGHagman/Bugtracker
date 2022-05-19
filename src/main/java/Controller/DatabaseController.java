@@ -127,7 +127,7 @@ public class DatabaseController {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
         String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category =" + fixSQLString(ticket.getCategory()) +
-                ", status =" + fixSQLString(ticket.getStatus()) + ", files =" + fixSQLString(ticket.getFile()) + ", time =" + ticket.getTime() +
+                ", status =" + fixSQLString(ticket.getStatus()) + ", time =" + ticket.getTime() +
                 ", dateopen =" + fixSQLDate(ticket.getStartdate()) + ", dateclose =" + fixSQLDate(ticket.getEnddate()) +
                 ", topic = " + fixSQLString(ticket.getTopic()) + ", owner = " + fixSQLString(ticket.getOwner().getEmail()) +
                 ", description = " + fixSQLString(ticket.getDescription()) +
@@ -183,7 +183,6 @@ public class DatabaseController {
             int priority = rs.getInt("priority");
             String category = rs.getString("category");
             String status = rs.getString("status");
-            String file = rs.getString("files");
             String time = rs.getString("time");
             Date startdate = rs.getDate("dateopen");
             Date enddate = rs.getDate("dateclose");
@@ -191,7 +190,7 @@ public class DatabaseController {
             String user = rs.getString("owner");
             String description = rs.getString("description");
             User u = controller.getUserFromString(user);
-            ticket = new Ticket(id, category, status, priority, startdate, enddate, file, topic);
+            ticket = new Ticket(id, category, status, priority, startdate, enddate, topic);
             ticket.setOwner(u);
             ticket.setDescription(description);
             controller.addTicketToManager(ticket);

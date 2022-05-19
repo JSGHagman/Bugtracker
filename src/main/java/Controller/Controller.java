@@ -3,13 +3,11 @@ package Controller;
 import Model.*;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
-import View.MainView.UserAdmin.UserAdminView;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +26,7 @@ public class Controller {
     private LogInGUI logInView;
     private AttachedFiles attachedFiles;
 
-    public Controller() {
+    public Controller()  {
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
@@ -408,7 +406,6 @@ public class Controller {
 
     /**
      * Method is used for checking if email is a correct email.
-     *
      * @param String email
      * @return boolean true if all requirements for an email is met.
      * @author Jakob Hagman
@@ -448,7 +445,6 @@ public class Controller {
 
     /**
      * Checks if any of the fields in the sign up fields is empty
-     *
      * @return boolean
      * @author Jakob Hagman
      */
@@ -526,16 +522,16 @@ public class Controller {
 
     public void addAttachedFile(int id, File file) throws GeneralSecurityException, IOException, SQLException {
         String strId = String.valueOf(id);
-        String folderID = ticketManager.getTicket(id).getFile();
+        /*String folderID = ticketManager.getTicket(id).getFile();
         if (folderID == null) {
-           folderID = attachedFiles.createDriveFolder(attachedFiles.getDriveService(), strId);
+            folderID = attachedFiles.createDriveFolder(attachedFiles.getDriveService(), strId);
             attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
             ticketManager.getTicket(id).setFile(folderID);
             dbController.updateTicket(ticketManager.getTicket(id));
         }
         else {
             attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
-        }
+        }*/
     }
 
     public ArrayList<String> getAttachedFiles(int id) throws GeneralSecurityException, IOException {
@@ -545,8 +541,14 @@ public class Controller {
         if (folderID != null) {
             filenames = attachedFiles.seeAttachedFiles(attachedFiles.getDriveService(), folderID);
         }
-
         return filenames;
+    }
+
+    public void getFilesFromID(int id){
+       ArrayList<com.google.api.services.drive.model.File> files = attachedFiles.getFilesFromID(id);
+       for(com.google.api.services.drive.model.File file : files){
+           System.out.println(file.getName());
+       }
     }
 
     public void setStatus(Ticket t){
@@ -583,13 +585,13 @@ public class Controller {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            new getFilesThread().start();
         }
     }
 
     /**
      * Class extends thread.
      * Uses thread to retrieve all users from the database.
-     *
      * @author Jakob Hagman
      */
     private class GetAllUsers extends Thread {
@@ -600,11 +602,14 @@ public class Controller {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
             getAllTickets();
         }
     }
 
+    /**
+     * This inner class adds assignees to the ticket in the database.
+     * @Author Jakob Hagman
+     */
     private class AssigneesThread extends Thread {
         private Ticket ticket;
         private ArrayList<String> assignees;
@@ -641,5 +646,38 @@ public class Controller {
         }
     }
 
-}
+    /**
+     * This class is a thread that handles attatching files.
+     * @author Jakob Hagman
+     */
+    private class placeFilesThread extends Thread{
+        public placeFilesThread(){
 
+        }
+
+        @Override
+        public void run() {
+
+        }
+    }
+
+
+    /**
+     * This thread retrieves all files attached to a ticket
+     * @Author Jakob Hagman
+     */
+    private class getFilesThread extends Thread{
+        @Override
+        public void run() {
+            try{
+                attachedFiles.getAllFolders(attachedFiles.getDriveService());
+                attachedFiles.getAllFiles(attachedFiles.getDriveService());
+                ArrayList<Ticket> tickets = ticketManager.getAllTickets();
+                for(Ticket t : tickets){
+                    attachedFiles.getFilesFromID(t.getId());
+                }
+            }catch (GeneralSecurityException ex){
+            }catch (IOException ie){}
+        }
+    }
+}
