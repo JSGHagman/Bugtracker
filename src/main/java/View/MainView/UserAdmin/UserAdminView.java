@@ -115,9 +115,9 @@ public class UserAdminView extends JComponent implements ActionListener {
 
 
         eastPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
-        eastPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
+        eastPanel.setBorder(BorderFactory.createLineBorder(menuColor, 1, false));
         westPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 2);
-        westPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
+        westPanel.setBorder(BorderFactory.createLineBorder(menuColor, 0, false));
         southPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, westPanel.getHeight(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 12);
 
 

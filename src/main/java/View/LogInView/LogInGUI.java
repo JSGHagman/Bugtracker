@@ -25,12 +25,9 @@ import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
-public class LogInGUI extends JComponent implements ActionListener {
+public class LogInGUI extends JComponent implements ActionListener, FocusListener {
     private JFrame frame;
     private JButton btnLogIn, btnSignUp, btnCreateAccount, btnCancel;
     private JPanel mainPanel, inputPanel, buttonPanel, logoPanel;
@@ -42,6 +39,7 @@ public class LogInGUI extends JComponent implements ActionListener {
     private Controller controller;
     private Color menuColor = new Color(65, 105, 225);
     private Color hoverColor = new Color(65, 145, 225);
+    private String oldValue;
 
 
 
@@ -94,14 +92,15 @@ public class LogInGUI extends JComponent implements ActionListener {
 
         passwordField = new JPasswordField("Password");
         passwordField.setEchoChar('\u25CF');
-        passwordField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        setTextFieldDesign(passwordField);
 
         emailTextField = new JTextField("Enter e-mail here");
-        emailTextField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        setTextFieldDesign(emailTextField);
+
         firstNameTextField = new JTextField("Enter first name here");
-        firstNameTextField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        setTextFieldDesign(firstNameTextField);
         lastNameTextField = new JTextField("Enter last name here");
-        lastNameTextField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        setTextFieldDesign(lastNameTextField);
 
 
         roleBox = new JComboBox();
@@ -213,6 +212,11 @@ public class LogInGUI extends JComponent implements ActionListener {
             }
         });
     }
+
+    private void setTextFieldDesign(JTextField text) {
+        text.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        text.addFocusListener(this);
+    }
     private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
@@ -231,7 +235,18 @@ public class LogInGUI extends JComponent implements ActionListener {
             setLogInPanel();
         }
     }
+    @Override
+    public void focusGained(FocusEvent e) {
+       JTextField src = (JTextField)e.getSource();
+       oldValue = src.getText();
+       src.setText("");
+    }
 
+    @Override
+    public void focusLost(FocusEvent e) {
+        JTextField src = (JTextField)e.getSource();
+        src.setText(oldValue);
+    }
 
     //getters for controller-class to get values later
     public JFrame getFrame() {
@@ -257,4 +272,6 @@ public class LogInGUI extends JComponent implements ActionListener {
     public JComboBox getRoleBox() {
         return roleBox;
     }
+
+
 }
