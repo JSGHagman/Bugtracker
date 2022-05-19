@@ -62,6 +62,7 @@ public class LogInGUI extends JComponent implements ActionListener {
         mainPanel = new JPanel();
         mainPanel.setBackground(backgroundColor);
         mainPanel.setLayout(null);
+        mainPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         mainPanel.add(new JLabel(new ImageIcon(logo)));
         setLogInPanel();
         frame.add(mainPanel);
@@ -71,7 +72,7 @@ public class LogInGUI extends JComponent implements ActionListener {
 
     public void initiateLabels() {
         logoLabel = new JLabel();
-        logoLabel.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/BugTrckerLogo.png")).getImage().getScaledInstance(frame.getWidth()-15, 100, Image.SCALE_DEFAULT)));
+        logoLabel.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/BugTrckerLogo.png")).getImage().getScaledInstance(frame.getWidth()-18, 100, Image.SCALE_DEFAULT)));
     }
 
     public void addActionListerner(JButton btn){
@@ -123,7 +124,7 @@ public class LogInGUI extends JComponent implements ActionListener {
         inputPanel.removeAll();
         buttonPanel.removeAll();
         setUtilities();
-        logoPanel.setBounds(0, 0, frame.getWidth()-15, 100);
+        logoPanel.setBounds(mainPanel.getX()+1, mainPanel.getY()+1, frame.getWidth()-18, 100);
         logoPanel.setLayout(new GridLayout(1,1));
         logoPanel.add(logoLabel);
         inputPanel.setBounds(45,125,300,100);
