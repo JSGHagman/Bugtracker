@@ -25,37 +25,53 @@ import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class LogInGUI extends JComponent implements ActionListener {
+public class LogInGUI extends JComponent implements ActionListener, FocusListener {
     private JFrame frame;
-    private JButton btnLogIn, btnSignUp, btnCreateAccount;
+    private JButton btnLogIn, btnSignUp, btnCreateAccount, btnCancel;
     private JPanel mainPanel, inputPanel, buttonPanel, logoPanel;
-    private JLabel emailLabel, passwordLabel, firstNameLabel, lastNameLabel, roleLabel;
+    private JLabel emailLabel, passwordLabel, firstNameLabel, lastNameLabel, roleLabel, logoLabel;
     private JTextField emailTextField, firstNameTextField, lastNameTextField;
     private JPasswordField passwordField;
     private JComboBox roleBox;
     private Color backgroundColor = new Color(65, 105, 225);
     private Controller controller;
+    private Color menuColor = new Color(65, 105, 225);
+    private Color hoverColor = new Color(65, 145, 225);
+    private String oldValue;
+
+
 
     public LogInGUI(Controller controller) {
         this.controller = controller;
         setUtilities();
+        initiateButtons();
+        initiatePanels();
+
         frame = new JFrame("Bugtracker Log In");
-        frame.setSize(new Dimension(400, 500));
+        frame.setSize(new Dimension(400, 600));
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Image icon = Toolkit.getDefaultToolkit().getImage("Images/bugTrackerIcon.png");
         frame.setIconImage(icon);
         Image logo = Toolkit.getDefaultToolkit().getImage("Images/bugTrckerLogo.png");
+        initiateLabels();
         mainPanel = new JPanel();
         mainPanel.setBackground(backgroundColor);
         mainPanel.setLayout(null);
+        mainPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         mainPanel.add(new JLabel(new ImageIcon(logo)));
         setLogInPanel();
         frame.add(mainPanel);
         frame.setVisible(true);
+        frame.getRootPane().setDefaultButton(btnLogIn);
+
+    }
+
+    public void initiateLabels() {
+        logoLabel = new JLabel();
+        logoLabel.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/BugTrckerLogo.png")).getImage().getScaledInstance(frame.getWidth()-18, 100, Image.SCALE_DEFAULT)));
     }
 
     public void addActionListerner(JButton btn){
@@ -63,8 +79,6 @@ public class LogInGUI extends JComponent implements ActionListener {
     }
 
     public void setUtilities(){
-        inputPanel = new JPanel();
-        buttonPanel = new JPanel();
 
         emailLabel = new JLabel("E-mail");
         emailLabel.setForeground(Color.WHITE);
@@ -79,29 +93,16 @@ public class LogInGUI extends JComponent implements ActionListener {
 
         passwordField = new JPasswordField("Password");
         passwordField.setEchoChar('\u25CF');
-        passwordField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        setTextFieldDesign(passwordField);
 
         emailTextField = new JTextField("Enter e-mail here");
-        emailTextField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        setTextFieldDesign(emailTextField);
+
         firstNameTextField = new JTextField("Enter first name here");
-        firstNameTextField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        setTextFieldDesign(firstNameTextField);
         lastNameTextField = new JTextField("Enter last name here");
-        lastNameTextField.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        setTextFieldDesign(lastNameTextField);
 
-        btnSignUp = new JButton("Sign up");
-        btnSignUp.setBackground(new Color(255,255,255));
-        btnSignUp.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        addActionListerner(btnSignUp);
-
-        btnLogIn = new JButton("Log in");
-        btnLogIn.setBackground(new Color(255,255,255));
-        btnLogIn.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        addActionListerner(btnLogIn);
-
-        btnCreateAccount = new JButton("Create Account");
-        btnCreateAccount.setBackground(new Color(255,255,255));
-        btnCreateAccount.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        addActionListerner(btnCreateAccount);
 
         roleBox = new JComboBox();
         roleBox.addItem("Admin");
@@ -111,12 +112,21 @@ public class LogInGUI extends JComponent implements ActionListener {
         roleBox.setBackground(Color.WHITE);
     }
 
+    private void initiatePanels() {
+        inputPanel = new JPanel();
+        buttonPanel = new JPanel();
+        logoPanel = new JPanel();
+
+    }
     public void setLogInPanel(){
         frame.setTitle("Bugtracker Log In");
         mainPanel.removeAll();
         inputPanel.removeAll();
         buttonPanel.removeAll();
         setUtilities();
+        logoPanel.setBounds(mainPanel.getX()+1, mainPanel.getY()+1, frame.getWidth()-18, 100);
+        logoPanel.setLayout(new GridLayout(1,1));
+        logoPanel.add(logoLabel);
         inputPanel.setBounds(45,125,300,100);
         inputPanel.setLayout(new GridLayout(4,1));
         inputPanel.add(emailLabel);
@@ -129,6 +139,7 @@ public class LogInGUI extends JComponent implements ActionListener {
         buttonPanel.add(btnSignUp);
         inputPanel.setBackground(backgroundColor);
         buttonPanel.setBackground(backgroundColor);
+        mainPanel.add(logoPanel);
         mainPanel.add(inputPanel);
         mainPanel.add(buttonPanel);
         mainPanel.revalidate();
@@ -139,7 +150,7 @@ public class LogInGUI extends JComponent implements ActionListener {
         frame.setTitle("Bugtracker Sign Up");
         inputPanel.removeAll();
         buttonPanel.removeAll();
-        inputPanel.setBounds(45,50, 300, 300);
+        inputPanel.setBounds(45,125, 300, 300);
         inputPanel.setLayout(new GridLayout(10,1));
         inputPanel.add(firstNameLabel);
         inputPanel.add(firstNameTextField);
@@ -150,12 +161,13 @@ public class LogInGUI extends JComponent implements ActionListener {
         inputPanel.add(passwordLabel);
         inputPanel.add(passwordField);
         inputPanel.setBackground(backgroundColor);
-        buttonPanel.setBounds(45,360,300,60);
-        buttonPanel.setLayout(new GridLayout(2,2));
+        buttonPanel.setBounds(45,435,300,35);
+        buttonPanel.setLayout(new GridLayout(1,2, 10, 10));
         buttonPanel.setBackground(backgroundColor);
         inputPanel.add(roleLabel);
         inputPanel.add(roleBox);
         buttonPanel.add(btnCreateAccount);
+        buttonPanel.add(btnCancel);
         mainPanel.add(inputPanel);
         mainPanel.add(buttonPanel);
         mainPanel.revalidate();
@@ -168,6 +180,47 @@ public class LogInGUI extends JComponent implements ActionListener {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
+    private void initiateButtons() {
+        btnSignUp = new JButton("Sign up");
+        setButtonDesign(btnSignUp);
+
+        btnLogIn = new JButton("Log in");
+        setButtonDesign(btnLogIn);
+
+        btnCreateAccount = new JButton("Create Account");
+        setButtonDesign(btnCreateAccount);
+
+        btnCancel = new JButton("Cancel");
+        setButtonDesign(btnCancel);
+    }
+
+    private void setButtonDesign(JButton btn) {
+        btn.setBackground(menuColor);
+        btn.setForeground(Color.WHITE);
+        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        addActionListener(btn);
+        btn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                btn.setBackground(hoverColor);
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                btn.setBackground(menuColor);
+            }
+
+            public void mousePressed(MouseEvent evt) {
+                btn.setBackground(menuColor);
+            }
+        });
+    }
+
+    private void setTextFieldDesign(JTextField text) {
+        text.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        text.addFocusListener(this);
+    }
+    private void addActionListener(JButton btn) {
+        btn.addActionListener(this);
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btnSignUp){
@@ -179,8 +232,20 @@ public class LogInGUI extends JComponent implements ActionListener {
             controller.onSignUpBtnClick();
             //BACK TO LOG IN
         }
+        if (e.getSource() == btnCancel) {
+            setLogInPanel();
+        }
+    }
+    @Override
+    public void focusGained(FocusEvent e) {
+       JTextField src = (JTextField)e.getSource();
+       src.setText("");
     }
 
+    @Override
+    public void focusLost(FocusEvent e) {
+
+    }
 
     //getters for controller-class to get values later
     public JFrame getFrame() {
@@ -206,4 +271,6 @@ public class LogInGUI extends JComponent implements ActionListener {
     public JComboBox getRoleBox() {
         return roleBox;
     }
+
+
 }

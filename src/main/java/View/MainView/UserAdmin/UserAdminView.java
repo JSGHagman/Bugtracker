@@ -9,6 +9,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UserAdminView extends JComponent implements ActionListener {
 
@@ -19,15 +20,16 @@ public class UserAdminView extends JComponent implements ActionListener {
     private MainFrame mainFrame;
     private JList<String> userList;
     private JPanel mainContentPanel, westPanel, eastPanel, southPanel;
-    private JPasswordField txtPassword;
-    private JTextField txtFirstName, txtLastName, txtEmail, txtDummy;
+    private JPasswordField txtPassword, txtPasswordConfirm;
+    private JTextField txtFirstName, txtLastName, txtEmail;
     private JComboBox role;
     private JButton btnSave, btnCancel, btnDelete;
-    private JLabel lblFirstName, lblLastName, lblPassword, lblEmail;
+    private JLabel lblFirstName, lblLastName, lblPassword, lblEmail, lblPasswordConfirm, lblRole;
     private Object[][] data;
     private String[] columnNames, roles;
     private JScrollPane scrollPane;
     private JTable userTable;
+
 
 
     public UserAdminView(Controller controller, MainFrame mainFrame, ArrayList users) {
@@ -43,6 +45,7 @@ public class UserAdminView extends JComponent implements ActionListener {
         initiateUserTable();
         initiatePanels();
         initializeUserAdminView();
+        this.mainContentPanel.getRootPane().setDefaultButton(btnSave);
 
     }
 
@@ -92,7 +95,7 @@ public class UserAdminView extends JComponent implements ActionListener {
         eastPanel.add(scrollPane);
 
         westPanel = new JPanel();
-        westPanel.setLayout(new GridLayout(6, 2));
+        westPanel.setLayout(new GridLayout(8, 2));
         westPanel.setName("Edit user");
         westPanel.add(lblFirstName);
         westPanel.add(txtFirstName);
@@ -103,8 +106,11 @@ public class UserAdminView extends JComponent implements ActionListener {
         westPanel.add(txtEmail);
         westPanel.add(lblPassword);
         westPanel.add(txtPassword);
+        westPanel.add(lblPasswordConfirm);
+        westPanel.add(txtPasswordConfirm);
+        westPanel.add(lblRole);
         westPanel.add(role);
-        westPanel.add(txtDummy);
+
 
 
         southPanel = new JPanel();
@@ -115,9 +121,9 @@ public class UserAdminView extends JComponent implements ActionListener {
 
 
         eastPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
-        eastPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
+        eastPanel.setBorder(BorderFactory.createLineBorder(menuColor, 1, false));
         westPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 2);
-        westPanel.setBorder(BorderFactory.createLineBorder(menuColor, 5, false));
+        westPanel.setBorder(BorderFactory.createLineBorder(menuColor, 0, false));
         southPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, westPanel.getHeight(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 12);
 
 
@@ -141,10 +147,12 @@ public class UserAdminView extends JComponent implements ActionListener {
         setTextBoxDesign(txtLastName);
         txtPassword = new JPasswordField();
         setTextBoxDesign(txtPassword);
+        txtPasswordConfirm = new JPasswordField();
+        setTextBoxDesign(txtPasswordConfirm);
         txtEmail = new JTextField();
         setTextBoxDesign(txtEmail);
-        txtDummy = new JTextField("");
-        setTextBoxDesign(txtDummy);
+        txtEmail.setEnabled(false);
+
     }
 
     private void initiateComboBox() {
@@ -170,6 +178,10 @@ public class UserAdminView extends JComponent implements ActionListener {
         setLabelDesign(lblEmail);
         lblPassword = new JLabel("Password");
         setLabelDesign(lblPassword);
+        lblPasswordConfirm = new JLabel("Confirm Password");
+        setLabelDesign(lblPasswordConfirm);
+        lblRole = new JLabel("Role");
+        setLabelDesign(lblRole);
 
     }
 
@@ -260,6 +272,15 @@ public class UserAdminView extends JComponent implements ActionListener {
         this.txtPassword.setEchoChar('\u25CF');
     }
 
+    public JPasswordField getTxtPasswordConfirm() {
+        return txtPasswordConfirm;
+    }
+
+    public void setTxtPasswordConfirm(String passwordtxt) {
+        this.txtPasswordConfirm.setText(passwordtxt);
+        this.txtPasswordConfirm.setEchoChar('\u25CF');
+    }
+
     public JTextField getTxtEmail() {
         return txtEmail;
     }
@@ -290,16 +311,27 @@ public class UserAdminView extends JComponent implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnCancel) {
             setPasswordtxt("");
+            setTxtPasswordConfirm("");
             setTxtEmail("");
             setRole("User");
             setTxtFirstName("");
             setTxtLastName("");
+
         }
 
         if (e.getSource() == btnSave) {
-            controller.updateUserDB(getTxtFirstName().getText(), getTxtLastName().getText(),
-                    getTxtEmail().getText(), getPasswordtxt().getText(), getRole().getSelectedItem().toString());
 
+            if (Arrays.equals(txtPassword.getPassword(), txtPasswordConfirm.getPassword())) {
+                if (txtPassword.getPassword().length == 0) {
+                    controller.showMessage("Password can't be null");
+                    }
+
+                controller.updateUserDB(getTxtFirstName().getText(), getTxtLastName().getText(),
+                        getTxtEmail().getText(), getPasswordtxt().getText(), getRole().getSelectedItem().toString());
+            }
+            else {
+                controller.showMessage("Passwords does not match");
+            }
         }
 
         if (e.getSource() == btnDelete) {
@@ -328,6 +360,9 @@ public class UserAdminView extends JComponent implements ActionListener {
                     setTxtLastName(userTable.getValueAt(row, 1).toString());
                     setTxtEmail(userTable.getValueAt(row, 2).toString());
                     setRole(userTable.getValueAt(row, 3).toString());
+                    setPasswordtxt(controller.userPassword(userTable.getValueAt(row, 2).toString()));
+                    setTxtPasswordConfirm(controller.userPassword(userTable.getValueAt(row, 2).toString()));
+
                 }
             }
 

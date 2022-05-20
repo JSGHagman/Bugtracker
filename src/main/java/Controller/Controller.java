@@ -247,6 +247,7 @@ public class Controller {
     /**
      * Attempts to sign up
      * takes the values in the sign up textfields and the selcted role
+     *
      * @author Jakob Hagman
      */
     public void trySignUp() {
@@ -286,9 +287,9 @@ public class Controller {
         new AssigneesThread(ticket, assignees);
         ticket.setPriority(priority);
         ticket.setCategory(type);
-        if(owner == "none@email.com"){
+        if (owner == "none@email.com") {
             ticket.setStatus("Open");
-        }else{
+        } else {
             ticket.setStatus("In progress");
         }
         ticketManager.addTicketToList(ticket);
@@ -309,9 +310,9 @@ public class Controller {
         new AssigneesThread(ticketToUpdate, assignees);
         User user = userManager.getUserFromString(owner);
         ticketToUpdate.setOwner(user);
-        if(owner == "none@email.com"){
+        if (owner == "none@email.com") {
             ticket.setStatus("Open");
-        }else{
+        } else {
             ticket.setStatus("In progress");
         }
         dbController.updateTicket(ticketToUpdate);
@@ -321,19 +322,19 @@ public class Controller {
         Ticket ticketToClose = ticketManager.getTicket(id);
         ticketToClose.setEnddate(new Date());
         ticketToClose.setStatus("Closed");
-        try{
+        try {
             dbController.updateTicket(ticketToClose);
-        } catch(SQLException ex){
+        } catch (SQLException ex) {
         }
     }
 
-    public void removeAgent(String user, int id){
+    public void removeAgent(String user, int id) {
         ticket = ticketManager.getTicket(id);
         User u = userManager.getUserFromString(user);
         ticket.removeAgent(u);
-        try{
+        try {
             dbController.removeAgent(ticket, u);
-        }catch(SQLException exc){
+        } catch (SQLException exc) {
             exc.printStackTrace();
         }
     }
@@ -341,7 +342,7 @@ public class Controller {
     /**
      * Get tickets with current user assigned
      */
-    public ArrayList <Ticket> getMyTickets() {
+    public ArrayList<Ticket> getMyTickets() {
         user = getSignedInUser();
         return ticketManager.getMyTickets(user.getEmail());
     }
@@ -402,6 +403,16 @@ public class Controller {
     public User getUserFromString(String user) {
         User u = userManager.getUserFromString(user);
         return u;
+    }
+
+    public String userPassword(String email) {
+        String password = "";
+        for (User u : userManager.getAllUsers()) {
+            if (u.getEmail().equals(email)) {
+                password = u.getPassword();
+            }
+        }
+        return password;
     }
 
     /**
@@ -505,12 +516,13 @@ public class Controller {
         t.addAgent(u);
     }
 
-    public boolean editGuard(int id){
+    public boolean editGuard(int id) {
         boolean ok = false;
         ticket = ticketManager.getTicket(id);
-        if(signedInUser.getRole().equals("Admin") || ticket.getOwner() == signedInUser || ticket.getOwner().getEmail().equals("none@email.com")){
+        if (signedInUser.getRole().equals("Admin") || ticket.getOwner() == signedInUser || ticket.getOwner().getEmail().equals("none@email.com")) {
             ok = true;
-        }if(!ok) {
+        }
+        if (!ok) {
             for (User u : ticket.getAgent()) {
                 if (u.equals(signedInUser)) {
                     ok = true;
@@ -528,8 +540,7 @@ public class Controller {
             attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
             ticketManager.getTicket(id).setFile(folderID);
             dbController.updateTicket(ticketManager.getTicket(id));
-        }
-        else {
+        } else {
             attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
         }*/
     }
@@ -543,7 +554,7 @@ public class Controller {
         }
         return filenames;
     }
-
+    
     public void getFilesFromID(int id){
        ArrayList<com.google.api.services.drive.model.File> files = attachedFiles.getFilesFromID(id);
        for(com.google.api.services.drive.model.File file : files){
@@ -551,8 +562,9 @@ public class Controller {
        }
     }
 
-    public void setStatus(Ticket t){
-        if(t.getAgent().isEmpty() && t.getEnddate() != null){
+
+    public void setStatus(Ticket t) {
+        if (t.getAgent().isEmpty() && t.getEnddate() != null) {
             t.setStatus("Open");
         }
     }
@@ -633,11 +645,13 @@ public class Controller {
                     if (u.equals(assignee)) {
                         found = true;
                     }
-                } if (!found) {
+                }
+                if (!found) {
                     ticket.addAgent(assignee);
                     assigneesToAdd.add(assignee);
                 }
-            } try {
+            }
+            try {
                 dbController.addAgentToTicket(assigneesToAdd, ticket);
             } catch (SQLException e) {
                 e.printStackTrace();
