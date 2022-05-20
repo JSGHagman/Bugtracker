@@ -65,6 +65,7 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         setLogInPanel();
         frame.add(mainPanel);
         frame.setVisible(true);
+        frame.getRootPane().setDefaultButton(btnLogIn);
 
     }
 
@@ -238,14 +239,12 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
     @Override
     public void focusGained(FocusEvent e) {
        JTextField src = (JTextField)e.getSource();
-       oldValue = src.getText();
        src.setText("");
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        JTextField src = (JTextField)e.getSource();
-        src.setText(oldValue);
+
     }
 
     //getters for controller-class to get values later
