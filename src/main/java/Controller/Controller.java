@@ -491,14 +491,18 @@ public class Controller {
         String assigneesString = ticketToShow.getAgentsAsStrings().stream().map(Object::toString)
                 .collect(Collectors.joining(", "));
         String enddate = "";
+        String attachedFiles = "";
+        if(ticketToShow.getFiles() != null){
+            attachedFiles = ticketToShow.getFiles().stream().map(String::toString).collect(Collectors.joining("\n"));
+        }
 
         if (ticketToShow.getEnddate() != null) {
             enddate = ticketToShow.getEnddate().toString();
         }
 
-        return String.format("ID: %s\nTOPIC: %s\nDESCRIPTION: %s\nTYPE: %s\nPRIORITY: %s\nSTATUS: %s\nOWNER: %s\nASSIGNEES: %s\nDATE OPEN: %s\nDATE CLOSE: %s\n",
+        return String.format("ID: %s\nTOPIC: %s\nDESCRIPTION: %s\nTYPE: %s\nPRIORITY: %s\nSTATUS: %s\nOWNER: %s\nASSIGNEES: %s\nATTATCHED FILES: %s\nDATE OPEN: %s\nDATE CLOSE: %s\n",
                 ticketToShow.getId(), ticketToShow.getTopic(), ticketToShow.getDescription(), ticketToShow.getCategory(),
-                ticketToShow.getPriorityAsString(), ticketToShow.getStatus(), ticketToShow.getOwner(), assigneesString, ticketToShow.getStartdate(), enddate);
+                ticketToShow.getPriorityAsString(), ticketToShow.getStatus(), ticketToShow.getOwner(), assigneesString, attachedFiles, ticketToShow.getStartdate(), enddate);
     }
 
     public ArrayList getTicketComments(int id) {
@@ -554,12 +558,25 @@ public class Controller {
         }
         return filenames;
     }
-    
+
+    /**
+     * This method retrievs the files and adds all files to the ticket
+     * @param id
+     */
     public void getFilesFromID(int id){
        ArrayList<com.google.api.services.drive.model.File> files = attachedFiles.getFilesFromID(id);
+       Ticket t = ticketManager.getTicket(id);
        for(com.google.api.services.drive.model.File file : files){
-           System.out.println(file.getName());
+           t.addFile(file.getName());
        }
+    }
+
+    public void testMetod(int id){
+        Ticket ticket = ticketManager.getTicket(id);
+        ArrayList<String> files = ticket.getFiles();
+        for(String s : files){
+            System.out.println("138 " + s);
+        }
     }
 
 
@@ -688,10 +705,11 @@ public class Controller {
                 attachedFiles.getAllFiles(attachedFiles.getDriveService());
                 ArrayList<Ticket> tickets = ticketManager.getAllTickets();
                 for(Ticket t : tickets){
-                    attachedFiles.getFilesFromID(t.getId());
+                    getFilesFromID(t.getId());
                 }
             }catch (GeneralSecurityException ex){
             }catch (IOException ie){}
+            testMetod(138);
         }
     }
 }

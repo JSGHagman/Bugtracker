@@ -22,7 +22,7 @@ public class Ticket {
     private int time;
     private Date startdate;
     private Date enddate;
-    private ArrayList <File> files;
+    private ArrayList <String> files;
     private String description;
     private String[] infoStrings;
 
@@ -149,12 +149,16 @@ public class Ticket {
         this.enddate = enddate;
     }
 
-    public ArrayList<File> getFile() {
+    public ArrayList<String> getFiles() {
         return files;
     }
 
     public void setFile(ArrayList<File> file) {
         this.files = files;
+    }
+
+    public void addFile(String file){
+        files.add(file);
     }
 
     public String getDescription() {

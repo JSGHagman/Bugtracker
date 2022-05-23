@@ -3,6 +3,11 @@
  * @author Jakob Hagman
  */
 
+/**
+ * @todo: Sätt ticket till open om inga assignees
+ *
+ */
+
 package View.MainView.Tickets;
 
 import Controller.Controller;
@@ -158,26 +163,26 @@ public class TicketView extends JComponent implements ActionListener {
         //FOR CREATE VIEW
         topicLabel = new JLabel("Topic");
         topicLabel.setForeground(menuColor);
-        topicLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        topicLabel.setFont(new Font("Dialog", Font.BOLD, 16));
 
         descriptionLabel = new JLabel("Description");
         descriptionLabel.setForeground(menuColor);
-        descriptionLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        descriptionLabel.setFont(new Font("Dialog", Font.BOLD, 16));
 
         priorityLabel = new JLabel("Priority");
-        priorityLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        priorityLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         priorityLabel.setForeground(menuColor);
 
         categoryLabel = new JLabel("Type");
-        categoryLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        categoryLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         categoryLabel.setForeground(menuColor);
 
         ownerLabel = new JLabel("Owner");
-        ownerLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        ownerLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         ownerLabel.setForeground(menuColor);
 
         collaboratorLabel = new JLabel("Collaborators");
-        collaboratorLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        collaboratorLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         collaboratorLabel.setForeground(menuColor);
 
         assigneesLabel = new JLabel("Assignees");
@@ -186,7 +191,7 @@ public class TicketView extends JComponent implements ActionListener {
 
         assigneesListLabel = new JLabel();
         assigneesListLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        assigneesListLabel.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
+        //assigneesListLabel.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
 
         searchLabel = new JLabel("Search");
         searchLabel.setForeground(menuColor);
@@ -199,8 +204,6 @@ public class TicketView extends JComponent implements ActionListener {
         commentsLabel = new JLabel("Comments");
         commentsLabel.setForeground(menuColor);
         commentsLabel.setFont(new Font("Dialog", Font.BOLD, 16));
-
-
     }
 
     /**
@@ -260,26 +263,26 @@ public class TicketView extends JComponent implements ActionListener {
     private void createLabelsEdit() {
         topicLabelEdit = new JLabel("Change Topic");
         topicLabelEdit.setForeground(menuColor);
-        topicLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        topicLabelEdit.setFont(new Font("Dialog", Font.BOLD, 16));
 
         descriptionLabelEdit = new JLabel("Change Description");
         descriptionLabelEdit.setForeground(menuColor);
-        descriptionLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        descriptionLabelEdit.setFont(new Font("Dialog", Font.BOLD, 16));
 
         priorityLabelEdit = new JLabel("Change Priority");
-        priorityLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        priorityLabelEdit.setFont(new Font("Dialog", Font.BOLD, 16));
         priorityLabelEdit.setForeground(menuColor);
 
         categoryLabelEdit = new JLabel("Change Type");
-        categoryLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        categoryLabelEdit.setFont(new Font("Dialog", Font.BOLD, 16));
         categoryLabelEdit.setForeground(menuColor);
 
         ownerLabelEdit = new JLabel("Change Owner");
-        ownerLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        ownerLabelEdit.setFont(new Font("Dialog", Font.BOLD, 16));
         ownerLabelEdit.setForeground(menuColor);
 
         collaboratorLabelEdit = new JLabel("Collaborators");
-        collaboratorLabelEdit.setFont(new Font("Dialog", Font.BOLD, 20));
+        collaboratorLabelEdit.setFont(new Font("Dialog", Font.BOLD, 16));
         collaboratorLabelEdit.setForeground(menuColor);
 
         assigneesLabelEdit = new JLabel("Assignees");
@@ -288,7 +291,7 @@ public class TicketView extends JComponent implements ActionListener {
 
         assigneesListLabelEdit = new JLabel();
         assigneesListLabelEdit.setFont(new Font("Dialog", Font.PLAIN, 12));
-        assigneesListLabelEdit.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
+        //assigneesListLabelEdit.setText("<html>This label will be updated for every added collaborator<br/>Owner: Viktor<br/>Collaborators: Yara, Jakob, Patrik<br/></html>");
     }
 
 
@@ -393,6 +396,7 @@ public class TicketView extends JComponent implements ActionListener {
         innerChoicesPanelEdit.add(categoryLabelEdit);
         innerChoicesPanelEdit.add(categoryBoxEdit);
 
+
         JPanel innerPeoplePanelEdit = new JPanel();
         innerPeoplePanelEdit.setLayout(new GridLayout(4, 1, 10, 10));
         innerPeoplePanelEdit.setBounds((innerChoicesPanelEdit.getX() + innerChoicesPanelEdit.getWidth()) + 5, innerDescriptionPanelEdit.getY() + innerDescriptionPanelEdit.getHeight(), (innerDescriptionPanelEdit.getWidth() / 2), innerDescriptionPanelEdit.getHeight());
@@ -414,7 +418,7 @@ public class TicketView extends JComponent implements ActionListener {
         innerAssigneesPanelEdit.add(assigneesLabel);
 
         JPanel innerAssigneesListPanelEdit = new JPanel();
-        innerAssigneesListPanelEdit.setBounds(0, innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth(), innerChoicesPanelEdit.getHeight() / 2);
+        innerAssigneesListPanelEdit.setBounds(0, innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth()/2, innerChoicesPanelEdit.getHeight() / 2);
         innerAssigneesListPanelEdit.setLayout(new GridLayout(1, 1, 10, 10));
         innerAssigneesListPanelEdit.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
         assigneesTextEdit = new JTextArea();
@@ -424,6 +428,7 @@ public class TicketView extends JComponent implements ActionListener {
         assigneesTextEdit.setOpaque(false);
         assigneesText.setBorder(BorderFactory.createEmptyBorder());
         innerAssigneesListPanelEdit.add(assigneesTextEdit);
+        innerAssigneesListPanelEdit.setBorder(BorderFactory.createLineBorder(menuColor));
 
         JPanel innerButtonPanelEdit = new JPanel();
         innerButtonPanelEdit.setBounds(0, innerAssigneesListPanelEdit.getY() + innerAssigneesListPanelEdit.getHeight() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth() * 2, innerChoicesPanelEdit.getHeight() / 4);
@@ -809,10 +814,7 @@ public class TicketView extends JComponent implements ActionListener {
             priority = 1;
         }
         String type = (String) categoryBox.getSelectedItem();
-        String owner = (String) ownerBox.getSelectedItem();
-        if (ownerBox.getSelectedItem().equals("None")) {
-            owner = "none@email.com";
-        }
+        String owner = controller.getSignedInUser().toString();
 
         try {
             controller.newTicket(topic, description, priority, type, owner, assignees);
@@ -864,7 +866,7 @@ public class TicketView extends JComponent implements ActionListener {
         if (priorityString.equals("Low")) {
             priority = 3;
         }
-        String owner = ownerBoxEdit.getSelectedItem().toString();
+        String owner = controller.getSignedInUser().toString();
         String type = categoryBoxEdit.getSelectedItem().toString();
         int ticketid = id;
         try {
@@ -1086,14 +1088,6 @@ public class TicketView extends JComponent implements ActionListener {
                 controller.showMessage("Select a ticket");
             }
             if (ok) {
-                try {
-                    setAttachedFiles(controller.getAttachedFiles(id));// sätt detta i seteditpanel
-                    controller.getFilesFromID(id);
-                } catch (GeneralSecurityException ex) {
-                    ex.printStackTrace();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
                 if (controller.editGuard(id)) {
                     setEditTicket(id);
                     setEditPanelDetails();
