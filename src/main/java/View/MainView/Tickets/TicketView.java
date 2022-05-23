@@ -1,6 +1,9 @@
 /**
  * Class used for different views of tickets, the main functionality of the program.
+ *
  * @author Jakob Hagman
+ * @todo: Sätt ticket till open om inga assignees
+ * @todo: Sätt ticket till open om inga assignees
  */
 
 /**
@@ -14,6 +17,7 @@ import Controller.Controller;
 import Model.AttachedFiles;
 import Model.Ticket;
 import View.MainView.MainFrame.MainFrame;
+import javafx.scene.layout.Border;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -39,7 +43,7 @@ public class TicketView extends JComponent implements ActionListener {
     private Object[][] data;
     private String[] columnNames;
     private JTable table;
-    private JLabel searchLabel, summaryLabel, commentsLabel;
+    private JLabel searchLabel, summaryLabel, commentsLabel, emptyLabel;
     private JTextField searchField;
     private JButton btnAddComment, btnRemoveComment;
     private TableRowSorter sorter;
@@ -48,23 +52,24 @@ public class TicketView extends JComponent implements ActionListener {
     private ArrayList<String> assignees, comments;
     private String owner;
     private boolean myTicketsView = false;
+    private boolean isCreateView = false;
     private JFileChooser fileChooser;
     private File attachedFile;
-    private ArrayList<String> attachedFiles;
+    private ArrayList<File> attachedFiles = new ArrayList<>();
     //FOR OTHER VIEWS
-    private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator, btnAttachFileCreate;
+    private JButton btnNewTicket, btnAllTickets, btnMyTickets, btnEditTicket, btnCreateTicket, btnCreateReturn, claimTicket, btnAddCollaborator, btnRemoveCollaborator, btnAttachFileCreate, btnDownLoadFilesCreate;
     private JPanel mainContentPanel, mainCreatePanel, mainTicketsPanel, mainEditPanel, mainCommentPanel, mainButtonsPanel, currentPanelOnDisplay;
     private JTextField topicField;
-    private JTextArea descriptionText, comment, assigneesText;
-    private JLabel topicLabel, descriptionLabel, priorityLabel, categoryLabel, ownerLabel, collaboratorLabel, assigneesLabel, assigneesListLabel;
+    private JTextArea descriptionText, comment, assigneesText, filesTextCreate;
+    private JLabel topicLabel, descriptionLabel, priorityLabel, categoryLabel, ownerLabel, collaboratorLabel, assigneesLabel, assigneesListLabel, attachedLabel;
     private JScrollPane descriptionScroll;
     private JComboBox priorityBox, categoryBox, ownerBox, collaboratorsBox;
     //FOR EDIT VIEW
-    private JButton btnEditReturn, btnSaveChanges, btnAddCollaboratorEdit, btnRemoveCollaboratorEdit, btnCloseTicket, btnAttachFileEdit;
+    private JButton btnEditReturn, btnSaveChanges, btnAddCollaboratorEdit, btnRemoveCollaboratorEdit, btnCloseTicket, btnAttachFileEdit, btnDownloadFilesEdit;
     private JPanel mainContentPanelEdit, mainCreatePanelEdit, mainTicketsPanelEdit, mainEditPanelEdit, mainCommentPanelEdit, mainButtonsPanelEdit, currentPanelOnDisplayEdit;
     private JTextField topicFieldEdit;
-    private JTextArea descriptionTextEdit, commentEdit, assigneesTextEdit;
-    private JLabel topicLabelEdit, descriptionLabelEdit, priorityLabelEdit, categoryLabelEdit, ownerLabelEdit, collaboratorLabelEdit, assigneesLabelEdit, assigneesListLabelEdit;
+    private JTextArea descriptionTextEdit, commentEdit, assigneesTextEdit, filesTextEdit;
+    private JLabel topicLabelEdit, descriptionLabelEdit, priorityLabelEdit, categoryLabelEdit, ownerLabelEdit, collaboratorLabelEdit, assigneesLabelEdit, assigneesListLabelEdit, attachedLabelEdit;
     private JScrollPane descriptionScrollEdit;
     private JComboBox priorityBoxEdit, categoryBoxEdit, ownerBoxEdit, collaboratorsBoxEdit;
     private int id;
@@ -129,6 +134,10 @@ public class TicketView extends JComponent implements ActionListener {
         setButtonDesign(btnAttachFileEdit);
         btnAttachFileCreate = new JButton("Attach file");
         setButtonDesign(btnAttachFileCreate);
+        btnDownloadFilesEdit = new JButton("Download files");
+        setButtonDesign(btnDownloadFilesEdit);
+        btnDownLoadFilesCreate = new JButton("Download files");
+        setButtonDesign(btnDownLoadFilesCreate);
     }
 
     /**
@@ -204,6 +213,18 @@ public class TicketView extends JComponent implements ActionListener {
         commentsLabel = new JLabel("Comments");
         commentsLabel.setForeground(menuColor);
         commentsLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+
+        attachedLabel = new JLabel("Files");
+        attachedLabel.setForeground(menuColor);
+        attachedLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+
+        attachedLabelEdit = new JLabel("Files");
+        attachedLabelEdit.setForeground(menuColor);
+        attachedLabelEdit.setFont(new Font("Dialog", Font.BOLD, 16));
+
+        emptyLabel = new JLabel("");
+
+
     }
 
     /**
@@ -224,6 +245,20 @@ public class TicketView extends JComponent implements ActionListener {
         descriptionScroll = new JScrollPane(descriptionText);
         descriptionScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         descriptionScroll.setBorder(BorderFactory.createLineBorder(menuColor, 3, false));
+
+        filesTextEdit = new JTextArea();
+        filesTextEdit.setLineWrap(true);
+        filesTextEdit.setEditable(false);
+        filesTextEdit.setOpaque(false);
+        filesTextEdit.setBorder(BorderFactory.createEmptyBorder());
+        filesTextEdit.setText("Attached Files: \n");
+
+        filesTextCreate = new JTextArea();
+        filesTextCreate.setLineWrap(true);
+        filesTextCreate.setEditable(false);
+        filesTextCreate.setOpaque(false);
+        filesTextCreate.setBorder(BorderFactory.createEmptyBorder());
+        filesTextCreate.setText("Attached Files: \n");
 
         priorityBox = new JComboBox();
         priorityBox.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -396,7 +431,6 @@ public class TicketView extends JComponent implements ActionListener {
         innerChoicesPanelEdit.add(categoryLabelEdit);
         innerChoicesPanelEdit.add(categoryBoxEdit);
 
-
         JPanel innerPeoplePanelEdit = new JPanel();
         innerPeoplePanelEdit.setLayout(new GridLayout(4, 1, 10, 10));
         innerPeoplePanelEdit.setBounds((innerChoicesPanelEdit.getX() + innerChoicesPanelEdit.getWidth()) + 5, innerDescriptionPanelEdit.getY() + innerDescriptionPanelEdit.getHeight(), (innerDescriptionPanelEdit.getWidth() / 2), innerDescriptionPanelEdit.getHeight());
@@ -406,9 +440,8 @@ public class TicketView extends JComponent implements ActionListener {
         innerPeoplePanelEdit.add(collaboratorsBoxEdit);
 
         JPanel innerCollaboratorButtonsPanelEdit = new JPanel();
-        innerCollaboratorButtonsPanelEdit.setLayout(new GridLayout(1, 3, 10, 10));
-        innerCollaboratorButtonsPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerPeoplePanelEdit.getY() + innerPeoplePanelEdit.getHeight() + 5, innerPeoplePanelEdit.getWidth(), innerPeoplePanelEdit.getHeight() / 4);
-        innerCollaboratorButtonsPanelEdit.add(btnAttachFileEdit);
+        innerCollaboratorButtonsPanelEdit.setLayout(new GridLayout(1, 2, 10, 10));
+        innerCollaboratorButtonsPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerPeoplePanelEdit.getY() + innerPeoplePanelEdit.getHeight() + 5, innerPeoplePanelEdit.getWidth(), innerPeoplePanelEdit.getHeight() / 6);
         innerCollaboratorButtonsPanelEdit.add(btnAddCollaboratorEdit);
         innerCollaboratorButtonsPanelEdit.add(btnRemoveCollaboratorEdit);
 
@@ -417,21 +450,41 @@ public class TicketView extends JComponent implements ActionListener {
         innerAssigneesPanelEdit.setLayout(new GridLayout(1, 2, 10, 10));
         innerAssigneesPanelEdit.add(assigneesLabel);
 
+        JPanel innerAttachedPanelEdit = new JPanel();
+        innerAttachedPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerCollaboratorButtonsPanelEdit.getY() + innerCollaboratorButtonsPanelEdit.getHeight(), innerPeoplePanelEdit.getWidth(), innerPeoplePanelEdit.getHeight() / 4);
+        innerAttachedPanelEdit.setLayout(new GridLayout(1, 2, 10, 10));
+        innerAttachedPanelEdit.add(attachedLabelEdit);
+
+        JPanel innerFilesListPanelEdit = new JPanel();
+        innerFilesListPanelEdit.setBounds(innerPeoplePanelEdit.getX(), innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth() / 2, innerChoicesPanelEdit.getHeight() / 3);
+        innerFilesListPanelEdit.setLayout(new GridLayout(1, 1, 10, 10));
+        //innerFilesListPanelEdit.setBorder(BorderFactory.createLineBorder(menuColor));
+
+        JScrollPane filesScroll = new JScrollPane(filesTextEdit);
+        filesScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        filesScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        filesScroll.setBorder(BorderFactory.createEmptyBorder());
+        innerFilesListPanelEdit.add(filesScroll);
+
+        JPanel innerFilesButtonEdit = new JPanel();
+        innerFilesButtonEdit.setBounds(innerFilesListPanelEdit.getX(), innerFilesListPanelEdit.getY() + innerFilesListPanelEdit.getHeight(), innerFilesListPanelEdit.getWidth(), (innerChoicesPanelEdit.getHeight() / 2) - innerFilesListPanelEdit.getHeight());
+        innerFilesButtonEdit.setLayout(new GridLayout(1, 2, 10, 10));
+        innerFilesButtonEdit.add(btnAttachFileEdit);
+        innerFilesButtonEdit.add(btnDownloadFilesEdit);
+
         JPanel innerAssigneesListPanelEdit = new JPanel();
-        innerAssigneesListPanelEdit.setBounds(0, innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth()/2, innerChoicesPanelEdit.getHeight() / 2);
+        innerAssigneesListPanelEdit.setBounds(0, innerAssigneesPanelEdit.getY() + innerAssigneesPanelEdit.getHeight(), innerTopicPanelEdit.getWidth() / 2, innerChoicesPanelEdit.getHeight() / 2);
         innerAssigneesListPanelEdit.setLayout(new GridLayout(1, 1, 10, 10));
-        innerAssigneesListPanelEdit.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
+        //innerAssigneesListPanelEdit.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
         assigneesTextEdit = new JTextArea();
-        assigneesTextEdit.setLineWrap(true);
         assigneesTextEdit.setLineWrap(true);
         assigneesTextEdit.setEditable(false);
         assigneesTextEdit.setOpaque(false);
         assigneesText.setBorder(BorderFactory.createEmptyBorder());
         innerAssigneesListPanelEdit.add(assigneesTextEdit);
-        innerAssigneesListPanelEdit.setBorder(BorderFactory.createLineBorder(menuColor));
 
         JPanel innerButtonPanelEdit = new JPanel();
-        innerButtonPanelEdit.setBounds(0, innerAssigneesListPanelEdit.getY() + innerAssigneesListPanelEdit.getHeight() + innerCollaboratorButtonsPanelEdit.getHeight(), innerChoicesPanelEdit.getWidth() * 2, innerChoicesPanelEdit.getHeight() / 4);
+        innerButtonPanelEdit.setBounds(0, innerAssigneesListPanelEdit.getY() + innerAssigneesListPanelEdit.getHeight() + innerCollaboratorButtonsPanelEdit.getHeight() + innerFilesListPanelEdit.getHeight(), innerTopicPanelEdit.getWidth(), innerChoicesPanelEdit.getHeight() / 4);
         innerButtonPanelEdit.setLayout(new GridLayout(1, 3, 10, 10));
         innerButtonPanelEdit.add(btnCloseTicket);
         innerButtonPanelEdit.add(btnSaveChanges);
@@ -442,9 +495,12 @@ public class TicketView extends JComponent implements ActionListener {
         mainEditPanel.add(innerDescriptionPanelEdit);
         mainEditPanel.add(innerChoicesPanelEdit);
         mainEditPanel.add(innerPeoplePanelEdit);
+        mainEditPanel.add(innerAttachedPanelEdit);
         mainEditPanel.add(innerCollaboratorButtonsPanelEdit);
         mainEditPanel.add(innerAssigneesPanelEdit);
         mainEditPanel.add(innerAssigneesListPanelEdit);
+        mainEditPanel.add(innerFilesListPanelEdit);
+        mainEditPanel.add(innerFilesButtonEdit);
     }
 
     /**
@@ -480,9 +536,8 @@ public class TicketView extends JComponent implements ActionListener {
         innerPeoplePanel.add(collaboratorsBox);
 
         JPanel innerCollaboratorButtonsPanel = new JPanel();
-        innerCollaboratorButtonsPanel.setLayout(new GridLayout(1, 3, 10, 10));
-        innerCollaboratorButtonsPanel.setBounds(innerPeoplePanel.getX(), innerPeoplePanel.getY() + innerPeoplePanel.getHeight() + 5, innerPeoplePanel.getWidth(), innerPeoplePanel.getHeight() / 4);
-        innerCollaboratorButtonsPanel.add(btnAttachFileCreate);
+        innerCollaboratorButtonsPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        innerCollaboratorButtonsPanel.setBounds(innerPeoplePanel.getX(), innerPeoplePanel.getY() + innerPeoplePanel.getHeight() + 5, innerPeoplePanel.getWidth(), innerPeoplePanel.getHeight() / 6);
         innerCollaboratorButtonsPanel.add(btnAddCollaborator);
         innerCollaboratorButtonsPanel.add(btnRemoveCollaborator);
 
@@ -491,10 +546,31 @@ public class TicketView extends JComponent implements ActionListener {
         innerAssigneesPanel.add(assigneesLabel);
         innerAssigneesPanel.setLayout(new GridLayout(1, 2, 10, 10));
 
+        JPanel innerAttachFilesPanel = new JPanel();
+        innerAttachFilesPanel.setBounds(innerPeoplePanel.getX(), innerCollaboratorButtonsPanel.getY() + innerCollaboratorButtonsPanel.getHeight(), (innerChoicesPanel.getWidth() / 2) - 5, innerChoicesPanel.getHeight() / 4);
+        innerAttachFilesPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        innerAttachFilesPanel.add(attachedLabel);
+
+        JPanel innerFilesListPanel = new JPanel();
+        innerFilesListPanel.setBounds(innerPeoplePanel.getX(), innerAssigneesPanel.getY() + innerAssigneesPanel.getHeight(), innerTopicPanel.getWidth() / 2, innerChoicesPanel.getHeight() / 3);
+        innerFilesListPanel.setLayout(new GridLayout(1, 1, 10, 10));
+        //innerFilesListPanelEdit.setBorder(BorderFactory.createLineBorder(menuColor));
+        JScrollPane filesScroll = new JScrollPane(filesTextCreate);
+        filesScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        filesScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        filesScroll.setBorder(BorderFactory.createEmptyBorder());
+        innerFilesListPanel.add(filesScroll);
+
+        JPanel innerFilesButton = new JPanel();
+        innerFilesButton.setBounds(innerFilesListPanel.getX(), innerFilesListPanel.getY() + innerFilesListPanel.getHeight(), innerFilesListPanel.getWidth(), (innerChoicesPanel.getHeight() / 2) - innerFilesListPanel.getHeight());
+        innerFilesButton.setLayout(new GridLayout(1, 2, 10, 10));
+        innerFilesButton.add(btnAttachFileCreate);
+        innerFilesButton.add(emptyLabel);
+
         JPanel innerAssigneesListPanel = new JPanel();
-        innerAssigneesListPanel.setBounds(0, innerAssigneesPanel.getY() + innerAssigneesPanel.getHeight(), innerTopicPanel.getWidth(), innerChoicesPanel.getHeight() / 2);
+        innerAssigneesListPanel.setBounds(0, innerAssigneesPanel.getY() + innerAssigneesPanel.getHeight(), innerTopicPanel.getWidth() / 2, innerChoicesPanel.getHeight() / 2);
         innerAssigneesListPanel.setLayout(new GridLayout(1, 1, 10, 10));
-        innerAssigneesListPanel.setBorder((BorderFactory.createMatteBorder(0, 0, 3, 0, menuColor)));
+        //innerAssigneesListPanel.setBorder(BorderFactory.createLineBorder(menuColor));
         assigneesText = new JTextArea();
         assigneesText.setLineWrap(true);
         assigneesText.setLineWrap(true);
@@ -505,10 +581,12 @@ public class TicketView extends JComponent implements ActionListener {
         innerAssigneesListPanel.add(assigneesText);
 
         JPanel innerButtonPanel = new JPanel();
-        innerButtonPanel.setBounds(0, innerAssigneesListPanel.getY() + innerAssigneesListPanel.getHeight() + innerCollaboratorButtonsPanel.getHeight(), innerChoicesPanel.getWidth(), innerChoicesPanel.getHeight() / 4);
+        innerButtonPanel.setBounds(0, innerAssigneesListPanel.getY() + innerAssigneesListPanel.getHeight() + innerCollaboratorButtonsPanel.getHeight() + innerFilesListPanel.getHeight(), innerChoicesPanel.getWidth(), innerChoicesPanel.getHeight() / 4);
         innerButtonPanel.setLayout(new GridLayout(1, 3, 10, 10));
         innerButtonPanel.add(btnCreateTicket);
         innerButtonPanel.add(btnCreateReturn);
+
+        //innerAssigneesListPanelEdit.getY() + innerAssigneesListPanelEdit.getHeight() + innerCollaboratorButtonsPanelEdit.getHeight() + innerFilesListPanelEdit.getHeight(), innerTopicPanelEdit.getWidth(), innerChoicesPanelEdit.getHeight() / 4);
 
         mainCreatePanel.add(innerButtonPanel);
         mainCreatePanel.add(innerTopicPanel);
@@ -518,6 +596,9 @@ public class TicketView extends JComponent implements ActionListener {
         mainCreatePanel.add(innerCollaboratorButtonsPanel);
         mainCreatePanel.add(innerAssigneesPanel);
         mainCreatePanel.add(innerAssigneesListPanel);
+        mainCreatePanel.add(innerAttachFilesPanel);
+        mainCreatePanel.add(innerFilesListPanel);
+        mainCreatePanel.add(innerFilesButton);
     }
 
 
@@ -624,6 +705,7 @@ public class TicketView extends JComponent implements ActionListener {
     /**
      * This method takes the id from the selected ticket in the table
      * It then places all the info from that ticket in the summarypanel
+     *
      * @param id
      */
     private void setSummaryInView(int id) {
@@ -646,6 +728,7 @@ public class TicketView extends JComponent implements ActionListener {
 
     /**
      * This method sets the list with the tickets
+     *
      * @param list
      */
     private void setCommentsList(String[] list) {
@@ -719,6 +802,7 @@ public class TicketView extends JComponent implements ActionListener {
                 data[i][6] = list.get(i).getStartdate();
             }
         }
+
         if (myTicketsView) {
             data = null;
             columnNames = new String[]{"ID", "Type", "Topic", "Priority", "Status", "Owner", "Date"};
@@ -826,6 +910,7 @@ public class TicketView extends JComponent implements ActionListener {
     /**
      * This method is called when edit ticket is pressed.
      * It sets the values in the fields based on what ticket is selected.
+     *
      * @param id
      * @throws IndexOutOfBoundsException
      */
@@ -845,11 +930,15 @@ public class TicketView extends JComponent implements ActionListener {
         ownerBoxEdit.setSelectedItem(t.getOwner());
         priorityBoxEdit.setSelectedItem(t.getPriorityAsString());
         owner = ownerBoxEdit.getSelectedItem().toString();
+        attachedFiles.clear();
+        String files = controller.getFilesAsString(t);
+        filesTextEdit.setText("Attached files: " + files);
     }
 
     /**
      * Method is called when save changes button is pressed.
      * It takes all values in the fields passes them to method in the controller which saves all the new info.
+     *
      * @param id
      */
     private void saveTicketChanges(int id) {
@@ -936,6 +1025,7 @@ public class TicketView extends JComponent implements ActionListener {
     /**
      * This method is called when edit button is pressed
      * It takes the id and gets all assignees on that ticket from the controller
+     *
      * @param id
      */
     private void setAssigneesTextEdit(int id) {
@@ -945,6 +1035,7 @@ public class TicketView extends JComponent implements ActionListener {
     /**
      * This method takes the list of assignees and formats every string in the list as one string
      * Which will be used whenever all assignees is displayed
+     *
      * @param assignees
      * @return
      */
@@ -956,6 +1047,7 @@ public class TicketView extends JComponent implements ActionListener {
 
     /**
      * This gets the id of the ticket which has been selected in the list.
+     *
      * @return
      */
     private int getIdFromTable() {
@@ -970,6 +1062,7 @@ public class TicketView extends JComponent implements ActionListener {
      * This method is used whenever the remove collaborator button has been pressed
      * It removes the user selected in the box if that user is in the assignees list
      * otherwise it will throw an errormessage
+     *
      * @param user
      */
     private void removeCollaborator(String user) {
@@ -990,6 +1083,7 @@ public class TicketView extends JComponent implements ActionListener {
      * This method is used whenever the remove collaborator button has been pressed
      * It removes the user selected in the box if that user is in the assignees list
      * otherwise it will throw an errormessage
+     *
      * @param user
      */
     private void removeCollaboratorFromOldTicket(String user, int id) {
@@ -1016,15 +1110,31 @@ public class TicketView extends JComponent implements ActionListener {
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             attachedFile = fileChooser.getSelectedFile();
-
+            attachedFiles.add(attachedFile);
+            if (isCreateView) {
+                setFilesCreate();
+            } else {
+                setFilesEdit();
+            }
         }
     }
 
-    /**
-     * This method sets all attachedfiles
-     */
-    private void setAttachedFiles(ArrayList<String> str) {
-        this.attachedFiles = str;
+    private void setFilesCreate() {
+        String listString = attachedFiles.stream().map(Object::toString)
+                .collect(Collectors.joining("\n"));
+        filesTextCreate.setText("Attached Files: \n" + listString);
+    }
+
+    private void setFilesEdit() {
+        Ticket t = controller.getMarkedTicket(id);
+        String oldfiles = controller.getFilesAsString(t);
+        String newFiles = attachedFiles.stream().map(Object::toString)
+                .collect(Collectors.joining("\n"));
+        filesTextEdit.setText("Attached Files: \n" + oldfiles + newFiles);
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -1040,6 +1150,7 @@ public class TicketView extends JComponent implements ActionListener {
 
     /**
      * This method specifies what will be called whenever a button is pressed
+     *
      * @param e
      */
     @Override
@@ -1051,23 +1162,32 @@ public class TicketView extends JComponent implements ActionListener {
             chooseFile();
         }
 
+        if (e.getSource() == btnDownloadFilesEdit) {
+            controller.startDownloadThread(id);
+        }
+
         if (e.getSource() == btnMyTickets) {
             myTicketsView = true;
+            isCreateView = false;
             setTicketPanelDetails();
             changeToTicketView();
+            table.clearSelection();
         }
 
 
         if (e.getSource() == btnAllTickets) {
             myTicketsView = false;
+            isCreateView = false;
             setTicketPanelDetails();
             changeToTicketView();
+            table.clearSelection();
         }
 
-
         if (e.getSource() == btnNewTicket) {
+            isCreateView = true;
             changeToCreate();
             assignees.clear();
+            attachedFiles.clear();
             ownerBox.addItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
@@ -1076,10 +1196,12 @@ public class TicketView extends JComponent implements ActionListener {
                 }
             });
             myTicketsView = false;
+            table.clearSelection();
         }
 
-
         if (e.getSource() == btnEditTicket) {
+            attachedFiles.clear();
+            isCreateView = false;
             boolean ok = false;
             try {
                 id = getIdFromTable();
@@ -1097,23 +1219,24 @@ public class TicketView extends JComponent implements ActionListener {
                     updateAssigneesTextEdit();
                     ownerBoxEdit.addItemListener(new ItemListener() {
                         @Override
-                        public void itemStateChanged(ItemEvent e) {
+                        public void itemStateChanged(ItemEvent e){
                             owner = ownerBoxEdit.getSelectedItem().toString();
                             updateAssigneesTextEdit();
                         }
                     });
                     myTicketsView = false;
+                    table.clearSelection();
                 } else {
                     controller.showMessage("You don't have authorization to edit this ticket");
                 }
             }
         }
 
-
         if (e.getSource() == btnEditReturn || e.getSource() == btnCreateReturn) {
             changeToTicketView();
             setDefaultValuesInFields();
             myTicketsView = false;
+            table.clearSelection();
         }
 
         if (e.getSource() == btnSaveChanges) {
@@ -1123,18 +1246,13 @@ public class TicketView extends JComponent implements ActionListener {
             table.clearSelection();
             setCommentsList(new String[0]);
             myTicketsView = false;
-            if (attachedFile != null) {
-                try {
-                    controller.addAttachedFile(id, attachedFile);
-                } catch (GeneralSecurityException ex) {
-                    ex.printStackTrace();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+            if (attachedFiles.size() > 0) {
+                //System.out.println("Hello ther");
+                controller.startPlaceFileThread(id, attachedFiles);
             }
+            attachedFile = null;
         }
+
         if (e.getSource() == btnCreateTicket) {
             createTicket();
             setTicketPanelDetails();
@@ -1143,18 +1261,11 @@ public class TicketView extends JComponent implements ActionListener {
             table.clearSelection();
             setCommentsList(new String[0]);
             myTicketsView = false;
-            if (attachedFile != null) {
-                try {
-                    controller.addAttachedFile(id, attachedFile);
-                } catch (GeneralSecurityException ex) {
-                    ex.printStackTrace();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+            if (attachedFiles.size() > 0) {
+                //System.out.println("Hello");
+                controller.startPlaceFileThread(id, attachedFiles);
             }
-
+            attachedFile = null;
             if (e.getSource() == btnAddCollaborator) {
                 setAssigneesCreate();
                 updateAssigneesTextCreate();

@@ -97,6 +97,10 @@ public class MainFrame extends JFrame {
         mainFrame.repaint();
     }
 
+    public TicketView getTicketView(){
+        return ticketView;
+    }
+
     public void profileView(){
         contentPanel.removeAll();
         profileView.CreateProfileView();

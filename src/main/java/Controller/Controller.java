@@ -26,7 +26,7 @@ public class Controller {
     private LogInGUI logInView;
     private AttachedFiles attachedFiles;
 
-    public Controller()  {
+    public Controller() {
         userManager = UserManager.getInstance();
         ticketManager = TicketManager.getInstance();
         dbController = new DatabaseController(this);
@@ -284,7 +284,7 @@ public class Controller {
         User u = userManager.getUserFromString(owner);
         int id = dbController.newTicket();
         ticket = new Ticket(id, u, topic, description);
-        new AssigneesThread(ticket, assignees);
+        new AssigneesThread(ticket, assignees).start();
         ticket.setPriority(priority);
         ticket.setCategory(type);
         if (owner == "none@email.com") {
@@ -294,6 +294,7 @@ public class Controller {
         }
         ticketManager.addTicketToList(ticket);
         dbController.updateTicket(ticket);
+        view.getTicketView().setId(id);
     }
 
 
@@ -307,7 +308,7 @@ public class Controller {
         ticketToUpdate.setDescription(description);
         ticketToUpdate.setPriority(priority);
         ticketToUpdate.setCategory(type);
-        new AssigneesThread(ticketToUpdate, assignees);
+        new AssigneesThread(ticketToUpdate, assignees).start();
         User user = userManager.getUserFromString(owner);
         ticketToUpdate.setOwner(user);
         if (owner == "none@email.com") {
@@ -417,6 +418,7 @@ public class Controller {
 
     /**
      * Method is used for checking if email is a correct email.
+     *
      * @param String email
      * @return boolean true if all requirements for an email is met.
      * @author Jakob Hagman
@@ -456,6 +458,7 @@ public class Controller {
 
     /**
      * Checks if any of the fields in the sign up fields is empty
+     *
      * @return boolean
      * @author Jakob Hagman
      */
@@ -492,7 +495,7 @@ public class Controller {
                 .collect(Collectors.joining(", "));
         String enddate = "";
         String attachedFiles = "";
-        if(ticketToShow.getFiles() != null){
+        if (ticketToShow.getFiles() != null) {
             attachedFiles = ticketToShow.getFiles().stream().map(String::toString).collect(Collectors.joining("\n"));
         }
 
@@ -508,6 +511,19 @@ public class Controller {
     public ArrayList getTicketComments(int id) {
         Ticket ticketToShow = ticketManager.getTicket(id);
         return ticketToShow.getComments();
+    }
+
+    public String getFilesAsString(Ticket t) {
+        ArrayList<String> list = t.getFiles();
+        String s = "";
+        if (list == null) {
+            s = "";
+        } else {
+            for (String str : list) {
+                s += str + "\n";
+            }
+        }
+        return s;
     }
 
     public ArrayList<String> getAgentsOnTicket(int id) {
@@ -561,21 +577,30 @@ public class Controller {
 
     /**
      * This method retrievs the files and adds all files to the ticket
+     *
      * @param id
      */
-    public void getFilesFromID(int id){
-       ArrayList<com.google.api.services.drive.model.File> files = attachedFiles.getFilesFromID(id);
-       Ticket t = ticketManager.getTicket(id);
-       for(com.google.api.services.drive.model.File file : files){
-           t.addFile(file.getName());
-       }
+    public void getFilesFromID(int id) {
+        ArrayList<com.google.api.services.drive.model.File> files = attachedFiles.getFilesFromID(id);
+        Ticket t = ticketManager.getTicket(id);
+        for (com.google.api.services.drive.model.File file : files) {
+            t.addFile(file.getName());
+        }
     }
 
-    public void testMetod(int id){
-        Ticket ticket = ticketManager.getTicket(id);
-        ArrayList<String> files = ticket.getFiles();
-        for(String s : files){
-            System.out.println("138 " + s);
+    public void downloadFilesFromID(int id) {
+        ArrayList<com.google.api.services.drive.model.File> files = attachedFiles.getFilesFromID(id);
+        Ticket t = ticketManager.getTicket(id);
+        String home = System.getProperty("user.home");
+        String path = (home + "/Downloads/");
+        for (com.google.api.services.drive.model.File file : files) {
+            try {
+                attachedFiles.downloadFile(attachedFiles.getDriveService(), file.getId(), path, file.getName());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (GeneralSecurityException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -603,6 +628,30 @@ public class Controller {
         }
     }
 
+
+    /**
+     * This method starts creates an object of the inner class which is used to download the files
+     *
+     * @param id
+     */
+    public void startDownloadThread(int id) {
+        new downloadFilesThread(id);
+    }
+
+    /**
+     * Starts the thread to place the file in the drive, through the api
+     *
+     * @param id
+     * @param file
+     */
+    public void startPlaceFileThread(int id, ArrayList<File> list) {
+        for (File f : list) {
+            ticketManager.getTicket(id).addFile(f.getName());
+        }
+
+        new placeFilesThread(id, list).start();
+    }
+
     /**
      * @Author Patrik Brandell
      * Separate thread to get all tickets from DB and add to TicketManager
@@ -621,6 +670,7 @@ public class Controller {
     /**
      * Class extends thread.
      * Uses thread to retrieve all users from the database.
+     *
      * @author Jakob Hagman
      */
     private class GetAllUsers extends Thread {
@@ -636,7 +686,28 @@ public class Controller {
     }
 
     /**
+     * Class exents thread
+     * This class uses a thread to download to the computer the attached files to a specific ticket
+     *
+     * @author Jakob Hagman
+     */
+    private class downloadFilesThread extends Thread {
+        private int id;
+
+        public downloadFilesThread(int id) {
+            this.id = id;
+            this.start();
+        }
+
+        @Override
+        public void run() {
+            downloadFilesFromID(id);
+        }
+    }
+
+    /**
      * This inner class adds assignees to the ticket in the database.
+     *
      * @Author Jakob Hagman
      */
     private class AssigneesThread extends Thread {
@@ -649,7 +720,6 @@ public class Controller {
             this.assignees = assignees;
             agents = t.getAgent();
             assigneesToAdd = new ArrayList<>();
-            start();
         }
 
         @Override
@@ -673,43 +743,65 @@ public class Controller {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
     /**
      * This class is a thread that handles attatching files.
+     *
      * @author Jakob Hagman
      */
-    private class placeFilesThread extends Thread{
-        public placeFilesThread(){
+    private class placeFilesThread extends Thread {
+        private int id;
+        private ArrayList<File> files = new ArrayList<>();
 
+        public placeFilesThread(int id, ArrayList<File> files) {
+            this.id = id;
+            this.files = files;
         }
 
         @Override
         public void run() {
-
+            try {
+                String folderID = attachedFiles.checkIfExist(attachedFiles.getDriveService(), String.valueOf(id));
+                System.out.println("folderid: " + folderID);
+                if (folderID == null) {
+                    folderID = attachedFiles.createDriveFolder(attachedFiles.getDriveService(), String.valueOf(id));
+                    for (File file : files) {
+                        attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
+                    }
+                } else {
+                    for (File file : files) {
+                        attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
+                    }
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (GeneralSecurityException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
 
     /**
      * This thread retrieves all files attached to a ticket
+     *
      * @Author Jakob Hagman
      */
-    private class getFilesThread extends Thread{
+    private class getFilesThread extends Thread {
         @Override
         public void run() {
-            try{
+            try {
                 attachedFiles.getAllFolders(attachedFiles.getDriveService());
                 attachedFiles.getAllFiles(attachedFiles.getDriveService());
                 ArrayList<Ticket> tickets = ticketManager.getAllTickets();
-                for(Ticket t : tickets){
+                for (Ticket t : tickets) {
                     getFilesFromID(t.getId());
                 }
-            }catch (GeneralSecurityException ex){
-            }catch (IOException ie){}
-            testMetod(138);
+            } catch (GeneralSecurityException ex) {
+            } catch (IOException ie) {
+            }
         }
     }
 }

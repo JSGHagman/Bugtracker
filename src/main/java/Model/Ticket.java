@@ -22,7 +22,7 @@ public class Ticket {
     private int time;
     private Date startdate;
     private Date enddate;
-    private ArrayList <String> files;
+    private ArrayList <String> files = new ArrayList<>();
     private String description;
     private String[] infoStrings;
 
@@ -45,7 +45,6 @@ public class Ticket {
         this.priority = priority;
         this.startdate = startdate;
         this.enddate = enddate;
-        this.files = new ArrayList<>();
         this.topic = topic;
     }
 

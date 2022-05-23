@@ -66,10 +66,6 @@ public class AttachedFiles {
         files = (ArrayList<File>) result.getFiles();
         if (files == null || files.isEmpty()) {
             System.out.println("No files found.");
-        } else {
-            for (File file : files) {
-                System.out.println(file.getName());
-           }
         }
     }
 
@@ -79,9 +75,6 @@ public class AttachedFiles {
                 .setFields("nextPageToken, files(id, name)")
                 .execute();
         folders = (ArrayList<File>) result.getFiles();
-        for(File f : folders){
-            System.out.println(f.getName());
-        }
     }
 
     public ArrayList<File> getFilesFromID(int id){
@@ -112,8 +105,10 @@ public class AttachedFiles {
                 .execute();
         List<File> files = result.getFiles();
         for (File file : files) {
+            //System.out.println("Checking...");
             if (file.getName().equals(name)) {
                 fileID = file.getId();
+                //System.out.println("MATCH");
             }
         }
         return fileID;
@@ -127,7 +122,7 @@ public class AttachedFiles {
         File file = service.files().create(fileMetadata)
                 .setFields("id")
                 .execute();
-        System.out.println("Folder ID: " + file.getId());
+        //System.out.println("Folder ID: " + file.getId());
         return file.getId();
     }
 
@@ -135,18 +130,14 @@ public class AttachedFiles {
         String type = FilenameUtils.getExtension(filePath); //Get filetype
         java.io.File file = new java.io.File(filePath); //Create file from path
         String mimetype = Files.probeContentType(Paths.get(filePath));
-
         File fileMetaData = new File();
         fileMetaData.setParents(Collections.singletonList(currDirectory));  //set TicketID directory
         fileMetaData.setName(file.getName());
-
         FileContent fileContent = new FileContent(mimetype, file); //create content for drive
-
         File driveFile = service.files().create(fileMetaData, fileContent)
                 .setFields("id")
                 .setFields("parents")
                 .execute();
-
     }
 
     public void downloadFile(Drive service, String id, String savePath, String saveName) throws IOException {

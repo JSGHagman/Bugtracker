@@ -27,7 +27,6 @@ public class StatisticView extends JComponent {
         JFreeChart chart = createChart(dataset);
         chartPanel = new ChartPanel(chart);
 
-
         chartPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
 
 
