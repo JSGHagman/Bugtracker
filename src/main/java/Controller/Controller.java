@@ -1,5 +1,4 @@
 package Controller;
-
 import Model.*;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
@@ -304,10 +303,12 @@ public class Controller {
         new AssigneesThread(ticketToUpdate, assignees).start();
         User user = userManager.getUserFromString(owner);
         ticketToUpdate.setOwner(user);
-        if (owner == "none@email.com") {
-            ticket.setStatus("Open");
-        } else {
-            ticket.setStatus("In progress");
+        if (assignees.isEmpty()) {
+            ticketToUpdate.setStatus("Open");
+        } if(!assignees.isEmpty()){
+            ticketToUpdate.setStatus("In progress");
+        } if(ticketToUpdate.getEnddate() != null){
+            ticketToUpdate.setStatus("Closed");
         }
         dbController.updateTicket(ticketToUpdate);
     }
@@ -586,7 +587,7 @@ public class Controller {
     public boolean editGuard(int id) {
         boolean ok = false;
         ticket = ticketManager.getTicket(id);
-        if (signedInUser.getRole().equals("Admin") || ticket.getOwner() == signedInUser || ticket.getOwner().getEmail().equals("none@email.com")) {
+        if (signedInUser.getRole().equals("Admin") || ticket.getOwner() == signedInUser || ticket.getAgent().isEmpty()) {
             ok = true;
         }
         if (!ok) {
@@ -640,14 +641,16 @@ public class Controller {
      * @author Jakob Hagman
      */
     public void setStatus(Ticket t) {
-        if (t.getAgent().isEmpty() && t.getEnddate() != null) {
+        if (t.getAgent().isEmpty() && t.getEnddate() == null) {
             t.setStatus("Open");
         }
-        if (!t.getAgent().isEmpty() && t.getEnddate() != null) {
+        if (!t.getAgent().isEmpty() && t.getEnddate() == null) {
             t.setStatus("In progress");
-        } else {
+        }
+        if(t.getEnddate() != null){
             t.setStatus("Closed");
         }
+
     }
 
     /**
@@ -820,7 +823,7 @@ public class Controller {
         public void run() {
             try {
                 String folderID = attachedFiles.checkIfExist(attachedFiles.getDriveService(), String.valueOf(id));
-                System.out.println("folderid: " + folderID);
+                //System.out.println("folderid: " + folderID);
                 if (folderID == null) {
                     folderID = attachedFiles.createDriveFolder(attachedFiles.getDriveService(), String.valueOf(id));
                     for (File file : files) {

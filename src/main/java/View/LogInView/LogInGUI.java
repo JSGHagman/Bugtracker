@@ -66,7 +66,6 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         frame.add(mainPanel);
         frame.setVisible(true);
         frame.getRootPane().setDefaultButton(btnLogIn);
-
     }
 
     public void initiateLabels() {
@@ -244,7 +243,6 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
 
     @Override
     public void focusLost(FocusEvent e) {
-
 
     }
 

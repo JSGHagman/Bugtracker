@@ -200,13 +200,11 @@ public class DatabaseController {
             String user = rs.getString("owner");
             String description = rs.getString("description");
             User u = controller.getUserFromString(user);
+            System.out.println(enddate);
             ticket = new Ticket(id, category, status, priority, startdate, enddate, topic);
             ticket.setOwner(u);
             ticket.setDescription(description);
             controller.addTicketToManager(ticket);
-            if (ticket.getEnddate() != null){
-                ticket.setStatus("Closed");
-            }
             setComments(ticket);
             setAgents(ticket);
         }

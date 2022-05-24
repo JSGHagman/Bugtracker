@@ -280,8 +280,11 @@ public class TicketView extends JComponent implements ActionListener {
         ownerBox = new JComboBox();
         ownerBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         ownerBox.setBackground(Color.WHITE);
-        ownerBox.addItem("None");
-        ownerBox.addItem(controller.getSignedInUser().toString());
+        if(controller.getSignedInUser().getRole().equals("Admin")){
+            controller.populatePeopleBox(ownerBox);
+        } else{
+            ownerBox.addItem(controller.getSignedInUser().toString());
+        }
         ownerBox.setSelectedItem(controller.getSignedInUser().toString());
         collaboratorsBox = new JComboBox();
         collaboratorsBox.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -367,7 +370,7 @@ public class TicketView extends JComponent implements ActionListener {
         ownerBoxEdit = new JComboBox();
         ownerBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
         ownerBoxEdit.setBackground(Color.WHITE);
-        ownerBoxEdit.addItem(controller.getSignedInUser());
+        //ownerBoxEdit.addItem(controller.getSignedInUser());
 
         collaboratorsBoxEdit = new JComboBox();
         collaboratorsBoxEdit.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -919,10 +922,8 @@ public class TicketView extends JComponent implements ActionListener {
         Ticket t = controller.getTicketInfo(id);
         if (controller.getSignedInUser().getRole().equals("Admin")) {
             controller.populatePeopleBox(ownerBoxEdit);
-        }
-
-        if (((DefaultComboBoxModel) ownerBoxEdit.getModel()).getIndexOf(t.getOwner()) < 0) {
-            ownerBoxEdit.addItem(t.getOwner());
+        } else {
+           ownerBoxEdit.addItem(t.getOwner());
         }
         int priority = t.getPriority();
         topicFieldEdit.setText(t.getTopic());
@@ -1248,7 +1249,6 @@ public class TicketView extends JComponent implements ActionListener {
             setCommentsList(new String[0]);
             myTicketsView = false;
             if (attachedFiles.size() > 0) {
-                //System.out.println("Hello ther");
                 controller.startPlaceFileThread(id, attachedFiles);
             }
             attachedFile = null;
@@ -1263,18 +1263,17 @@ public class TicketView extends JComponent implements ActionListener {
             setCommentsList(new String[0]);
             myTicketsView = false;
             if (attachedFiles.size() > 0) {
-                //System.out.println("Hello");
                 controller.startPlaceFileThread(id, attachedFiles);
             }
             attachedFile = null;
         }
+
         if (e.getSource() == btnAddCollaborator) {
             setAssigneesCreate();
             updateAssigneesTextCreate();
         }
 
         if (e.getSource() == btnAddCollaboratorEdit) {
-            System.out.println("Hello");
             setAssigneesEdit();
             updateAssigneesTextEdit();
         }
