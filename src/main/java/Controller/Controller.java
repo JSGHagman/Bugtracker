@@ -114,7 +114,7 @@ public class Controller {
      * loads username,  to profileWindow
      */
     public void switchToProfile() {
-        view.profileView();
+        view.startProfileView();
     }
 
 
@@ -122,7 +122,7 @@ public class Controller {
      * switch scene to ticket view
      */
     public void switchToTicket() {
-        view.ticketView();
+        view.startTicketView();
     }
 
     /**
@@ -143,7 +143,7 @@ public class Controller {
      * Will be used to switch to statistics
      */
     public void switchToStatistics() {
-        view.statisticsView();
+        view.startStatisticsView();
     }
 
     /**
@@ -161,7 +161,7 @@ public class Controller {
             list.add(u.getEmail());
             list.add(u.getRole());
         }
-        view.userAdminView(list);
+        view.startUserAdminView(list);
     }
 
 

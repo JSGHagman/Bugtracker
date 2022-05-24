@@ -1,4 +1,8 @@
-
+/**
+ * This class is the mainframe class
+ * It is used to start the other different views.
+ * @author Jakob Hagman, further developed by Patrik Brandell & Viktor Abraham.
+ */
 package View.MainView.MainFrame;
 import Controller.Controller;
 import View.MainView.Menu.MenuViewAdmin;
@@ -46,7 +50,6 @@ public class MainFrame extends JFrame {
         ticketView = new TicketView(controller, this);
         profileView = new ProfileView(controller, this);
 
-
         switch (controller.getSignedInUser().getRole()) {
             case "User":
                 menuViewUser = new MenuViewUser(controller, this);
@@ -57,11 +60,7 @@ public class MainFrame extends JFrame {
             case "Agent":
                 menuViewAgent = new MenuViewAgent(controller, this);
                 break;
-            default:
-                menuViewUser = new MenuViewUser(controller, this);
-                break;
         }
-
     }
 
     public void setUpPanels(){
@@ -86,11 +85,11 @@ public class MainFrame extends JFrame {
         return mainFrame;
     }
 
-    public void userAdminView(ArrayList users) {
+    public void startUserAdminView(ArrayList users) {
         userAdminView = new UserAdminView(controller, this, users);
     }
 
-    public void ticketView () {
+    public void startTicketView() {
         contentPanel.removeAll();
         ticketView.initializeTicketView();
         mainFrame.revalidate();
@@ -101,7 +100,7 @@ public class MainFrame extends JFrame {
         return ticketView;
     }
 
-    public void profileView(){
+    public void startProfileView(){
         contentPanel.removeAll();
         profileView.CreateProfileView();
         mainFrame.revalidate();
@@ -116,7 +115,7 @@ public class MainFrame extends JFrame {
         userAdminView.setRole(role);
     }
 
-    public void statisticsView() {
+    public void startStatisticsView() {
         statisticView = new StatisticView(this, controller);
     }
 
