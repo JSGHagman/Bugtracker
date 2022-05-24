@@ -22,6 +22,11 @@ public class DatabaseController {
         this.controller = controller;
     }
 
+    /**
+     * Establishes connection with the MAU Database
+     * @return Connection
+     * @author Jakob Hagman
+     */
     public Connection getDBConnection() {
         Connection con = null;
         try {
@@ -152,7 +157,13 @@ public class DatabaseController {
     }
 
 
-
+    /**
+     * This method adds agents to the ticket.
+     * @param assignees
+     * @param t
+     * @throws SQLException
+     * @author Jakob Hagman & Patrik Brandell
+     */
     public void addAgentToTicket(ArrayList<User> assignees, Ticket t) throws SQLException {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
@@ -164,7 +175,6 @@ public class DatabaseController {
         stmt.close();
         con.close();
     }
-
 
     /**
      * @return ArrayList of all current tickets in db
@@ -194,14 +204,8 @@ public class DatabaseController {
             ticket.setOwner(u);
             ticket.setDescription(description);
             controller.addTicketToManager(ticket);
-            if (ticket.getEnddate() == null || ticket.getOwner().getEmail().equals("none@email.com")) {
-                ticket.setStatus("Open");
-            }
             if (ticket.getEnddate() != null){
                 ticket.setStatus("Closed");
-            }
-            if (ticket.getEnddate() == null && (!ticket.getOwner().getEmail().equals("none@email.com"))) {
-                ticket.setStatus("In progress");
             }
             setComments(ticket);
             setAgents(ticket);

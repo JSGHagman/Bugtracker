@@ -245,6 +245,7 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
     @Override
     public void focusLost(FocusEvent e) {
 
+
     }
 
     //getters for controller-class to get values later

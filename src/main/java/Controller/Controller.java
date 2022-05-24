@@ -3,7 +3,6 @@ package Controller;
 import Model.*;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
-
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +32,6 @@ public class Controller {
         startThreads();
         logInView = new LogInGUI(this);
         attachedFiles = new AttachedFiles();
-        //openMainWindow();
     }
 
     public void startThreads() {
@@ -126,20 +124,6 @@ public class Controller {
     }
 
     /**
-     * Will be used to switch to main menu
-     */
-    public void switchToMainMenu() {
-
-    }
-
-
-    /**
-     * Will be used to switch to settings
-     */
-    public void switchToSettings() {
-    }
-
-    /**
      * Will be used to switch to statistics
      */
     public void switchToStatistics() {
@@ -226,7 +210,6 @@ public class Controller {
 
     /**
      * Attempts to login
-     *
      * @return true if login is successful.
      * @author Jakob Hagman
      */
@@ -247,7 +230,6 @@ public class Controller {
     /**
      * Attempts to sign up
      * takes the values in the sign up textfields and the selcted role
-     *
      * @author Jakob Hagman
      */
     public void trySignUp() {
@@ -302,6 +284,17 @@ public class Controller {
         ticketManager.addTicketToList(ticket);
     }
 
+    /**
+     * This method
+     * @param id
+     * @param topic
+     * @param description
+     * @param priority
+     * @param owner
+     * @param type
+     * @param assignees
+     * @throws Exception
+     */
     public void updateTicket(int id, String topic, String description, int priority, String owner, String type, ArrayList<String> assignees) throws Exception {
         Ticket ticketToUpdate = ticketManager.getTicket(id);
         ticketToUpdate.setTopic(topic);
@@ -326,9 +319,16 @@ public class Controller {
         try {
             dbController.updateTicket(ticketToClose);
         } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
+    /**
+     * This method removes an agent from a ticket.
+     *
+     * @param user
+     * @param id
+     */
     public void removeAgent(String user, int id) {
         ticket = ticketManager.getTicket(id);
         User u = userManager.getUserFromString(user);
@@ -351,7 +351,7 @@ public class Controller {
     /**
      * Gets all tickets from the TicketManager Object
      *
-     * @return
+     * @return Arraylist of tickets.
      */
     public ArrayList getAllTicketsFromManager() {
         ArrayList<Ticket> ticketList = new ArrayList<>();
@@ -360,14 +360,8 @@ public class Controller {
     }
 
     /**
-     * Get unassigned tickets based on null agent or zero size array
-     */
-    public void getUnassignedTickets() {
-        ArrayList unassignedTickets = new ArrayList(ticketManager.getUnassignedTickets());
-    }
-
-    /**
      * @return User - the user that is currently signed in.
+     * @author Jakob Hagman
      */
     public User getSignedInUser() {
         return signedInUser;
@@ -477,6 +471,11 @@ public class Controller {
         ticketManager.addTicketToList(t);
     }
 
+    /**
+     * This method populates the combobox it receives as parameter with users
+     *
+     * @param box
+     */
     public void populatePeopleBox(JComboBox box) {
         ArrayList<User> userList = getAllUsersFromManager();
         for (User u : userList) {
@@ -484,11 +483,24 @@ public class Controller {
         }
     }
 
+    /**
+     * Returns the ticket corresponding to the id it receives as parameter.
+     *
+     * @param id
+     * @return
+     */
     public Ticket getTicketInfo(int id) {
         Ticket editTicket = ticketManager.getTicket(id);
         return editTicket;
     }
 
+    /**
+     * This method is called when a ticket is selected in the ticket table in the gui.
+     * It gets all necessary information about a ticket,and formats it as one long string.
+     *
+     * @param id
+     * @return
+     */
     public String showTicketSummary(int id) {
         Ticket ticketToShow = ticketManager.getTicket(id);
         String assigneesString = ticketToShow.getAgentsAsStrings().stream().map(Object::toString)
@@ -508,11 +520,25 @@ public class Controller {
                 ticketToShow.getPriorityAsString(), ticketToShow.getStatus(), ticketToShow.getOwner(), assigneesString, attachedFiles, ticketToShow.getStartdate(), enddate);
     }
 
+    /**
+     * This method returns Arraylist of Strings ie the comments.
+     *
+     * @param id
+     * @return All comments in an Arraylist
+     * @author Jakob Hagman
+     */
     public ArrayList getTicketComments(int id) {
         Ticket ticketToShow = ticketManager.getTicket(id);
         return ticketToShow.getComments();
     }
 
+    /**
+     * This mehtod formatts all attached files as one string which is then displayed in the gui
+     *
+     * @param t
+     * @return All filenames as one string
+     * @author Jakob Hagman
+     */
     public String getFilesAsString(Ticket t) {
         ArrayList<String> list = t.getFiles();
         String s = "";
@@ -526,16 +552,37 @@ public class Controller {
         return s;
     }
 
+    /**
+     * This method returns all agents added to a ticket as an ArrayList of their names.
+     *
+     * @param id
+     * @return
+     */
     public ArrayList<String> getAgentsOnTicket(int id) {
         Ticket t = ticketManager.getTicket(id);
         return t.getAgentsAsStrings();
     }
 
+    /**
+     * Method is called from the database
+     * It simply adds an agent to the ticket.
+     *
+     * @param email
+     * @param t
+     * @author Jakob Hagman
+     */
     public void addAgentFromDB(String email, Ticket t) {
         User u = userManager.getUserFromString(email);
         t.addAgent(u);
     }
 
+    /**
+     * This method is called to check if a user has the permission to edit a ticket
+     *
+     * @param id
+     * @return
+     * @author Jakob Hagman
+     */
     public boolean editGuard(int id) {
         boolean ok = false;
         ticket = ticketManager.getTicket(id);
@@ -552,29 +599,6 @@ public class Controller {
         return ok;
     }
 
-    public void addAttachedFile(int id, File file) throws GeneralSecurityException, IOException, SQLException {
-        String strId = String.valueOf(id);
-        /*String folderID = ticketManager.getTicket(id).getFile();
-        if (folderID == null) {
-            folderID = attachedFiles.createDriveFolder(attachedFiles.getDriveService(), strId);
-            attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
-            ticketManager.getTicket(id).setFile(folderID);
-            dbController.updateTicket(ticketManager.getTicket(id));
-        } else {
-            attachedFiles.moveAttachedFile(attachedFiles.getDriveService(), file.getAbsolutePath(), folderID);
-        }*/
-    }
-
-    public ArrayList<String> getAttachedFiles(int id) throws GeneralSecurityException, IOException {
-        String strId = String.valueOf(id);
-        ArrayList filenames = new ArrayList<String>();
-        String folderID = attachedFiles.checkIfExist(attachedFiles.getDriveService(), strId);
-        if (folderID != null) {
-            filenames = attachedFiles.seeAttachedFiles(attachedFiles.getDriveService(), folderID);
-        }
-        return filenames;
-    }
-
     /**
      * This method retrievs the files and adds all files to the ticket
      *
@@ -588,6 +612,11 @@ public class Controller {
         }
     }
 
+    /**
+     * This method handles the download of the files from a specific ticket.
+     *
+     * @param id
+     */
     public void downloadFilesFromID(int id) {
         ArrayList<com.google.api.services.drive.model.File> files = attachedFiles.getFilesFromID(id);
         Ticket t = ticketManager.getTicket(id);
@@ -604,19 +633,46 @@ public class Controller {
         }
     }
 
-
+    /**
+     * Sets status on the ticket
+     *
+     * @param t - the ticket
+     * @author Jakob Hagman
+     */
     public void setStatus(Ticket t) {
         if (t.getAgent().isEmpty() && t.getEnddate() != null) {
             t.setStatus("Open");
         }
+        if (!t.getAgent().isEmpty() && t.getEnddate() != null) {
+            t.setStatus("In progress");
+        } else {
+            t.setStatus("Closed");
+        }
     }
 
+    /**
+     * Method is used for setting a comment to a ticket
+     *
+     * @param comment - the comment
+     * @param email   - used to assign what user has sent the comment
+     * @param ticket  - which ticket the comment regards
+     * @author Jakob Hagman
+     */
     public void addComment(String comment, String email, Ticket ticket) {
         User u = userManager.getUserFromString(email);
         String commentToAdd = String.format("%s: %s", u.toString(), comment);
         ticket.addComment(commentToAdd);
     }
 
+    /**
+     * Same as the method above, only diffrence is taht this one comes from user input, and the method above is
+     * called from the database on launch.
+     *
+     * @param comment
+     * @param email
+     * @param id
+     * @Author Jakob Hagman
+     */
     public void addCommentToTicket(String comment, String email, int id) {
         Ticket ticketToUpdate = ticketManager.getTicket(id);
         String commentToAdd = String.format("%s: %s", getSignedInUser().toString(), comment);

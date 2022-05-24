@@ -4,6 +4,7 @@
  * @author Jakob Hagman
  * @todo: Sätt ticket till open om inga assignees
  * @todo: Sätt ticket till open om inga assignees
+ * @todo: Sätt ticket till open om inga assignees
  */
 
 /**
@@ -1219,7 +1220,7 @@ public class TicketView extends JComponent implements ActionListener {
                     updateAssigneesTextEdit();
                     ownerBoxEdit.addItemListener(new ItemListener() {
                         @Override
-                        public void itemStateChanged(ItemEvent e){
+                        public void itemStateChanged(ItemEvent e) {
                             owner = ownerBoxEdit.getSelectedItem().toString();
                             updateAssigneesTextEdit();
                         }
@@ -1266,53 +1267,53 @@ public class TicketView extends JComponent implements ActionListener {
                 controller.startPlaceFileThread(id, attachedFiles);
             }
             attachedFile = null;
-            if (e.getSource() == btnAddCollaborator) {
-                setAssigneesCreate();
-                updateAssigneesTextCreate();
-            }
+        }
+        if (e.getSource() == btnAddCollaborator) {
+            setAssigneesCreate();
+            updateAssigneesTextCreate();
+        }
 
-            if (e.getSource() == btnAddCollaboratorEdit) {
-                setAssigneesEdit();
-                updateAssigneesTextEdit();
-            }
+        if (e.getSource() == btnAddCollaboratorEdit) {
+            System.out.println("Hello");
+            setAssigneesEdit();
+            updateAssigneesTextEdit();
+        }
 
-            if (e.getSource() == btnRemoveCollaboratorEdit) {
-                removeCollaboratorFromOldTicket(collaboratorsBoxEdit.getSelectedItem().toString(), id);
-                updateAssigneesTextEdit();
-            }
+        if (e.getSource() == btnRemoveCollaboratorEdit) {
+            removeCollaboratorFromOldTicket(collaboratorsBoxEdit.getSelectedItem().toString(), id);
+            updateAssigneesTextEdit();
+        }
 
-            if (e.getSource() == btnRemoveCollaborator) {
-                removeCollaborator(collaboratorsBox.getSelectedItem().toString());
-                updateAssigneesTextCreate();
-            }
+        if (e.getSource() == btnRemoveCollaborator) {
+            removeCollaborator(collaboratorsBox.getSelectedItem().toString());
+            updateAssigneesTextCreate();
+        }
 
-            if (e.getSource() == btnCloseTicket) {
-                myTicketsView = false;
-                controller.closeTicket(id);
-                setTicketPanelDetails();
-                changeToTicketView();
-                table.clearSelection();
-                setCommentsList(new String[0]);
-            }
+        if (e.getSource() == btnCloseTicket) {
+            myTicketsView = false;
+            controller.closeTicket(id);
+            setTicketPanelDetails();
+            changeToTicketView();
+            table.clearSelection();
+            setCommentsList(new String[0]);
+        }
 
-            if (e.getSource() == btnAddComment) {
-                String check = commentText.getText().trim(); //read contents of text area into 'data'
-                if (check.equals("")) {
-                    controller.showMessage("Comment cannot be null");
-                } else {
-                    try {
-                        id = getIdFromTable();
-                        controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
-                        comments = controller.getTicketComments(id);
-                        String[] list = comments.toArray(new String[comments.size()]);
-                        setCommentsList(list);
-                        commentText.setText("");
-                    } catch (IndexOutOfBoundsException exc) {
-                        controller.showMessage("Select a ticket first.");
-                    }
+        if (e.getSource() == btnAddComment) {
+            String check = commentText.getText().trim(); //read contents of text area into 'data'
+            if (check.equals("")) {
+                controller.showMessage("Comment cannot be null");
+            } else {
+                try {
+                    id = getIdFromTable();
+                    controller.addCommentToTicket(commentText.getText(), controller.getSignedInUser().getEmail(), id);
+                    comments = controller.getTicketComments(id);
+                    String[] list = comments.toArray(new String[comments.size()]);
+                    setCommentsList(list);
+                    commentText.setText("");
+                } catch (IndexOutOfBoundsException exc) {
+                    controller.showMessage("Select a ticket first.");
                 }
             }
-
         }
     }
 }
