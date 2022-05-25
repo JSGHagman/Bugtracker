@@ -65,6 +65,21 @@ public class DatabaseController {
         con.close();
         controller.updateUserManager(user);
     }
+    //same as updateUser but for profileview
+    public void updateUserProfile(User user) throws SQLException {
+        Connection con = getDBConnection();
+        String QUERY = "UPDATE userid " +
+                "SET firstname = " + fixSQLString(user.getFirstName()) +
+                ", lastname = " + fixSQLString(user.getLastName()) +
+                ", password = " + fixSQLString(user.getPassword()) +
+                ", role = " + fixSQLString(user.getRole()) +
+                "WHERE email = " + fixSQLString(user.getEmail());
+
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
+        con.close();
+        controller.updateUserManagerProfile(user);
+    }
 
     public void deleteUser(User user) throws SQLException {
         Connection con = getDBConnection();
