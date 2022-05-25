@@ -2,6 +2,7 @@ package View.MainView.ProfileView;
 import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
 
+import javax.print.attribute.standard.MediaName;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -16,7 +17,7 @@ public class ProfileView extends Component implements ActionListener {
     private JPanel mainContentPanel, infoPanel, changePanel, buttonPanel, currentPanelOnDisplay, imagePanel, topInfoPanel, middleInfoPanel, loweInfoPanel, roleInfoPanel;
     private JPanel changeBtnPanel, imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
     private JTextField fName, lName, eMail;
-    private JLabel chosenPictureLabel, confirmPasswordLabel , roleInfoLabel, firstnameLabel, lastnameLabel, passwordLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
+    private JLabel infoChosenPictureLabel, chosenPictureLabel, confirmPasswordLabel , roleInfoLabel, firstnameLabel, lastnameLabel, passwordLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
     private JTextArea infoBox;
     private JFileChooser fileChooser;
     private JPasswordField passwordField, tfConfirmPassword;
@@ -145,7 +146,9 @@ public class ProfileView extends Component implements ActionListener {
         roleInfoLabel.setFont(new Font("Dialog", Font.BOLD, 12));
 
         chosenPictureLabel = new JLabel();
-        chosenPictureLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        infoChosenPictureLabel = new JLabel();
+
     }
 
     public void creatInputField(){
@@ -196,7 +199,8 @@ public class ProfileView extends Component implements ActionListener {
         imagePanel = new JPanel();
         imagePanel.setBounds(infoPanel.getX() - infoPanel.getX()*5/6, infoPanel.getY() - infoPanel.getY()*4/5, infoPanel.getWidth()/4, infoPanel.getHeight()/6);
         imagePanel.createImage(imagePanel.getWidth(), imagePanel.getHeight());
-        imagePanel.setBackground(menuColor);
+        imagePanel.setBorder(BorderFactory.createLineBorder(menuColor, 1, true));
+        imagePanel.add(infoChosenPictureLabel);
 
         topInfoPanel = new JPanel();
         topInfoPanel.setBounds(imagePanel.getX(), imagePanel.getY()+imagePanel.getHeight() + 10, infoPanel.getWidth()/3, infoPanel.getHeight()/3);
@@ -241,6 +245,7 @@ public class ProfileView extends Component implements ActionListener {
         imageChangePanel = new JPanel();
         imageChangePanel.setBounds(changePanel.getX() - changePanel.getX()*5/6, changePanel.getY() - changePanel.getY()*4/5, changePanel.getWidth()/4, changePanel.getHeight()/6);
         imageChangePanel.setLayout(new GridLayout(2, 1));
+        imageChangePanel.setBorder(BorderFactory.createLineBorder(menuColor, 1, true));
         imageChangePanel.add(chosenPictureLabel);
         imageChangePanel.add(btnChangePicture);
 
@@ -344,7 +349,6 @@ public class ProfileView extends Component implements ActionListener {
         fName.setText("");
         lName.setText("");
         passwordField.setText("");
-
     }
 
     public void CreateProfileView(){
@@ -401,6 +405,7 @@ public class ProfileView extends Component implements ActionListener {
                 selectedFile = fileChooser.getSelectedFile();
                 icon = getIcon(selectedFile, 100, 100);
                 chosenPictureLabel.setIcon(icon);
+                infoChosenPictureLabel.setIcon(icon);
             }
 
         }
