@@ -690,6 +690,39 @@ public class TicketView extends JComponent implements ActionListener {
                     } catch (IndexOutOfBoundsException exception) {
                     }
                 }
+                if(e.getClickCount() == 2){
+                        attachedFiles.clear();
+                        isCreateView = false;
+                        boolean ok = false;
+                        try {
+                            id = getIdFromTable();
+                            ok = true;
+                        } catch (IndexOutOfBoundsException ex) {
+                            controller.showMessage("Select a ticket");
+                        }
+                        if (ok) {
+                            if (controller.editGuard(id)) {
+                                setEditTicket(id);
+                                setEditPanelDetails();
+                                changeToEdit();
+                                assignees.clear();
+                                setAssigneesTextEdit(id);
+                                updateAssigneesTextEdit();
+                                ownerBoxEdit.addItemListener(new ItemListener() {
+                                    @Override
+                                    public void itemStateChanged(ItemEvent e) {
+                                        owner = ownerBoxEdit.getSelectedItem().toString();
+                                        updateAssigneesTextEdit();
+                                    }
+                                });
+                                myTicketsView = false;
+                                table.clearSelection();
+                            } else {
+                                controller.showMessage("You don't have authorization to edit this ticket");
+                            }
+
+                    }
+                }
             }
         });
 

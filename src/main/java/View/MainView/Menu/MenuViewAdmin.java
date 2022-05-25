@@ -36,6 +36,7 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
 
         btnStatistics = new JButton("Statistics");
         setButtonDesign(btnStatistics);
+        btnStatistics.setEnabled(false);
         menuPanel.add(btnStatistics);
 
         btnSettings = new JButton("Profile Settings");
