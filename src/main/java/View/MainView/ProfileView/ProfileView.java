@@ -340,7 +340,7 @@ public class ProfileView extends Component implements ActionListener {
         infolastname.setText(lastName);
         infoFirstname.setText(firstName);
         infoArea.setText(infoBox.getText());
-        controller.updateUserDB(firstName, lastName, email, passwordChangeText, controller.getSignedInUser().getRole());
+        controller.updateUserProfileDB(firstName, lastName, email, passwordChangeText, controller.getSignedInUser().getRole());
     }
 
 

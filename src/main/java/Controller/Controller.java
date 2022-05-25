@@ -183,7 +183,29 @@ public class Controller {
         }
     }
 
+    public void updateUserProfileDB(String firstName, String lastName, String email, String password, String role) {
+        User changedUser = new User(firstName, lastName, email, password, role);
+
+        try {
+            dbController.updateUserProfile(changedUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void updateUserManager(User user) {
+        for (User u : userManager.getAllUsers()) {
+            if (user.getEmail().equals(u.getEmail())) {
+                u.setFirstName(user.getFirstName());
+                u.setLastName(user.getLastName());
+                u.setPassword(user.getPassword());
+                u.setRole(user.getRole());
+            }
+            switchToUserAdmin();
+        }
+    }
+
+    public void updateUserManagerProfile(User user) {
         for (User u : userManager.getAllUsers()) {
             if (user.getEmail().equals(u.getEmail())) {
                 u.setFirstName(user.getFirstName());
