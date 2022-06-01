@@ -1,6 +1,9 @@
 package Model;
 
+//import org.checkerframework.checker.units.qual.A;
+
 import java.io.File;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +22,7 @@ public class Ticket {
     private int time;
     private Date startdate;
     private Date enddate;
-    private String file;
+    private ArrayList <String> files = new ArrayList<>();
     private String description;
     private String[] infoStrings;
 
@@ -35,14 +38,13 @@ public class Ticket {
         startdate = new Date();
     }
 
-    public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String file, String topic) {
+    public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String topic) {
         this.id = id;
         this.category = category;
         this.status = status;
         this.priority = priority;
         this.startdate = startdate;
         this.enddate = enddate;
-        this.file = file;
         this.topic = topic;
     }
 
@@ -146,12 +148,16 @@ public class Ticket {
         this.enddate = enddate;
     }
 
-    public String getFile() {
-        return file;
+    public ArrayList<String> getFiles() {
+        return files;
     }
 
-    public void setFile(String file) {
-        this.file = file;
+    public void setFile(ArrayList<File> file) {
+        this.files = files;
+    }
+
+    public void addFile(String file){
+        files.add(file);
     }
 
     public String getDescription() {
@@ -171,6 +177,10 @@ public class Ticket {
         return String.format("ID: %s | OWNER: %s | TOPIC: %s | COMMENTS: %s", this.id, this.owner, this.topic, this.comments);
     }
 
+    /**
+     * Returns the priority of the ticket as a string
+     * @return
+     */
     public String getPriorityAsString() {
         String priority = "";
         if(this.priority == 1){

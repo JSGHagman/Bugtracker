@@ -9,11 +9,9 @@ module com.example.bugtracker {
     requires com.google.api.client;
     requires com.google.api.client.json.gson;
     requires org.apache.commons.io;
-
     opens Controller to javafx.fxml;
     exports Controller;
     exports View.LogInView;
-    exports View.OldTicketGui;
     opens View.OldTicketGui to javafx.fxml;
     exports View.MainView.MainFrame;
 }

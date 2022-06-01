@@ -22,6 +22,11 @@ public class DatabaseController {
         this.controller = controller;
     }
 
+    /**
+     * Establishes connection with the MAU Database
+     * @return Connection
+     * @author Jakob Hagman
+     */
     public Connection getDBConnection() {
         Connection con = null;
         try {
@@ -59,6 +64,21 @@ public class DatabaseController {
         stmt.executeUpdate(QUERY);
         con.close();
         controller.updateUserManager(user);
+    }
+    //same as updateUser but for profileview
+    public void updateUserProfile(User user) throws SQLException {
+        Connection con = getDBConnection();
+        String QUERY = "UPDATE userid " +
+                "SET firstname = " + fixSQLString(user.getFirstName()) +
+                ", lastname = " + fixSQLString(user.getLastName()) +
+                ", password = " + fixSQLString(user.getPassword()) +
+                ", role = " + fixSQLString(user.getRole()) +
+                "WHERE email = " + fixSQLString(user.getEmail());
+
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(QUERY);
+        con.close();
+        controller.updateUserManagerProfile(user);
     }
 
     public void deleteUser(User user) throws SQLException {
@@ -127,7 +147,7 @@ public class DatabaseController {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
         String QUERY = "UPDATE ticket SET priority =" + ticket.getPriority() + ", category =" + fixSQLString(ticket.getCategory()) +
-                ", status =" + fixSQLString(ticket.getStatus()) + ", files =" + fixSQLString(ticket.getFile()) + ", time =" + ticket.getTime() +
+                ", status =" + fixSQLString(ticket.getStatus()) + ", time =" + ticket.getTime() +
                 ", dateopen =" + fixSQLDate(ticket.getStartdate()) + ", dateclose =" + fixSQLDate(ticket.getEnddate()) +
                 ", topic = " + fixSQLString(ticket.getTopic()) + ", owner = " + fixSQLString(ticket.getOwner().getEmail()) +
                 ", description = " + fixSQLString(ticket.getDescription()) +
@@ -152,7 +172,13 @@ public class DatabaseController {
     }
 
 
-
+    /**
+     * This method adds agents to the ticket.
+     * @param assignees
+     * @param t
+     * @throws SQLException
+     * @author Jakob Hagman & Patrik Brandell
+     */
     public void addAgentToTicket(ArrayList<User> assignees, Ticket t) throws SQLException {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
@@ -164,7 +190,6 @@ public class DatabaseController {
         stmt.close();
         con.close();
     }
-
 
     /**
      * @return ArrayList of all current tickets in db
@@ -183,7 +208,6 @@ public class DatabaseController {
             int priority = rs.getInt("priority");
             String category = rs.getString("category");
             String status = rs.getString("status");
-            String file = rs.getString("files");
             String time = rs.getString("time");
             Date startdate = rs.getDate("dateopen");
             Date enddate = rs.getDate("dateclose");
@@ -191,19 +215,11 @@ public class DatabaseController {
             String user = rs.getString("owner");
             String description = rs.getString("description");
             User u = controller.getUserFromString(user);
-            ticket = new Ticket(id, category, status, priority, startdate, enddate, file, topic);
+            System.out.println(enddate);
+            ticket = new Ticket(id, category, status, priority, startdate, enddate, topic);
             ticket.setOwner(u);
             ticket.setDescription(description);
             controller.addTicketToManager(ticket);
-            if (ticket.getEnddate() == null || ticket.getOwner().getEmail().equals("none@email.com")) {
-                ticket.setStatus("Open");
-            }
-            if (ticket.getEnddate() != null){
-                ticket.setStatus("Closed");
-            }
-            if (ticket.getEnddate() == null && (!ticket.getOwner().getEmail().equals("none@email.com"))) {
-                ticket.setStatus("In progress");
-            }
             setComments(ticket);
             setAgents(ticket);
         }
