@@ -28,7 +28,8 @@ public class StatisticView extends JComponent {
         chartPanel = new ChartPanel(chart);
 
 
-        chartPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
+        chartPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3,
+                mainContentPanel.getHeight() / 5 * 4);
 
 
 
@@ -73,3 +74,26 @@ public class StatisticView extends JComponent {
     }
 
 }
+
+
+/*
+* public CategoryDataset createDataset(List<String> phases, List<WorkItem> workItemList) throws IOException {
+    // add start date and end date instead of local date here
+    if (endDate == null) {
+        endDate = currentLocalDate();
+    }
+    if (startDate == null) {
+        startDate = ChartUtils.getFirstDate(workItemList);
+        if (startDate == null) {
+            startDate = endDate;
+        }
+    }
+    CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, startDate, endDate);
+    for (WorkItem workItem : workItemList) {
+        matrix.registerWorkItem(workItem);
+    }
+    List<LocalDate> dates = matrix.getOrderedListOfDates();
+    double[][] data = matrix.getData();
+    Day[] days = getListOfDays(dates);
+    return DatasetUtilities.createCategoryDataset(getPhasesInInverseOrder(phases), days, data);
+}*/
