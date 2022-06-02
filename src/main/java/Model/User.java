@@ -8,36 +8,40 @@ public class User {
     private String role;
 
     /**
-     * @author Jakob Hagman
-     * Constructor
-     * Will set any paramater that is null to an empty string
      * @param firstName
      * @param lastName
      * @param password
      * @param email
      * @param role
+     * @author Jakob Hagman
+     * Constructor
+     * Will set any paramater that is null to an empty string
      */
-    public User(String firstName, String lastName, String email, String password, String role){
+    public User(String firstName, String lastName, String email, String password, String role) {
 
-        if(firstName.equals(null)){
+        if (firstName.equals(null)) {
             this.firstName = "";
-        } else{
+        } else {
             this.firstName = firstName;
-        } if(lastName.equals(null)){
+        }
+        if (lastName.equals(null)) {
             this.lastName = "";
-        }else{
+        } else {
             this.lastName = lastName;
-        } if(password.equals(null)){
+        }
+        if (password.equals(null)) {
             this.password = "";
-        }else{
+        } else {
             this.password = password;
-        } if(email.equals(null)){
+        }
+        if (email.equals(null)) {
             this.email = "";
-        }else{
+        } else {
             this.email = email;
-        } if(role.equals(null)) {
+        }
+        if (role.equals(null)) {
             this.role = "";
-        }else{
+        } else {
             this.role = role;
         }
     }

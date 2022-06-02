@@ -1,9 +1,11 @@
 /**
  * This class is the mainframe class
  * It is used to start the other different views.
+ *
  * @author Jakob Hagman, further developed by Patrik Brandell & Viktor Abraham.
  */
 package View.MainView.MainFrame;
+
 import Controller.Controller;
 import View.MainView.Menu.MenuViewAdmin;
 import View.MainView.Menu.MenuViewAgent;
@@ -30,7 +32,7 @@ public class MainFrame extends JFrame {
     private ProfileView profileView;
     private StatisticView statisticView;
 
-    public MainFrame(Controller controller){
+    public MainFrame(Controller controller) {
         this.controller = controller;
         mainFrame = new JFrame();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -63,25 +65,25 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void setUpPanels(){
+    public void setUpPanels() {
         menuPanel = new JPanel();
-        menuPanel.setBounds(0,0, mainFrame.getWidth()/14, mainFrame.getHeight());
+        menuPanel.setBounds(0, 0, mainFrame.getWidth() / 14, mainFrame.getHeight());
         menuPanel.setBackground(menuColor);
         menuPanel.setLayout(null);
         contentPanel = new JPanel();
-        contentPanel.setBounds(menuPanel.getX() + menuPanel.getWidth(),0, (mainFrame.getWidth() - menuPanel.getWidth()), mainFrame.getHeight());
+        contentPanel.setBounds(menuPanel.getX() + menuPanel.getWidth(), 0, (mainFrame.getWidth() - menuPanel.getWidth()), mainFrame.getHeight());
         contentPanel.setLayout(null);
     }
 
-    public JPanel getMenuPanel(){
+    public JPanel getMenuPanel() {
         return menuPanel;
     }
 
-    public JPanel getContentPanel(){
+    public JPanel getContentPanel() {
         return contentPanel;
     }
 
-    public JFrame getFrame(){
+    public JFrame getFrame() {
         return mainFrame;
     }
 
@@ -96,11 +98,11 @@ public class MainFrame extends JFrame {
         mainFrame.repaint();
     }
 
-    public TicketView getTicketView(){
+    public TicketView getTicketView() {
         return ticketView;
     }
 
-    public void startProfileView(){
+    public void startProfileView() {
         contentPanel.removeAll();
         profileView.CreateProfileView();
         mainFrame.revalidate();

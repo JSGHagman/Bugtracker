@@ -1,5 +1,7 @@
 package Model;
+
 import java.util.ArrayList;
+
 public class UserManager {
     private final ArrayList<User> users;
     private User signedInUser;
@@ -9,17 +11,19 @@ public class UserManager {
         users = new ArrayList<>();
     }
 
-    public static UserManager getInstance(){
+    public static UserManager getInstance() {
         return instance;
     }
 
-    public void printUserList(){
-        for(User u : users){
+    public void printUserList() {
+        for (User u : users) {
             System.out.println(u.toString());
         }
     }
+
     /**
      * This method adds a new user to an ArrayList of users.
+     *
      * @param user
      */
     public void addToUsers(User user) {
@@ -30,10 +34,11 @@ public class UserManager {
      * This method will later be used to check the list of users when
      * a user attempts to sign in.
      * Will return true if email and password matches that of a user in the list.
+     *
      * @param email
      * @param password
      * @return found
-     * */
+     */
     public boolean checkPassword(String email, String password) {
         boolean found = false;
         for (User u : users) {
@@ -48,13 +53,14 @@ public class UserManager {
     /**
      * This method is used when a user wants to create an account
      * Checks if a user with an email already exists
+     *
      * @param email
      * @return
      */
-    public boolean checkIfUserExists(String email){
+    public boolean checkIfUserExists(String email) {
         boolean exists = false;
-        for(User u : users){
-            if(u.getEmail().equals(email)){
+        for (User u : users) {
+            if (u.getEmail().equals(email)) {
                 exists = true;
             }
         }
@@ -69,14 +75,14 @@ public class UserManager {
         return signedInUser;
     }
 
-    public ArrayList<User> getAllUsers(){
+    public ArrayList<User> getAllUsers() {
         return users;
     }
 
-    public User getUserFromString(String user){
+    public User getUserFromString(String user) {
         User userFound = null;
-        for(User u : users){
-            if (u.toString().equals(user) || u.getEmail().equals(user)){
+        for (User u : users) {
+            if (u.toString().equals(user) || u.getEmail().equals(user)) {
                 userFound = u;
             }
         }
@@ -84,19 +90,17 @@ public class UserManager {
     }
 
     public boolean deleteUser(User user) {
-        if(users.remove(user)) {
+        if (users.remove(user)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public User getUserAtIndex (int index) {
+    public User getUserAtIndex(int index) {
         if (users.get(index) != null) {
             return users.get(index);
-        }
-        else {
+        } else {
             return getSignedInUser();
         }
     }
@@ -104,7 +108,7 @@ public class UserManager {
     public ArrayList<String> infoStrings() {
         ArrayList<String> infoStrings = new ArrayList<>();
         for (User u : users) {
-            infoStrings.add(String.format("%-50s %30s %70s",u.toString(), u.getEmail(), u.getRole()));
+            infoStrings.add(String.format("%-50s %30s %70s", u.toString(), u.getEmail(), u.getRole()));
 
         }
         return infoStrings;

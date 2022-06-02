@@ -24,6 +24,7 @@ public class DatabaseController {
 
     /**
      * Establishes connection with the MAU Database
+     *
      * @return Connection
      * @author Jakob Hagman
      */
@@ -65,6 +66,7 @@ public class DatabaseController {
         con.close();
         controller.updateUserManager(user);
     }
+
     //same as updateUser but for profileview
     public void updateUserProfile(User user) throws SQLException {
         Connection con = getDBConnection();
@@ -174,6 +176,7 @@ public class DatabaseController {
 
     /**
      * This method adds agents to the ticket.
+     *
      * @param assignees
      * @param t
      * @throws SQLException
@@ -183,7 +186,7 @@ public class DatabaseController {
         Connection con = getDBConnection();
         Statement stmt = con.createStatement();
         int id = t.getId();
-        for(User u : assignees){
+        for (User u : assignees) {
             String QUERY = "INSERT INTO ticketuser (id, email) VALUES (" + id + ", " + fixSQLString(u.getEmail()) + ")";
             stmt.executeUpdate(QUERY);
         }

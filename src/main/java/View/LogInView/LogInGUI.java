@@ -1,28 +1,16 @@
 /**
- * Gjorde detta guit i går eftermiddag
- * Där finns mycket kvar att göra här
- * Förslår att någon tar detta på sig
- * Ett Gui för att logga in, här finns två paneler, en för textfälten och en för knapparna.
- * Observera att när man trycker på sign up målas panelerna om.
- * Trycker man på log in öppnas main view
+ * Följande klass fungerar som login-gui.
+ * Den används för att logga in i applikationen och skapa konto
  *
- * MainPanels layout är null, med det kan man placera paneler med setBounds(x,y,bredd,höjd)
- * Tips när ni lägger in annan panel är att inte sätta färgen på panelen till backgroundcolour förs än den sitter rätt.
- *
- * Att göra:
- * Öka bredden på guit
- * Ändra så att sign up delarna hamnar till höger om login på samma sätt som i Java FX
- * För att göra det behöver man skapa en ny panel, placera dem till höger om den andra och flytta signup textfält/lables/combobox från InputPanel till denna
- * skapa nya fält för password och email för signup (kan använda samma i dagsläget för panelen målas om vid sign up så ingen risk att den tar fel)
- * Behöver få in logga
- * Behöver annan styling för att göra det snyggare
- * Behöver koppla funktioner mot controller när allt är fixat.
+ * @authors Jakob Hagman, Patrik Brandell, Yara Rajjoub, Viktor Abraham.
  */
 
 
 package View.LogInView;
+
 import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -40,7 +28,6 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
     private Color menuColor = new Color(65, 105, 225);
     private Color hoverColor = new Color(65, 145, 225);
     private String oldValue;
-
 
 
     public LogInGUI(Controller controller) {
@@ -70,14 +57,14 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
 
     public void initiateLabels() {
         logoLabel = new JLabel();
-        logoLabel.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/BugTrckerLogo.png")).getImage().getScaledInstance(frame.getWidth()-18, 100, Image.SCALE_DEFAULT)));
+        logoLabel.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/BugTrckerLogo.png")).getImage().getScaledInstance(frame.getWidth() - 18, 100, Image.SCALE_DEFAULT)));
     }
 
-    public void addActionListerner(JButton btn){
+    public void addActionListerner(JButton btn) {
         btn.addActionListener(this);
     }
 
-    public void setUtilities(){
+    public void setUtilities() {
 
         emailLabel = new JLabel("E-mail");
         emailLabel.setForeground(Color.WHITE);
@@ -117,23 +104,24 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         logoPanel = new JPanel();
 
     }
-    public void setLogInPanel(){
+
+    public void setLogInPanel() {
         frame.setTitle("Bugtracker Log In");
         mainPanel.removeAll();
         inputPanel.removeAll();
         buttonPanel.removeAll();
         setUtilities();
-        logoPanel.setBounds(mainPanel.getX()+1, mainPanel.getY()+1, frame.getWidth()-18, 100);
-        logoPanel.setLayout(new GridLayout(1,1));
+        logoPanel.setBounds(mainPanel.getX() + 1, mainPanel.getY() + 1, frame.getWidth() - 18, 100);
+        logoPanel.setLayout(new GridLayout(1, 1));
         logoPanel.add(logoLabel);
-        inputPanel.setBounds(45,125,300,100);
-        inputPanel.setLayout(new GridLayout(4,1));
+        inputPanel.setBounds(45, 125, 300, 100);
+        inputPanel.setLayout(new GridLayout(4, 1));
         inputPanel.add(emailLabel);
         inputPanel.add(emailTextField);
         inputPanel.add(passwordLabel);
         inputPanel.add(passwordField);
-        buttonPanel.setBounds(45,235, 300,35);
-        buttonPanel.setLayout(new GridLayout(1,3,10,10));
+        buttonPanel.setBounds(45, 235, 300, 35);
+        buttonPanel.setLayout(new GridLayout(1, 3, 10, 10));
         buttonPanel.add(btnLogIn);
         buttonPanel.add(btnSignUp);
         inputPanel.setBackground(backgroundColor);
@@ -145,12 +133,12 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         mainPanel.repaint();
     }
 
-    public void switchToSignUp(){
+    public void switchToSignUp() {
         frame.setTitle("Bugtracker Sign Up");
         inputPanel.removeAll();
         buttonPanel.removeAll();
-        inputPanel.setBounds(45,125, 300, 300);
-        inputPanel.setLayout(new GridLayout(10,1));
+        inputPanel.setBounds(45, 125, 300, 300);
+        inputPanel.setLayout(new GridLayout(10, 1));
         inputPanel.add(firstNameLabel);
         inputPanel.add(firstNameTextField);
         inputPanel.add(lastNameLabel);
@@ -160,8 +148,8 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         inputPanel.add(passwordLabel);
         inputPanel.add(passwordField);
         inputPanel.setBackground(backgroundColor);
-        buttonPanel.setBounds(45,435,300,35);
-        buttonPanel.setLayout(new GridLayout(1,2, 10, 10));
+        buttonPanel.setBounds(45, 435, 300, 35);
+        buttonPanel.setLayout(new GridLayout(1, 2, 10, 10));
         buttonPanel.setBackground(backgroundColor);
         inputPanel.add(roleLabel);
         inputPanel.add(roleBox);
@@ -174,7 +162,7 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
     }
 
     @Override
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
@@ -217,16 +205,20 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         text.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         text.addFocusListener(this);
     }
+
     private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btnSignUp){
+        if (e.getSource() == btnSignUp) {
             switchToSignUp();
-        } if(e.getSource() == btnLogIn){
+        }
+        if (e.getSource() == btnLogIn) {
             controller.onSignInBtnClick();
-        } if(e.getSource() == btnCreateAccount){
+        }
+        if (e.getSource() == btnCreateAccount) {
             //CREATE ACCOUNT
             controller.onSignUpBtnClick();
             //BACK TO LOG IN
@@ -235,10 +227,11 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
             setLogInPanel();
         }
     }
+
     @Override
     public void focusGained(FocusEvent e) {
-       JTextField src = (JTextField)e.getSource();
-       src.setText("");
+        JTextField src = (JTextField) e.getSource();
+        src.setText("");
     }
 
     @Override
@@ -246,7 +239,6 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
 
     }
 
-    //getters for controller-class to get values later
     public JFrame getFrame() {
         return frame;
     }

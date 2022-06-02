@@ -5,6 +5,7 @@
  * @todo: Sätt ticket till open om inga assignees
  * @todo: Sätt ticket till open om inga assignees
  * @todo: Sätt ticket till open om inga assignees
+ * @todo: Sätt ticket till open om inga assignees
  */
 
 /**
@@ -280,9 +281,9 @@ public class TicketView extends JComponent implements ActionListener {
         ownerBox = new JComboBox();
         ownerBox.setFont(new Font("Dialog", Font.PLAIN, 16));
         ownerBox.setBackground(Color.WHITE);
-        if(controller.getSignedInUser().getRole().equals("Admin")){
+        if (controller.getSignedInUser().getRole().equals("Admin")) {
             controller.populatePeopleBox(ownerBox);
-        } else{
+        } else {
             ownerBox.addItem(controller.getSignedInUser().toString());
         }
         ownerBox.setSelectedItem(controller.getSignedInUser().toString());
@@ -690,36 +691,36 @@ public class TicketView extends JComponent implements ActionListener {
                     } catch (IndexOutOfBoundsException exception) {
                     }
                 }
-                if(e.getClickCount() == 2){
-                        attachedFiles.clear();
-                        isCreateView = false;
-                        boolean ok = false;
-                        try {
-                            id = getIdFromTable();
-                            ok = true;
-                        } catch (IndexOutOfBoundsException ex) {
-                            controller.showMessage("Select a ticket");
+                if (e.getClickCount() == 2) {
+                    attachedFiles.clear();
+                    isCreateView = false;
+                    boolean ok = false;
+                    try {
+                        id = getIdFromTable();
+                        ok = true;
+                    } catch (IndexOutOfBoundsException ex) {
+                        controller.showMessage("Select a ticket");
+                    }
+                    if (ok) {
+                        if (controller.editGuard(id)) {
+                            setEditTicket(id);
+                            setEditPanelDetails();
+                            changeToEdit();
+                            assignees.clear();
+                            setAssigneesTextEdit(id);
+                            updateAssigneesTextEdit();
+                            ownerBoxEdit.addItemListener(new ItemListener() {
+                                @Override
+                                public void itemStateChanged(ItemEvent e) {
+                                    owner = ownerBoxEdit.getSelectedItem().toString();
+                                    updateAssigneesTextEdit();
+                                }
+                            });
+                            myTicketsView = false;
+                            table.clearSelection();
+                        } else {
+                            controller.showMessage("You don't have authorization to edit this ticket");
                         }
-                        if (ok) {
-                            if (controller.editGuard(id)) {
-                                setEditTicket(id);
-                                setEditPanelDetails();
-                                changeToEdit();
-                                assignees.clear();
-                                setAssigneesTextEdit(id);
-                                updateAssigneesTextEdit();
-                                ownerBoxEdit.addItemListener(new ItemListener() {
-                                    @Override
-                                    public void itemStateChanged(ItemEvent e) {
-                                        owner = ownerBoxEdit.getSelectedItem().toString();
-                                        updateAssigneesTextEdit();
-                                    }
-                                });
-                                myTicketsView = false;
-                                table.clearSelection();
-                            } else {
-                                controller.showMessage("You don't have authorization to edit this ticket");
-                            }
 
                     }
                 }
@@ -956,7 +957,7 @@ public class TicketView extends JComponent implements ActionListener {
         if (controller.getSignedInUser().getRole().equals("Admin")) {
             controller.populatePeopleBox(ownerBoxEdit);
         } else {
-           ownerBoxEdit.addItem(t.getOwner());
+            ownerBoxEdit.addItem(t.getOwner());
         }
         int priority = t.getPriority();
         topicFieldEdit.setText(t.getTopic());

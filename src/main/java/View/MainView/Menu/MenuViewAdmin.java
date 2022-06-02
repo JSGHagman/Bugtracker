@@ -3,6 +3,7 @@ package View.MainView.Menu;
 import Controller.Controller;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,14 +19,14 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
     private int width;
     private JButton btnTickets, btnStatistics, btnSettings, btnLogout, btnUserAdmin;
     private Color menuColor = new Color(255, 255, 255);
-    private Color hoverColor = new Color(65,145,225);
+    private Color hoverColor = new Color(65, 145, 225);
 
 
     public MenuViewAdmin(Controller controller, MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.controller = controller;
         menuPanel = mainFrame.getMenuPanel();
-        menuPanel.setLayout(new GridLayout(12,1,0,30));
+        menuPanel.setLayout(new GridLayout(12, 1, 0, 30));
         setUp();
     }
 
@@ -49,10 +50,10 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
 
         btnLogout = new JButton("Log out");
         setButtonDesign(btnLogout);
-        menuPanel.add(btnLogout,0,4);
+        menuPanel.add(btnLogout, 0, 4);
     }
 
-    private void setButtonDesign(JButton btn){
+    private void setButtonDesign(JButton btn) {
         btn.setBackground(menuColor);
         btn.setForeground(Color.BLUE);
         addActionListener(btn);
@@ -67,7 +68,7 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
         });
     }
 
-    private void addActionListener(JButton btn){
+    private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
 

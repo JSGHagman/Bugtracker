@@ -1,7 +1,9 @@
 package Controller;
+
 import Model.*;
 import View.LogInView.LogInGUI;
 import View.MainView.MainFrame.MainFrame;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -230,6 +232,7 @@ public class Controller {
 
     /**
      * Attempts to login
+     *
      * @return true if login is successful.
      * @author Jakob Hagman
      */
@@ -250,6 +253,7 @@ public class Controller {
     /**
      * Attempts to sign up
      * takes the values in the sign up textfields and the selcted role
+     *
      * @author Jakob Hagman
      */
     public void trySignUp() {
@@ -305,7 +309,8 @@ public class Controller {
     }
 
     /**
-     * This method
+     * This method updates a ticket.
+     *
      * @param id
      * @param topic
      * @param description
@@ -326,9 +331,11 @@ public class Controller {
         ticketToUpdate.setOwner(user);
         if (assignees.isEmpty()) {
             ticketToUpdate.setStatus("Open");
-        } if(!assignees.isEmpty()){
+        }
+        if (!assignees.isEmpty()) {
             ticketToUpdate.setStatus("In progress");
-        } if(ticketToUpdate.getEnddate() != null){
+        }
+        if (ticketToUpdate.getEnddate() != null) {
             ticketToUpdate.setStatus("Closed");
         }
         dbController.updateTicket(ticketToUpdate);
@@ -668,7 +675,7 @@ public class Controller {
         if (!t.getAgent().isEmpty() && t.getEnddate() == null) {
             t.setStatus("In progress");
         }
-        if(t.getEnddate() != null){
+        if (t.getEnddate() != null) {
             t.setStatus("Closed");
         }
 

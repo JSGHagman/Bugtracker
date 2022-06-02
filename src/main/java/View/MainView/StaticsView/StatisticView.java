@@ -30,7 +30,6 @@ public class StatisticView extends JComponent {
         chartPanel.setBounds(mainContentPanel.getWidth() / 2, mainContentPanel.getY(), mainContentPanel.getWidth() / 3, mainContentPanel.getHeight() / 5 * 4);
 
 
-
         mainContentPanel.removeAll();
 
         mainContentPanel.add(chartPanel);
@@ -39,11 +38,11 @@ public class StatisticView extends JComponent {
         this.mainFrame.getFrame().revalidate();
         this.mainFrame.getFrame().repaint();
 
-   //     pack();
-     //   setTitle("Bar chart");
+        //     pack();
+        //   setTitle("Bar chart");
 
 
-   //     setLocationRelativeTo(null);
+        //     setLocationRelativeTo(null);
 
     }
 

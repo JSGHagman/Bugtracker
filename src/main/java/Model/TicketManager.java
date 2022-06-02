@@ -10,7 +10,7 @@ public class TicketManager {
         tickets = new ArrayList<>();
     }
 
-    public static TicketManager getInstance(){
+    public static TicketManager getInstance() {
         return instance;
     }
 
@@ -22,19 +22,19 @@ public class TicketManager {
         tickets.remove(ticket);
     }
 
-    public void printAllTickets(){
-        for(Ticket t : tickets){
+    public void printAllTickets() {
+        for (Ticket t : tickets) {
             System.out.println(t.toString());
         }
     }
 
     /**
-     * @author Patrik Brandell
      * @param username - Username of current user
-     * Method filters out tickets based on username input and return ArrayList
+     *                 Method filters out tickets based on username input and return ArrayList
      * @return List of mytickets for both users and agents
+     * @author Patrik Brandell
      */
-    public ArrayList getMyTickets (String email) {
+    public ArrayList getMyTickets(String email) {
         ArrayList myTickets = new ArrayList();
         for (Ticket t : tickets) {
             if (t.getOwner() != null) {
@@ -48,38 +48,38 @@ public class TicketManager {
                 }
             }
         }
-       return myTickets;
+        return myTickets;
     }
 
     /**
-     * @author Patrik Brandell
      * @return ArrayList with Tickets with no agent
+     * @author Patrik Brandell
      */
     public ArrayList getUnassignedTickets() {
         ArrayList unassignedTickets = new ArrayList();
         for (Ticket t : tickets) {
             if (t.getAgent().size() == 0 || t.getAgent().equals(null)) {
-                    unassignedTickets.add(t);
-                    System.out.print(t);
-                }
+                unassignedTickets.add(t);
+                System.out.print(t);
             }
+        }
         return unassignedTickets;
     }
 
-    public ArrayList getAllTickets(){
+    public ArrayList getAllTickets() {
         return tickets;
     }
 
     /**
-     * @author Patrik Brandell
      * @param id - ID from GUI sent from controller
      * @return Ticket with that ID, if not exist null
+     * @author Patrik Brandell
      */
     public Ticket getTicket(int id) {
         Ticket ticket = null;
         for (Ticket t : tickets) {
             if (t.getId() == id) {
-               ticket = t;
+                ticket = t;
             }
         }
         return ticket;

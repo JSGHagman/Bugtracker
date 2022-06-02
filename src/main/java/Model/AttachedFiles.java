@@ -32,7 +32,7 @@ public class AttachedFiles {
     private final String serviceAccountEmail = "bugtracker@autonomous-key-349812.iam.gserviceaccount.com";
     private final String directoryID = "1JWTpxqLvj6nt8H8-I_RXlDW_KXy7LvT-";
     private String uploadFileName;
-    private ArrayList<File> folders,files;
+    private ArrayList<File> folders, files;
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
 
@@ -77,19 +77,19 @@ public class AttachedFiles {
         folders = (ArrayList<File>) result.getFiles();
     }
 
-    public ArrayList<File> getFilesFromID(int id){
+    public ArrayList<File> getFilesFromID(int id) {
         String idString = String.valueOf(id);
         File folder = null;
         ArrayList<File> finalFiles = new ArrayList<>();
-        for(File f : folders){
-            if(f.getName().equals(idString)){
+        for (File f : folders) {
+            if (f.getName().equals(idString)) {
                 folder = f;
                 break;
             }
         }
-        if(folder != null){
-            for(File file : files){
-                if(file.getParents().contains(folder.getId())){
+        if (folder != null) {
+            for (File file : files) {
+                if (file.getParents().contains(folder.getId())) {
                     finalFiles.add(file);
                 }
             }

@@ -1,4 +1,5 @@
 package View.MainView.ProfileView;
+
 import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
 
@@ -17,7 +18,7 @@ public class ProfileView extends Component implements ActionListener {
     private JPanel mainContentPanel, infoPanel, changePanel, buttonPanel, currentPanelOnDisplay, imagePanel, topInfoPanel, middleInfoPanel, loweInfoPanel, roleInfoPanel;
     private JPanel changeBtnPanel, imageChangePanel, topChangePanel, middleChangePanel, lowerChangePanel, roleChangePanel;
     private JTextField fName, lName, eMail;
-    private JLabel infoChosenPictureLabel, chosenPictureLabel, confirmPasswordLabel , roleInfoLabel, firstnameLabel, lastnameLabel, passwordLabel, roleLabel, infoFirstname, infolastname,infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
+    private JLabel infoChosenPictureLabel, chosenPictureLabel, confirmPasswordLabel, roleInfoLabel, firstnameLabel, lastnameLabel, passwordLabel, roleLabel, infoFirstname, infolastname, infoEmail, infoInputFirstname, infoInputLastname, infoInputEmail;
     private JTextArea infoBox;
     private JFileChooser fileChooser;
     private JPasswordField passwordField, tfConfirmPassword;
@@ -40,7 +41,7 @@ public class ProfileView extends Component implements ActionListener {
         this.mainContentPanel = mainFrame.getContentPanel();
     }
 
-    public void createButton(){
+    public void createButton() {
         btnChangePicture = new JButton("Choose picture");
         btnChangePicture.setBackground(menuColor);
         btnChangePicture.setForeground(Color.white);
@@ -67,16 +68,16 @@ public class ProfileView extends Component implements ActionListener {
         btnChange.setFont(new Font("Dialog", Font.BOLD, 16));
     }
 
-    public void createMainPanels(){
+    public void createMainPanels() {
         infoPanel = new JPanel();
         infoPanel.setLayout(null);
-        infoPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10 , mainContentPanel.getY() + 12, mainContentPanel.getWidth()/2, mainContentPanel.getHeight()- (mainContentPanel.getHeight()/9));
+        infoPanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, mainContentPanel.getY() + 12, mainContentPanel.getWidth() / 2, mainContentPanel.getHeight() - (mainContentPanel.getHeight() / 9));
         infoPanel.setBorder(BorderFactory.createLineBorder(menuColor, 1));
         setInfoPanelDetails();
 
         changePanel = new JPanel();
         changePanel.setLayout(null);
-        changePanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, mainContentPanel.getY()+ 12, mainContentPanel.getWidth()/2, mainContentPanel.getHeight() - (mainContentPanel.getHeight()/9));
+        changePanel.setBounds(mainContentPanel.getX() + mainContentPanel.getWidth() / 14 + 10, mainContentPanel.getY() + 12, mainContentPanel.getWidth() / 2, mainContentPanel.getHeight() - (mainContentPanel.getHeight() / 9));
         changePanel.setBorder(BorderFactory.createLineBorder(menuColor, 1));
         setChangePanelDetails();
 
@@ -84,7 +85,7 @@ public class ProfileView extends Component implements ActionListener {
         mainContentPanel.add(currentPanelOnDisplay);
     }
 
-    public void createLabel(){
+    public void createLabel() {
         confirmPasswordLabel = new JLabel();
         confirmPasswordLabel.setText("Confirm password");
         confirmPasswordLabel.setForeground(menuColor);
@@ -151,7 +152,7 @@ public class ProfileView extends Component implements ActionListener {
 
     }
 
-    public void creatInputField(){
+    public void creatInputField() {
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("images", "png", "jpg"));
@@ -179,7 +180,7 @@ public class ProfileView extends Component implements ActionListener {
         passwordField.setBorder(BorderFactory.createLineBorder(menuColor, 1));
 
         infoBox = new JTextArea();
-        infoBox.setFont(new Font("Dialog", Font.PLAIN,  12));
+        infoBox.setFont(new Font("Dialog", Font.PLAIN, 12));
         infoBox.setText("Personal \n skills");
 
         infoArea = new JTextPane();
@@ -197,13 +198,13 @@ public class ProfileView extends Component implements ActionListener {
     public void setInfoPanelDetails() {
         //set details for infoPanel
         imagePanel = new JPanel();
-        imagePanel.setBounds(infoPanel.getX() - infoPanel.getX()*5/6, infoPanel.getY() - infoPanel.getY()*4/5, infoPanel.getWidth()/4, infoPanel.getHeight()/6);
+        imagePanel.setBounds(infoPanel.getX() - infoPanel.getX() * 5 / 6, infoPanel.getY() - infoPanel.getY() * 4 / 5, infoPanel.getWidth() / 4, infoPanel.getHeight() / 6);
         imagePanel.createImage(imagePanel.getWidth(), imagePanel.getHeight());
         imagePanel.setBorder(BorderFactory.createLineBorder(menuColor, 1, true));
         imagePanel.add(infoChosenPictureLabel);
 
         topInfoPanel = new JPanel();
-        topInfoPanel.setBounds(imagePanel.getX(), imagePanel.getY()+imagePanel.getHeight() + 10, infoPanel.getWidth()/3, infoPanel.getHeight()/3);
+        topInfoPanel.setBounds(imagePanel.getX(), imagePanel.getY() + imagePanel.getHeight() + 10, infoPanel.getWidth() / 3, infoPanel.getHeight() / 3);
         topInfoPanel.setLayout(new GridLayout(4, 1));
 
         topInfoPanel.add(infoInputFirstname);
@@ -212,23 +213,23 @@ public class ProfileView extends Component implements ActionListener {
         topInfoPanel.add(infolastname);
 
         middleInfoPanel = new JPanel();
-        middleInfoPanel.setBounds(topInfoPanel.getX(), infoPanel.getY()+5 + imagePanel.getHeight() + topInfoPanel.getHeight(), infoPanel.getWidth()/3, (infoPanel.getHeight() - imagePanel.getHeight())/6);
+        middleInfoPanel.setBounds(topInfoPanel.getX(), infoPanel.getY() + 5 + imagePanel.getHeight() + topInfoPanel.getHeight(), infoPanel.getWidth() / 3, (infoPanel.getHeight() - imagePanel.getHeight()) / 6);
         middleInfoPanel.setLayout(new GridLayout(2, 1));
         middleInfoPanel.add(infoInputEmail);
         middleInfoPanel.add(infoEmail);
 
         loweInfoPanel = new JPanel();
-        loweInfoPanel.setBounds(imagePanel.getX(), middleInfoPanel.getY() + middleInfoPanel.getHeight() + 5, infoPanel.getWidth()/3,  mainContentPanel.getHeight()/4);
+        loweInfoPanel.setBounds(imagePanel.getX(), middleInfoPanel.getY() + middleInfoPanel.getHeight() + 5, infoPanel.getWidth() / 3, mainContentPanel.getHeight() / 4);
         loweInfoPanel.setLayout(new GridLayout(1, 1));
         loweInfoPanel.add(infoScroll);
         loweInfoPanel.setBorder(BorderFactory.createLineBorder(menuColor, 1));
 
         roleInfoPanel = new JPanel();
-        roleInfoPanel.setBounds(infoPanel.getWidth()*2/3,infoPanel.getY() - (mainContentPanel.getHeight()/6), infoPanel.getWidth()*2/7, infoPanel.getHeight()/7);
+        roleInfoPanel.setBounds(infoPanel.getWidth() * 2 / 3, infoPanel.getY() - (mainContentPanel.getHeight() / 6), infoPanel.getWidth() * 2 / 7, infoPanel.getHeight() / 7);
         roleInfoPanel.add(roleInfoLabel);
 
         changeBtnPanel = new JPanel();
-        changeBtnPanel.setBounds(infoPanel.getWidth() * 2/3, infoPanel.getY() + (infoPanel.getHeight()* 6/7), infoPanel.getWidth()/ 4, infoPanel.getHeight()/8);
+        changeBtnPanel.setBounds(infoPanel.getWidth() * 2 / 3, infoPanel.getY() + (infoPanel.getHeight() * 6 / 7), infoPanel.getWidth() / 4, infoPanel.getHeight() / 8);
         changeBtnPanel.add(btnChangeInfo);
 
         infoPanel.add(imagePanel);
@@ -240,17 +241,18 @@ public class ProfileView extends Component implements ActionListener {
         currentPanelOnDisplay = infoPanel;
 
     }
+
     public void setChangePanelDetails() {
         //set details for infoPanel
         imageChangePanel = new JPanel();
-        imageChangePanel.setBounds(changePanel.getX() - changePanel.getX()*5/6, changePanel.getY() - changePanel.getY()*4/5, changePanel.getWidth()/4, changePanel.getHeight()/6);
+        imageChangePanel.setBounds(changePanel.getX() - changePanel.getX() * 5 / 6, changePanel.getY() - changePanel.getY() * 4 / 5, changePanel.getWidth() / 4, changePanel.getHeight() / 6);
         imageChangePanel.setLayout(new GridLayout(2, 1));
         imageChangePanel.setBorder(BorderFactory.createLineBorder(menuColor, 1, true));
         imageChangePanel.add(chosenPictureLabel);
         imageChangePanel.add(btnChangePicture);
 
         topChangePanel = new JPanel();
-        topChangePanel.setBounds(imageChangePanel.getX(), imageChangePanel.getY()+imageChangePanel.getHeight() + 10, changePanel.getWidth()/3, changePanel.getHeight()/3);
+        topChangePanel.setBounds(imageChangePanel.getX(), imageChangePanel.getY() + imageChangePanel.getHeight() + 10, changePanel.getWidth() / 3, changePanel.getHeight() / 3);
         topChangePanel.setLayout(new GridLayout(4, 2));
 
         topChangePanel.add(firstnameLabel);
@@ -259,7 +261,7 @@ public class ProfileView extends Component implements ActionListener {
         topChangePanel.add(lName);
 
         middleChangePanel = new JPanel();
-        middleChangePanel.setBounds(topChangePanel.getX(), changePanel.getY()+5 + imageChangePanel.getHeight() + topChangePanel.getHeight(), changePanel.getWidth()/3, (changePanel.getHeight()/4));
+        middleChangePanel.setBounds(topChangePanel.getX(), changePanel.getY() + 5 + imageChangePanel.getHeight() + topChangePanel.getHeight(), changePanel.getWidth() / 3, (changePanel.getHeight() / 4));
         middleChangePanel.setLayout(new GridLayout(4, 1));
         middleChangePanel.add(passwordLabel);
         middleChangePanel.add(passwordField);
@@ -267,18 +269,18 @@ public class ProfileView extends Component implements ActionListener {
         middleChangePanel.add(tfConfirmPassword);
 
         lowerChangePanel = new JPanel();
-        lowerChangePanel.setBounds(imageChangePanel.getX(), middleChangePanel.getY() + middleChangePanel.getHeight() + 5, changePanel.getWidth()/3, mainContentPanel.getHeight()/8);
+        lowerChangePanel.setBounds(imageChangePanel.getX(), middleChangePanel.getY() + middleChangePanel.getHeight() + 5, changePanel.getWidth() / 3, mainContentPanel.getHeight() / 8);
         lowerChangePanel.setBorder(BorderFactory.createLineBorder(menuColor, 1));
         lowerChangePanel.setLayout(new GridLayout(1, 1));
         lowerChangePanel.add(changeScroll);
 
         roleChangePanel = new JPanel();
-        roleChangePanel.setBounds(changePanel.getWidth()*2/3,changePanel.getY() - (mainContentPanel.getHeight()/6), changePanel.getWidth()*2/7, changePanel.getHeight()/7);
+        roleChangePanel.setBounds(changePanel.getWidth() * 2 / 3, changePanel.getY() - (mainContentPanel.getHeight() / 6), changePanel.getWidth() * 2 / 7, changePanel.getHeight() / 7);
         roleLabel.setBorder(BorderFactory.createLineBorder(menuColor));
         roleChangePanel.add(roleLabel);
 
         changeBtnPanel = new JPanel();
-        changeBtnPanel.setBounds(changePanel.getWidth() * 2/3, changePanel.getY() + (changePanel.getHeight()* 6/7), changePanel.getWidth()/ 4, changePanel.getHeight()/8);
+        changeBtnPanel.setBounds(changePanel.getWidth() * 2 / 3, changePanel.getY() + (changePanel.getHeight() * 6 / 7), changePanel.getWidth() / 4, changePanel.getHeight() / 8);
         changeBtnPanel.add(btnChange);
         changeBtnPanel.add(btnCancel);
 
@@ -293,7 +295,7 @@ public class ProfileView extends Component implements ActionListener {
 
     }
 
-    public void changeToChangeInfoview(){
+    public void changeToChangeInfoview() {
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(changePanel);
         mainFrame.getFrame().revalidate();
@@ -310,29 +312,27 @@ public class ProfileView extends Component implements ActionListener {
         currentPanelOnDisplay = infoPanel;
     }
 
-    public void changeInfo(){
+    public void changeInfo() {
         String firstName = "";
         String lastName = "";
         String passwordChangeText = "";
         String email = controller.getSignedInUser().getEmail();
         char[] changedPassword = passwordField.getPassword();
 
-        if(fName.getText().equals("")){
+        if (fName.getText().equals("")) {
             firstName = controller.getSignedInUser().getFirstName();
-        }
-        else{
+        } else {
             firstName = fName.getText();
         }
-        if (lName.getText().equals("")){
+        if (lName.getText().equals("")) {
             lastName = controller.getSignedInUser().getLastName();
-        }
-        else{
+        } else {
             lastName = lName.getText();
         }
-        if(passwordField.getPassword().length == 0){
+        if (passwordField.getPassword().length == 0) {
             passwordChangeText = controller.getSignedInUser().getPassword();
         }
-        if ((passwordField.getPassword().length > 0) && ((Arrays.equals(passwordField.getPassword(), tfConfirmPassword.getPassword())))){
+        if ((passwordField.getPassword().length > 0) && ((Arrays.equals(passwordField.getPassword(), tfConfirmPassword.getPassword())))) {
             passwordChangeText = new String(changedPassword);
             controller.showMessage("Profileinfo is changed!");
         }
@@ -344,32 +344,33 @@ public class ProfileView extends Component implements ActionListener {
     }
 
 
-    public void setTextFieldNull(){
+    public void setTextFieldNull() {
         tfConfirmPassword.setText("");
         fName.setText("");
         lName.setText("");
         passwordField.setText("");
     }
 
-    public void CreateProfileView(){
+    public void CreateProfileView() {
         createLabel();
         creatInputField();
         createButton();
         createMainPanels();
     }
 
-    public Icon getIcon(File f, int width, int height){
-        Icon icon=null;
+    public Icon getIcon(File f, int width, int height) {
+        Icon icon = null;
 
-        icon=createImageIcon(f.getPath(),null, width, height);
+        icon = createImageIcon(f.getPath(), null, width, height);
 
         return icon;
     }
-    private ImageIcon createImageIcon(String path,String description, int width, int height) {
+
+    private ImageIcon createImageIcon(String path, String description, int width, int height) {
         if (path != null) {
-            ImageIcon icon=new ImageIcon(path);
-            Image img = icon.getImage() ;
-            Image newimg = img.getScaledInstance( width, height,  java.awt.Image.SCALE_SMOOTH ) ;
+            ImageIcon icon = new ImageIcon(path);
+            Image img = icon.getImage();
+            Image newimg = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
             return new ImageIcon(newimg);
         } else {
             System.err.println("Couldn't find file: " + path);
@@ -379,26 +380,26 @@ public class ProfileView extends Component implements ActionListener {
 
     /**
      * Adds actionlistener to the buttons.
-     * */
-    private void addActionListener(JButton btn){
+     */
+    private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(btnChangeInfo)){
+        if (e.getSource().equals(btnChangeInfo)) {
             setTextFieldNull();
             changeToChangeInfoview();
         }
-        if (e.getSource().equals(btnChange)){
+        if (e.getSource().equals(btnChange)) {
             changetoInfoView();
             changeInfo();
         }
-        if (e.getSource().equals(btnCancel)){
+        if (e.getSource().equals(btnCancel)) {
             setTextFieldNull();
             changetoInfoView();
         }
-        if(e.getSource().equals(btnChangePicture)){
+        if (e.getSource().equals(btnChangePicture)) {
             int r = fileChooser.showOpenDialog(this);
 
             if (r == JFileChooser.APPROVE_OPTION) {

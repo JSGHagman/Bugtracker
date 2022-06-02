@@ -31,7 +31,6 @@ public class UserAdminView extends JComponent implements ActionListener {
     private JTable userTable;
 
 
-
     public UserAdminView(Controller controller, MainFrame mainFrame, ArrayList users) {
         this.controller = controller;
         this.mainFrame = mainFrame;
@@ -110,7 +109,6 @@ public class UserAdminView extends JComponent implements ActionListener {
         westPanel.add(txtPasswordConfirm);
         westPanel.add(lblRole);
         westPanel.add(role);
-
 
 
         southPanel = new JPanel();
@@ -324,12 +322,11 @@ public class UserAdminView extends JComponent implements ActionListener {
             if (Arrays.equals(txtPassword.getPassword(), txtPasswordConfirm.getPassword())) {
                 if (txtPassword.getPassword().length == 0) {
                     controller.showMessage("Password can't be null");
-                    }
+                }
 
                 controller.updateUserDB(getTxtFirstName().getText(), getTxtLastName().getText(),
                         getTxtEmail().getText(), getPasswordtxt().getText(), getRole().getSelectedItem().toString());
-            }
-            else {
+            } else {
                 controller.showMessage("Passwords does not match");
             }
         }

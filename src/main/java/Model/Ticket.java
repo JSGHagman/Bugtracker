@@ -22,15 +22,15 @@ public class Ticket {
     private int time;
     private Date startdate;
     private Date enddate;
-    private ArrayList <String> files = new ArrayList<>();
+    private ArrayList<String> files = new ArrayList<>();
     private String description;
     private String[] infoStrings;
 
-    public Ticket (User owner) {
+    public Ticket(User owner) {
         this.owner = owner;
     }
 
-    public Ticket (int id, User owner, String topic, String description) {
+    public Ticket(int id, User owner, String topic, String description) {
         this.id = id;
         this.owner = owner;
         this.topic = topic;
@@ -38,7 +38,7 @@ public class Ticket {
         startdate = new Date();
     }
 
-    public Ticket (int id, String category, String status, int priority, Date startdate, Date enddate, String topic) {
+    public Ticket(int id, String category, String status, int priority, Date startdate, Date enddate, String topic) {
         this.id = id;
         this.category = category;
         this.status = status;
@@ -124,7 +124,7 @@ public class Ticket {
         this.comments = comments;
     }
 
-    public void setComment (String comment) {
+    public void setComment(String comment) {
         this.comments.add(comment);
     }
 
@@ -156,7 +156,7 @@ public class Ticket {
         this.files = files;
     }
 
-    public void addFile(String file){
+    public void addFile(String file) {
         files.add(file);
     }
 
@@ -168,7 +168,7 @@ public class Ticket {
         this.description = description;
     }
 
-    public void addComment(String comment){
+    public void addComment(String comment) {
         comments.add(comment);
     }
 
@@ -179,41 +179,44 @@ public class Ticket {
 
     /**
      * Returns the priority of the ticket as a string
+     *
      * @return
      */
     public String getPriorityAsString() {
         String priority = "";
-        if(this.priority == 1){
+        if (this.priority == 1) {
             priority = "High";
-        }if(this.priority == 2){
+        }
+        if (this.priority == 2) {
             priority = "Medium";
-        }if(this.priority == 3){
+        }
+        if (this.priority == 3) {
             priority = "Low";
         }
         return priority;
     }
 
-    public ArrayList <String> getAgentsAsStrings(){
-        ArrayList <String> agentStrings = new ArrayList<>();
-        for(User u : agent){
+    public ArrayList<String> getAgentsAsStrings() {
+        ArrayList<String> agentStrings = new ArrayList<>();
+        for (User u : agent) {
             agentStrings.add(u.toString());
         }
         return agentStrings;
     }
 
-    public String[] getCommentsAsStringList(){
+    public String[] getCommentsAsStringList() {
         return infoStrings;
     }
 
-    public void setCommentsList(){
+    public void setCommentsList() {
         new commentsThread().start();
     }
 
-    class commentsThread extends Thread{
+    class commentsThread extends Thread {
         @Override
         public void run() {
             infoStrings = new String[comments.size()];
-            for (int i = 0; i < comments.size(); i++ ){
+            for (int i = 0; i < comments.size(); i++) {
                 infoStrings[i] = comments.get(i).toString();
             }
         }
