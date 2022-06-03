@@ -1,4 +1,8 @@
 package View.MainView.Menu;
+/**
+ * @author Patrik Brandell
+ * Class to show menu gui for Agent
+ */
 
 import Controller.Controller;
 import View.LogInView.LogInGUI;
@@ -30,7 +34,9 @@ public class MenuViewAgent extends JComponent implements ActionListener {
         menuPanel.setLayout(new GridLayout(12, 1, 0, 30));
         setUp();
     }
-
+    /**
+     * Setup buttons
+     */
     public void setUp() {
         btnTickets = new JButton("Tickets");
         setButtonDesign(btnTickets);
@@ -46,6 +52,10 @@ public class MenuViewAgent extends JComponent implements ActionListener {
 
     }
 
+    /**
+     *
+     * @param btn JButton set design
+     */
     private void setButtonDesign(JButton btn) {
         btn.setBackground(menuColor);
         btn.setForeground(Color.BLUE);
@@ -61,10 +71,18 @@ public class MenuViewAgent extends JComponent implements ActionListener {
         });
     }
 
+    /**
+     *
+     * @param btn JButton add actionlistener
+     */
     private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
 
+    /**
+     *
+     * @param e ButtonActions
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnTickets) {

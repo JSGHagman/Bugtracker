@@ -1,4 +1,8 @@
 package View.MainView.Menu;
+/**
+ * @author Patrik Brandell
+ * Class to show menu gui for admins
+ */
 
 import Controller.Controller;
 import View.LogInView.LogInGUI;
@@ -30,6 +34,9 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
         setUp();
     }
 
+    /**
+     * Setup buttons
+     */
     public void setUp() {
         btnTickets = new JButton("Tickets");
         setButtonDesign(btnTickets);
@@ -53,6 +60,10 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
         menuPanel.add(btnLogout, 0, 4);
     }
 
+    /**
+     *
+     * @param btn JButton set design
+     */
     private void setButtonDesign(JButton btn) {
         btn.setBackground(menuColor);
         btn.setForeground(Color.BLUE);
@@ -68,10 +79,18 @@ public class MenuViewAdmin extends JComponent implements ActionListener {
         });
     }
 
+    /**
+     *
+     * @param btn JButton add actionlistener
+     */
     private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
 
+    /**
+     *
+     * @param e ButtonActions
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnTickets) {
