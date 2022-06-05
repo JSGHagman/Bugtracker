@@ -40,7 +40,11 @@ public class ProfileView extends Component implements ActionListener {
         this.mainFrame = mainFrame;
         this.mainContentPanel = mainFrame.getContentPanel();
     }
-
+    /**
+     * Creates all buttons on profileView
+     *
+     * @author Viktor Abraham
+     */
     public void createButton() {
         btnChangePicture = new JButton("Choose picture");
         btnChangePicture.setBackground(menuColor);
@@ -67,6 +71,10 @@ public class ProfileView extends Component implements ActionListener {
         addActionListener(btnChange);
         btnChange.setFont(new Font("Dialog", Font.BOLD, 16));
     }
+    /**
+     * Creates all main panels
+     *
+     */
 
     public void createMainPanels() {
         infoPanel = new JPanel();
@@ -85,6 +93,10 @@ public class ProfileView extends Component implements ActionListener {
         mainContentPanel.add(currentPanelOnDisplay);
     }
 
+    /**
+     * Creates all labels
+     *
+     */
     public void createLabel() {
         confirmPasswordLabel = new JLabel();
         confirmPasswordLabel.setText("Confirm password");
@@ -151,6 +163,10 @@ public class ProfileView extends Component implements ActionListener {
         infoChosenPictureLabel = new JLabel();
 
     }
+    /**
+     * Creates all inputfields
+     *
+     */
 
     public void creatInputField() {
         fileChooser = new JFileChooser();
@@ -195,6 +211,10 @@ public class ProfileView extends Component implements ActionListener {
         changeScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
     }
 
+    /**
+     * Sets information on info panel
+     *
+     */
     public void setInfoPanelDetails() {
         //set details for infoPanel
         imagePanel = new JPanel();
@@ -242,8 +262,10 @@ public class ProfileView extends Component implements ActionListener {
 
     }
 
+    /**
+     * Sets all information on Change Panel Details
+     */
     public void setChangePanelDetails() {
-        //set details for infoPanel
         imageChangePanel = new JPanel();
         imageChangePanel.setBounds(changePanel.getX() - changePanel.getX() * 5 / 6, changePanel.getY() - changePanel.getY() * 4 / 5, changePanel.getWidth() / 4, changePanel.getHeight() / 6);
         imageChangePanel.setLayout(new GridLayout(2, 1));
@@ -295,6 +317,10 @@ public class ProfileView extends Component implements ActionListener {
 
     }
 
+    /**
+     * Changes from infoview to change info view
+     *
+     */
     public void changeToChangeInfoview() {
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(changePanel);
@@ -303,7 +329,9 @@ public class ProfileView extends Component implements ActionListener {
         currentPanelOnDisplay = changePanel;
 
     }
-
+    /**
+     * Changes view from change view to infoview
+     */
     public void changetoInfoView() {
         mainContentPanel.remove(currentPanelOnDisplay);
         mainContentPanel.add(infoPanel);
@@ -311,7 +339,10 @@ public class ProfileView extends Component implements ActionListener {
         mainFrame.getFrame().repaint();
         currentPanelOnDisplay = infoPanel;
     }
-
+    /**
+     * changes info on signed in user
+     *
+     */
     public void changeInfo() {
         String firstName = "";
         String lastName = "";
@@ -343,21 +374,31 @@ public class ProfileView extends Component implements ActionListener {
         controller.updateUserProfileDB(firstName, lastName, email, passwordChangeText, controller.getSignedInUser().getRole());
     }
 
-
+    /**
+     *
+     * Set textfields to empty string
+     *
+     */
     public void setTextFieldNull() {
         tfConfirmPassword.setText("");
         fName.setText("");
         lName.setText("");
         passwordField.setText("");
     }
-
+    /**
+     *
+     * Methods to create everything in view
+     */
     public void CreateProfileView() {
         createLabel();
         creatInputField();
         createButton();
         createMainPanels();
     }
-
+    /**
+     * gets picture as icon
+     *
+     */
     public Icon getIcon(File f, int width, int height) {
         Icon icon = null;
 
@@ -365,7 +406,10 @@ public class ProfileView extends Component implements ActionListener {
 
         return icon;
     }
-
+    /**
+     * Creates image to set as profilepicture
+     *
+     */
     private ImageIcon createImageIcon(String path, String description, int width, int height) {
         if (path != null) {
             ImageIcon icon = new ImageIcon(path);
@@ -384,7 +428,11 @@ public class ProfileView extends Component implements ActionListener {
     private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
-
+    /**
+     * Actionpreformed if a button i pressed
+     *
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnChangeInfo)) {
