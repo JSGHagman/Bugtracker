@@ -722,7 +722,7 @@ public class Controller {
      * @param id
      */
     public void startDownloadThread(int id) {
-        new downloadFilesThread(id);
+        new Controller.Controller.DownloadFilesThread(id);
     }
 
     /**
@@ -736,7 +736,7 @@ public class Controller {
             ticketManager.getTicket(id).addFile(f.getName());
         }
 
-        new placeFilesThread(id, list).start();
+        new Controller.Controller.PlaceFilesThread(id, list).start();
     }
 
     /**
@@ -750,7 +750,7 @@ public class Controller {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new getFilesThread().start();
+            new Controller.Controller.GetFilesThread().start();
         }
     }
 
@@ -778,10 +778,10 @@ public class Controller {
      *
      * @author Jakob Hagman
      */
-    private class downloadFilesThread extends Thread {
+    private class DownloadFilesThread extends Thread {
         private int id;
 
-        public downloadFilesThread(int id) {
+        public DownloadFilesThread(int id) {
             this.id = id;
             this.start();
         }
@@ -838,11 +838,11 @@ public class Controller {
      *
      * @author Jakob Hagman
      */
-    private class placeFilesThread extends Thread {
+    private class PlaceFilesThread extends Thread {
         private int id;
         private ArrayList<File> files = new ArrayList<>();
 
-        public placeFilesThread(int id, ArrayList<File> files) {
+        public PlaceFilesThread(int id, ArrayList<File> files) {
             this.id = id;
             this.files = files;
         }
@@ -876,7 +876,7 @@ public class Controller {
      *
      * @Author Jakob Hagman
      */
-    private class getFilesThread extends Thread {
+    private class GetFilesThread extends Thread {
         @Override
         public void run() {
             try {

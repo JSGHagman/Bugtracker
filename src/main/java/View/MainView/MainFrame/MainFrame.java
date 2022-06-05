@@ -49,9 +49,12 @@ public class MainFrame extends JFrame {
         mainFrame.add(menuPanel);
         mainFrame.add(contentPanel);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        startViews();
+    }
+
+    public void startViews(){
         ticketView = new TicketView(controller, this);
         profileView = new ProfileView(controller, this);
-
         switch (controller.getSignedInUser().getRole()) {
             case "User":
                 menuViewUser = new MenuViewUser(controller, this);

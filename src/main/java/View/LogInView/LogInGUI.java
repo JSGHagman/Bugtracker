@@ -60,10 +60,6 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         logoLabel.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/BugTrckerLogo.png")).getImage().getScaledInstance(frame.getWidth() - 18, 100, Image.SCALE_DEFAULT)));
     }
 
-    public void addActionListerner(JButton btn) {
-        btn.addActionListener(this);
-    }
-
     public void setUtilities() {
 
         emailLabel = new JLabel("E-mail");

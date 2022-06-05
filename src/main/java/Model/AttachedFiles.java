@@ -146,33 +146,4 @@ public class AttachedFiles {
         service.files().get(id)
                 .executeMediaAndDownloadTo(outputStream);
     }
-
-    public ArrayList<String> seeAttachedFiles(Drive service, String id) throws IOException {
-        try {
-            ArrayList<String> returnlist = new ArrayList();
-            FileList result = service.files().list()
-                    .setCorpora("drive")
-                    .setPageSize(10)
-                    .setFields("nextPageToken, files(id, name)")
-                    .setSupportsAllDrives(true)
-                    .setIncludeItemsFromAllDrives(true)
-                    .setDriveId(id)
-                    .execute();
-            List<File> files = result.getFiles();
-            if (files == null || files.isEmpty()) {
-                System.out.println("No files found.");
-            } else {
-                System.out.println("Files:");
-                for (File file : files) {
-                    returnlist.add(file.getName());
-                    System.out.printf("%s (%s)\n", file.getName(), file.getId());
-                }
-            }
-            return returnlist;
-        } catch (GoogleJsonResponseException e) {
-            System.out.println("no attached files");
-            return null;
-        }
-
-    }
 }

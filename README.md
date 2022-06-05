@@ -12,7 +12,7 @@ OBS. Om ni skulle få problem med att köra programmet och få ett felmeddelande
 
 "java.sql.SQLException: No suitable driver found for..."
 
-Vill ni ändå köra programmet kan ni gå in på https://jdbc.postgresql.org/download.html
+Vill ni köra programmet kan ni gå in på https://jdbc.postgresql.org/download.html
 För att fixa (Förutsatt att ni änvänder IntelliJ)
 1. Ladda ner drivern från länken
 2. Tryck på File (IntelliJ)
@@ -24,3 +24,8 @@ För att fixa (Förutsatt att ni änvänder IntelliJ)
 8. Välj .jar filen som ni laddade ner från postgres
 9. Tryck på Apply och sedan OK.
 10. Kör programmet
+
+
+Kommentarer:
+
+- Statistikfunktioner är ej färdigutvecklat och kan därför inte testas.

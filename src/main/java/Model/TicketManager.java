@@ -18,15 +18,6 @@ public class TicketManager {
         tickets.add(ticket);
     }
 
-    public void removeTicketFromList(Ticket ticket) {
-        tickets.remove(ticket);
-    }
-
-    public void printAllTickets() {
-        for (Ticket t : tickets) {
-            System.out.println(t.toString());
-        }
-    }
 
     /**
      * @param username - Username of current user
@@ -49,21 +40,6 @@ public class TicketManager {
             }
         }
         return myTickets;
-    }
-
-    /**
-     * @return ArrayList with Tickets with no agent
-     * @author Patrik Brandell
-     */
-    public ArrayList getUnassignedTickets() {
-        ArrayList unassignedTickets = new ArrayList();
-        for (Ticket t : tickets) {
-            if (t.getAgent().size() == 0 || t.getAgent().equals(null)) {
-                unassignedTickets.add(t);
-                System.out.print(t);
-            }
-        }
-        return unassignedTickets;
     }
 
     public ArrayList getAllTickets() {

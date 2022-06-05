@@ -3,8 +3,6 @@ package Model;
 //import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -26,9 +24,6 @@ public class Ticket {
     private String description;
     private String[] infoStrings;
 
-    public Ticket(User owner) {
-        this.owner = owner;
-    }
 
     public Ticket(int id, User owner, String topic, String description) {
         this.id = id;
@@ -124,10 +119,6 @@ public class Ticket {
         this.comments = comments;
     }
 
-    public void setComment(String comment) {
-        this.comments.add(comment);
-    }
-
     public void setAgent(ArrayList<User> agent) {
         this.agent = agent;
     }
@@ -209,10 +200,10 @@ public class Ticket {
     }
 
     public void setCommentsList() {
-        new commentsThread().start();
+        new CommentsThread().start();
     }
 
-    class commentsThread extends Thread {
+    class CommentsThread extends Thread {
         @Override
         public void run() {
             infoStrings = new String[comments.size()];
