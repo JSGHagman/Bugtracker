@@ -138,6 +138,10 @@ public class Controller {
         view = new MainFrame(this);
     }
 
+    /**
+     * @author Patrik Brandell
+     * Add all users to list and send to gui
+     */
     public void switchToUserAdmin() {
         ArrayList<String> list = new ArrayList<>();
         for (User u : userManager.getAllUsers()) {
@@ -176,6 +180,10 @@ public class Controller {
         }
     }
 
+    /**
+     * @author Patrik Brandell
+     * @param user set Updated values on user and update GUI
+     */
     public void updateUserManager(User user) {
         for (User u : userManager.getAllUsers()) {
             if (user.getEmail().equals(u.getEmail())) {
@@ -199,6 +207,10 @@ public class Controller {
         }
     }
 
+    /**
+     * @author Patrik Brandell
+     * @param email String email of user to delete
+     */
     public void deleteUser(String email) {
         if (!signedInUser.getEmail().equals(email)) {
             for (User u : userManager.getAllUsers()) {
@@ -408,7 +420,8 @@ public class Controller {
     }
 
     /**
-     * Create private GetallTickets object and start thread
+     * @author Patrik Brandell
+     * Create private GetallTickets class and start thread
      */
     public void getAllTickets() {
         GetAllTickets getAllTicketsThread = new GetAllTickets();

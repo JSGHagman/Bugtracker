@@ -1,4 +1,8 @@
 package View.MainView.UserAdmin;
+/**
+ * @author Patrik Brandell
+ * This class controls the Useradministration gui
+ */
 
 import Controller.Controller;
 import View.MainView.MainFrame.MainFrame;
@@ -31,6 +35,13 @@ public class UserAdminView extends JComponent implements ActionListener {
     private JTable userTable;
 
 
+    /**
+     *
+     * @param controller
+     * @param mainFrame
+     * @param users all users from db
+     */
+
     public UserAdminView(Controller controller, MainFrame mainFrame, ArrayList users) {
         this.controller = controller;
         this.mainFrame = mainFrame;
@@ -48,7 +59,9 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
-
+    /**
+     * Initiate all buttons
+     */
     public void initiateButtons() {
         btnSave = new JButton("Save");
         setButtonDesign(btnSave);
@@ -59,6 +72,9 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
+    /**
+     * Initiate usertable
+     */
     public void initiateUserTable() {
 
         userTable = new JTable(data, columnNames);
@@ -88,6 +104,9 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
+    /**
+     * Initiate panels
+     */
     private void initiatePanels() {
         eastPanel = new JPanel(new GridLayout(1, 1));
         eastPanel.setName("Users");
@@ -127,6 +146,9 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
+    /**
+     * Add class to mainFrame to show it
+     */
     public void initializeUserAdminView() {
         mainContentPanel.removeAll();
         mainContentPanel.add(westPanel);
@@ -138,6 +160,9 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
+    /**
+     * Initiate Textfields
+     */
     private void initiateTextfield() {
         txtFirstName = new JTextField();
         setTextBoxDesign(txtFirstName);
@@ -153,6 +178,9 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
+    /**
+     * Initiate combobox
+     */
     private void initiateComboBox() {
         role = new JComboBox(roles);
         role.setSelectedIndex(0);
@@ -167,6 +195,9 @@ public class UserAdminView extends JComponent implements ActionListener {
         });
     }
 
+    /**
+     * Initiate Labels
+     */
     public void initiateLabels() {
         lblFirstName = new JLabel("First Name");
         setLabelDesign(lblFirstName);
@@ -183,6 +214,11 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
+    /**
+     *
+     * @param txt - JTextField to set design when initiated
+     */
+
     private void setTextBoxDesign(JTextField txt) {
         txt.setForeground(menuColor);
         txt.setBackground(Color.WHITE);
@@ -191,6 +227,10 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
+    /**
+     *
+     * @param lbl - JLabel to set label design when initiated
+     */
     private void setLabelDesign(JLabel lbl) {
         lbl.setForeground(menuColor);
         lbl.setBackground(Color.WHITE);
@@ -198,6 +238,10 @@ public class UserAdminView extends JComponent implements ActionListener {
         lbl.setBorder(BorderFactory.createLineBorder(menuColor, 1));
     }
 
+    /**
+     *
+     * @param btn JButton to set button design when initiated
+     */
     private void setButtonDesign(JButton btn) {
         btn.setBackground(menuColor);
         btn.setForeground(Color.WHITE);
@@ -218,11 +262,18 @@ public class UserAdminView extends JComponent implements ActionListener {
         });
     }
 
-
+    /**
+     *
+     * @return JList userList
+     */
     public JList<String> getUserList() {
         return userList;
     }
 
+    /**
+     * Set userlist in window
+     * @param users
+     */
     public void setUserList(ArrayList users) {
         columnNames = new String[]{"First Name", "Last Name", "Email", "Role"};
 
@@ -244,7 +295,10 @@ public class UserAdminView extends JComponent implements ActionListener {
         }
     }
 
-
+    /**
+     *
+     * Getters & Setters
+     */
     public JTextField getTxtFirstName() {
         return txtFirstName;
     }
@@ -291,6 +345,7 @@ public class UserAdminView extends JComponent implements ActionListener {
         return role;
     }
 
+
     public void setRole(String role) {
 
         if (role.equals("Admin")) {
@@ -305,6 +360,10 @@ public class UserAdminView extends JComponent implements ActionListener {
 
     }
 
+    /**
+     *
+     * @param e ButtonClick
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnCancel) {
@@ -341,11 +400,17 @@ public class UserAdminView extends JComponent implements ActionListener {
         }
     }
 
+    /**
+     *
+     * @param btn add actionlistener to JButton
+     */
     private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
 
-
+    /**
+     * userTable listerner
+     */
     public void addListener() {
         ListSelectionModel rowSM = userTable.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {

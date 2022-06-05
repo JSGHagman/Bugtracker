@@ -55,6 +55,9 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         frame.getRootPane().setDefaultButton(btnLogIn);
     }
 
+    /**
+     * Initiate JLabels and setIcon
+     */
     public void initiateLabels() {
         logoLabel = new JLabel();
         logoLabel.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/BugTrckerLogo.png")).getImage().getScaledInstance(frame.getWidth() - 18, 100, Image.SCALE_DEFAULT)));
@@ -94,6 +97,9 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         roleBox.setBackground(Color.WHITE);
     }
 
+    /**
+     * Initiate Panels
+     */
     private void initiatePanels() {
         inputPanel = new JPanel();
         buttonPanel = new JPanel();
@@ -101,6 +107,9 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
 
     }
 
+    /**
+     * Setup loginPanel
+     */
     public void setLogInPanel() {
         frame.setTitle("Bugtracker Log In");
         mainPanel.removeAll();
@@ -129,6 +138,9 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         mainPanel.repaint();
     }
 
+    /**
+     * Switch to signUp view if btn clicked
+     */
     public void switchToSignUp() {
         frame.setTitle("Bugtracker Sign Up");
         inputPanel.removeAll();
@@ -163,6 +175,9 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
+    /**
+     * Initiate Buttons
+     */
     private void initiateButtons() {
         btnSignUp = new JButton("Sign up");
         setButtonDesign(btnSignUp);
@@ -177,6 +192,10 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         setButtonDesign(btnCancel);
     }
 
+    /**
+     *
+     * @param btn JButton set button design
+     */
     private void setButtonDesign(JButton btn) {
         btn.setBackground(menuColor);
         btn.setForeground(Color.WHITE);
@@ -197,15 +216,27 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         });
     }
 
+    /**
+     *
+     * @param text JTextField set design
+     */
     private void setTextFieldDesign(JTextField text) {
         text.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         text.addFocusListener(this);
     }
 
+    /**
+     *
+     * @param btn JButton add actionListener
+     */
     private void addActionListener(JButton btn) {
         btn.addActionListener(this);
     }
 
+    /**
+     *
+     * @param e ActionPerformed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSignUp) {
@@ -224,12 +255,20 @@ public class LogInGUI extends JComponent implements ActionListener, FocusListene
         }
     }
 
+    /**
+     *
+     * @param e FocusEvent
+     */
     @Override
     public void focusGained(FocusEvent e) {
         JTextField src = (JTextField) e.getSource();
         src.setText("");
     }
 
+    /**
+     *
+     * @param e FocusLost
+     */
     @Override
     public void focusLost(FocusEvent e) {
 

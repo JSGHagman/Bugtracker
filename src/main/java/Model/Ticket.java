@@ -1,6 +1,8 @@
 package Model;
-
-//import org.checkerframework.checker.units.qual.A;
+/**
+ * @author Jakob Hagman, Patrik Brandell
+ * This class contains the Ticket object
+ */
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +35,16 @@ public class Ticket {
         startdate = new Date();
     }
 
+    /**
+     *
+     * @param id int Ticked ID
+     * @param category String Category
+     * @param status String Status
+     * @param priority int priority
+     * @param startdate Date startdate
+     * @param enddate Date enddate
+     * @param topic String topic
+     */
     public Ticket(int id, String category, String status, int priority, Date startdate, Date enddate, String topic) {
         this.id = id;
         this.category = category;
