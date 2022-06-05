@@ -1,3 +1,9 @@
+/**
+ * This is the controller-class
+ * It's purpose is to handle all the main logic
+ * between model and view
+ */
+
 package Controller;
 
 import Model.*;

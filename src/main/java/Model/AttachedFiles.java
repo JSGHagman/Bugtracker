@@ -1,6 +1,6 @@
 package Model;
 /**
- * @author Patrik Brandell
+ * @author Patrik Brandell/Jakob Hagman
  * Google Drive API Class
  */
 

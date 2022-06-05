@@ -1,5 +1,7 @@
+/**
+ * This class is spceifies all the information about an userobject
+ */
 package Model;
-
 public class User {
     private String firstName;
     private String lastName;

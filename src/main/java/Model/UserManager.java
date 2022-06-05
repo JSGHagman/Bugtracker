@@ -1,5 +1,7 @@
+/**
+ * This class is used for managing all the users that have been created
+ */
 package Model;
-
 import java.util.ArrayList;
 
 public class UserManager {

@@ -1,3 +1,9 @@
+/**
+ * This is the databsecontroller
+ * It is used for input/output to and from the database
+ * @author Jakob Hagman/Patrik Brandell
+ */
+
 package Controller;
 
 import Model.Ticket;

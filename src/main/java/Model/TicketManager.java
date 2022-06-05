@@ -1,3 +1,7 @@
+/**
+ * This class is used for managing all the tickets that have been created.
+ */
+
 package Model;
 
 import java.util.ArrayList;
